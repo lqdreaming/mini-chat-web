@@ -27,12 +27,12 @@ export default {
 
     document.getElementById("online").addEventListener("click", function(){
         console.log("online button is click")
-        rtc.connect("ws://10.1.12.127:8123/websocket/1/bbb");
+        rtc.connect("ws://192.168.0.105:8123/websocket/1/bbb");
     });
 
     //创建本地视频流成功
     rtc.on("stream_created", function(stream) {
-      document.getElementById('me').src = URL.createObjectURL(stream);
+      document.getElementById('me').srcObject = stream;
       document.getElementById('me').play();
     });
 
@@ -44,37 +44,37 @@ export default {
     //接收到其他用户的视频流
     rtc.on('pc_add_stream', function(stream) {
       // document.getElementById('other').src = URL.createObjectURL(stream);
-
-      var newVideo = document.createElement("video"),
-      id = "other-" + "00";
-      newVideo.setAttribute("class", "other");
-      newVideo.setAttribute("autoplay", "autoplay");
-      newVideo.setAttribute("id", id);
-      videos.appendChild(newVideo);
-  
-      var element = document.getElementById(id);
-      if (navigator.mozGetUserMedia) {
-          element.mozSrcObject = stream;
-          element.play();
-      } else {
-          element.src = webkitURL.createObjectURL(stream);
-      }
-      element.src = webkitURL.createObjectURL(stream);
+      document.getElementById('other').srcObject = stream;
+      // var newVideo = document.createElement("video"),
+      // id = "other-" + "00";
+      // newVideo.setAttribute("class", "other");
+      // newVideo.setAttribute("autoplay", "autoplay");
+      // newVideo.setAttribute("id", id);
+      // videos.appendChild(newVideo);
+      //
+      // var element = document.getElementById(id);
+      // if (navigator.mozGetUserMedia) {
+      //     element.mozSrcObject = stream;
+      //     element.play();
+      // } else {
+      //     element.src = webkitURL.createObjectURL(stream);
+      // }
+      // element.src = webkitURL.createObjectURL(stream);
 
     });
 
     rtc.on('matchMakerCallAnswer', function(data) {
       console.log("receive matchMakerCallAnswer");
       if (data.grabFlag === true){
-        // rtc.createStream({
-        //   "video": true,
-        //   "audio": true,
-        //   "uid" : data.uid,
-        //   "mid" : data.mid,
-        //   "type" : "matchmaker"
-        // });
+        rtc.createStream({
+          "video": true,
+          "audio": true,
+          "uid" : data.uid,
+          "mid" : data.mid,
+          "type" : "matchmaker"
+        });
       }
-      var pc = rtc.createPeerConnection(data.uid)
+      // var pc = rtc.createPeerConnection(data.uid)
     })
   }
 }

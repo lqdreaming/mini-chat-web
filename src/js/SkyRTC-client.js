@@ -115,11 +115,12 @@ var SkyRTC = function() {
         this.on('ready', function(mid, uid, type) {
           if (type === "user"){
             that.createPeerConnection(mid);
+            that.addStreams();
+            that.sendOffers(uid, mid)
           }else {
             that.createPeerConnection(uid);
+            that.addStreams();
           }
-          that.addStreams();
-          that.sendOffers(uid, mid);
         });
     };
 
@@ -225,12 +226,12 @@ var SkyRTC = function() {
 
 
     //创建与其他用户连接的PeerConnections
-    skyrtc.prototype.createPeerConnections = function() {
-        var i, m;
-        for (i = 0, m = this.connections.length; i < m; i++) {
-            this.createPeerConnection(this.connections[i]);
-        }
-    };
+    // skyrtc.prototype.createPeerConnections = function() {
+    //     var i, m;
+    //     for (i = 0, m = this.connections.length; i < m; i++) {
+    //         this.createPeerConnection(this.connections[i]);
+    //     }
+    // };
 
     //创建单个PeerConnection
     skyrtc.prototype.createPeerConnection = function(toId) {
