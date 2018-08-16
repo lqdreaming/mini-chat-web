@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="index">
     MatchmakerIndex
     <button id="online">上线</button>
     <div id="videos">
@@ -21,20 +21,13 @@ export default {
   },
   mounted () {
     var videos = document.getElementById("videos");
+    var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
     var rtc = SkyRTC();
 
-      //成功创建WebSocket连接
-    rtc.on("connected", function(socket) {
-      //创建本地视频流
-      rtc.createStream({
-        "video": true,
-        "audio": true
-      });
-    });
 
     document.getElementById("online").addEventListener("click", function(){
         console.log("online button is click")
-        rtc.connect("ws://127.0.0.1:8123/websocket/1/bbb");
+        rtc.connect("ws://10.1.12.127:8123/websocket/1/bbb");
     });
 
     //创建本地视频流成功
@@ -50,8 +43,39 @@ export default {
 
     //接收到其他用户的视频流
     rtc.on('pc_add_stream', function(stream) {
-      document.getElementById('other').src = URL.createObjectURL(stream);
+      // document.getElementById('other').src = URL.createObjectURL(stream);
+
+      var newVideo = document.createElement("video"),
+      id = "other-" + "00";
+      newVideo.setAttribute("class", "other");
+      newVideo.setAttribute("autoplay", "autoplay");
+      newVideo.setAttribute("id", id);
+      videos.appendChild(newVideo);
+  
+      var element = document.getElementById(id);
+      if (navigator.mozGetUserMedia) {
+          element.mozSrcObject = stream;
+          element.play();
+      } else {
+          element.src = webkitURL.createObjectURL(stream);
+      }
+      element.src = webkitURL.createObjectURL(stream);
+
     });
+
+    rtc.on('matchMakerCallAnswer', function(data) {
+      console.log("receive matchMakerCallAnswer");
+      if (data.grabFlag === true){
+        // rtc.createStream({
+        //   "video": true,
+        //   "audio": true,
+        //   "uid" : data.uid,
+        //   "mid" : data.mid,
+        //   "type" : "matchmaker"
+        // });
+      }
+      var pc = rtc.createPeerConnection(data.uid)
+    })
   }
 }
 </script>
@@ -72,7 +96,7 @@ li {
 a {
   color: #42b983;
 }
-html, body {
+index {
   width: 100%;
   height: 100%;
   margin: 0;
@@ -82,9 +106,6 @@ html, body {
 
 #videos {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
   overflow: auto;
   border: 3px solid #0f0f0f;
 }

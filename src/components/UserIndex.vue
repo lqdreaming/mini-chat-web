@@ -1,8 +1,8 @@
 <template>
   <div>
     UserIndex
-    <button id="online">上线</button>
-    <button id="chat">连接红娘</button>
+    <button id="online" v-on:click="online">上线</button>
+    <button id="chat" v-on:click="callMatchmaker">连接红娘</button>
     <div id="matchMakers"/>
     <div id="videos">
       <video id="me" autoplay></video>
@@ -13,6 +13,7 @@
 
 <script>
 import SkyRTC from '@/js/SkyRTC-client.js'
+var rtc = SkyRTC();
 export default {
   name: 'UserIndex',
   data () {
@@ -20,23 +21,25 @@ export default {
       msg: 'Welcome to Your Vue.js App'
     }
   },
+  methods: {
+    online: function(){
+      console.log("online button is click")
+      rtc.connect("ws://10.1.12.127:8123/websocket/2/588")
+    },
+
+    callMatchmaker: function(){
+      console.log("callMatchmaker button is click")
+      rtc.socket.send(JSON.stringify({
+          "eventName": "Call",
+          "data": {
+              "mid": "bbb",
+          }
+      }))
+    }
+  },
   mounted () {
       var videos = document.getElementById("videos");
-      var rtc = SkyRTC();
-
-      document.getElementById("online").addEventListener("click", function(){
-          console.log("online button is click")
-          rtc.connect("ws://127.0.0.1:8123/websocket/2/588");
-      });
-
-      //成功创建WebSocket连接
-      rtc.on("connected", function(socket) {
-        //创建本地视频流
-        rtc.createStream({
-          "video": true,
-          "audio": true
-        });
-      });
+      var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
 
       //创建本地视频流成功
       rtc.on("stream_created", function(stream) {
@@ -51,7 +54,15 @@ export default {
 
       //接收到其他用户的视频流
       rtc.on('pc_add_stream', function(stream) {
-        document.getElementById('other').src = URL.createObjectURL(stream);
+        // document.getElementById('other').src = URL.createObjectURL(stream);
+        var element = document.getElementById('other');
+        if (navigator.mozGetUserMedia) {
+            element.mozSrcObject = stream;
+            element.play();
+        } else {
+            element.src = webkitURL.createObjectURL(stream);
+        }
+        element.src = webkitURL.createObjectURL(stream);
       });
 
       rtc.on('matchMakerChangeStatus', function (data) {
@@ -79,6 +90,19 @@ export default {
           });
           matchMakers.innerHTML = content.toString();
       });
+
+      rtc.on('userCallAnswer', function(data) {
+        console.log("receive UserCallAnswer");
+        if (data.grabFlag === true){
+          rtc.createStream({
+            "video": true,
+            "audio": true,
+            "uid" : data.uid,
+            "mid" : data.mid,
+            "type" : "user"
+          });
+        }
+      })
     }
   }
 </script>
@@ -104,9 +128,6 @@ a {
 }
 #videos {
   position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
   overflow: auto;
   border: 3px solid #0f0f0f;
 }
