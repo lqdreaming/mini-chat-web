@@ -5,7 +5,8 @@ var SkyRTC = function() {
     var nativeRTCSessionDescription = (window.mozRTCSessionDescription || window.RTCSessionDescription); // order is very important: "RTCSessionDescription" defined in Nighly but useless
     var iceServer = {
         "iceServers": [{
-            "url": "stun:stun.l.google.com:19302"
+            // "url": "stun:stun.l.google.com:19302"
+            "url": "stun:113.32.111.126:3478"
         }]
     };
 
@@ -106,10 +107,12 @@ var SkyRTC = function() {
         this.on('offerTo', function(data) {
             that.receiveOffer(data.fromId, data.sdp);
             that.emit("get_offer", data);
+            // this.peerConnection.addStream(this.localMediaStream);
         });
 
         this.on('answerTo', function(data) {
             that.receiveAnswer(data.sdp);
+            // this.peerConnection.addStream(this.localMediaStream);
         });
 
         this.on('ready', function(mid, uid, type) {
@@ -223,15 +226,6 @@ var SkyRTC = function() {
 
 
     /***********************点对点连接部分*****************************/
-
-
-    //创建与其他用户连接的PeerConnections
-    // skyrtc.prototype.createPeerConnections = function() {
-    //     var i, m;
-    //     for (i = 0, m = this.connections.length; i < m; i++) {
-    //         this.createPeerConnection(this.connections[i]);
-    //     }
-    // };
 
     //创建单个PeerConnection
     skyrtc.prototype.createPeerConnection = function(toId) {

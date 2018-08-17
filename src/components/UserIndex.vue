@@ -13,7 +13,9 @@
 
 <script>
 import SkyRTC from '@/js/SkyRTC-client.js'
+import Conf from '@/conf/conf.js'
 var rtc = SkyRTC();
+
 export default {
   name: 'UserIndex',
   data () {
@@ -24,7 +26,7 @@ export default {
   methods: {
     online: function(){
       console.log("online button is click")
-      rtc.connect("ws://192.168.0.105:8123/websocket/2/588")
+      rtc.connect(Conf.WS_ADDRESS + "/2/588")
     },
 
     callMatchmaker: function(){
@@ -54,15 +56,6 @@ export default {
 
       //接收到其他用户的视频流
       rtc.on('pc_add_stream', function(stream) {
-        // document.getElementById('other').src = URL.createObjectURL(stream);
-        // var element = document.getElementById('other');
-        // if (navigator.mozGetUserMedia) {
-        //     element.mozSrcObject = stream;
-        //     element.play();
-        // } else {
-        //     element.src = webkitURL.createObjectURL(stream);
-        // }
-        // element.src = webkitURL.createObjectURL(stream);
         var addVideo = function(){
           document.getElementById('other').srcObject = stream;
           // var arr = Object.keys(document.getElementById('other').srcObject);
@@ -71,7 +64,6 @@ export default {
           }
         }
         setTimeout(addVideo,200)
-
       });
 
       rtc.on('matchMakerChangeStatus', function (data) {

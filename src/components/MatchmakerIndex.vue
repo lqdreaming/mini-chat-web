@@ -11,6 +11,7 @@
 
 <script>
 import SkyRTC from '@/js/SkyRTC-client.js'
+import Conf from '@/conf/conf.js'
 
 export default {
   name: 'MatchmakerIndex',
@@ -24,10 +25,9 @@ export default {
     var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
     var rtc = SkyRTC();
 
-
     document.getElementById("online").addEventListener("click", function(){
         console.log("online button is click")
-        rtc.connect("ws://192.168.0.105:8123/websocket/1/bbb");
+        rtc.connect(Conf.WS_ADDRESS + "/1/bbb");
     });
 
     //创建本地视频流成功
@@ -43,38 +43,31 @@ export default {
 
     //接收到其他用户的视频流
     rtc.on('pc_add_stream', function(stream) {
-      // document.getElementById('other').src = URL.createObjectURL(stream);
-      document.getElementById('other').srcObject = stream;
-      // var newVideo = document.createElement("video"),
-      // id = "other-" + "00";
-      // newVideo.setAttribute("class", "other");
-      // newVideo.setAttribute("autoplay", "autoplay");
-      // newVideo.setAttribute("id", id);
-      // videos.appendChild(newVideo);
-      //
-      // var element = document.getElementById(id);
-      // if (navigator.mozGetUserMedia) {
-      //     element.mozSrcObject = stream;
-      //     element.play();
-      // } else {
-      //     element.src = webkitURL.createObjectURL(stream);
-      // }
-      // element.src = webkitURL.createObjectURL(stream);
+      // document.getElementById('other').srcObject = stream;
 
+      var addVideo = function(){
+        alert("ready video")
+        document.getElementById('other').srcObject = stream
+        document.getElementById('other').play();
+        if(isEmptyObject(document.getElementById('other').srcObject)){
+          setTimeout(addVideo,200)
+        }
+      }
+      setTimeout(addVideo,2000)
     });
 
     rtc.on('matchMakerCallAnswer', function(data) {
       console.log("receive matchMakerCallAnswer");
       if (data.grabFlag === true){
-        rtc.createStream({
-          "video": true,
-          "audio": true,
-          "uid" : data.uid,
-          "mid" : data.mid,
-          "type" : "matchmaker"
-        });
+        // rtc.createStream({
+        //   "video": true,
+        //   "audio": true,
+        //   "uid" : data.uid,
+        //   "mid" : data.mid,
+        //   "type" : "matchmaker"
+        // });
+        rtc.emit("ready", data.mid, data.uid, "matchmaker");
       }
-      // var pc = rtc.createPeerConnection(data.uid)
     })
   }
 }
