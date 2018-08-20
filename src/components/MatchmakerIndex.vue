@@ -1,7 +1,6 @@
 <template>
   <div class="index">
     MatchmakerIndex
-    <button id="online">上线</button>
     <div id="videos">
       <video id="me" autoplay></video>
       <video id="other" autoplay></video>
@@ -20,16 +19,15 @@ export default {
       msg: 'Welcome to Your Vue.js App'
     }
   },
+  methods: {
+
+  },
   mounted () {
     var videos = document.getElementById("videos");
     var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
+
     var rtc = SkyRTC();
-
-    document.getElementById("online").addEventListener("click", function(){
-        console.log("online button is click")
-        rtc.connect(Conf.WS_ADDRESS + "/1/bbb");
-    });
-
+    rtc.connect(Conf.WS_ADDRESS + "/1/" + this.$route.params.mid);
     //创建本地视频流成功
     rtc.on("stream_created", function(stream) {
       document.getElementById('me').srcObject = stream;
@@ -43,17 +41,16 @@ export default {
 
     //接收到其他用户的视频流
     rtc.on('pc_add_stream', function(stream) {
-      // document.getElementById('other').srcObject = stream;
-
+    
       var addVideo = function(){
-        alert("ready video")
+        // alert("ready video")
         document.getElementById('other').srcObject = stream
         document.getElementById('other').play();
-        if(isEmptyObject(document.getElementById('other').srcObject)){
-          setTimeout(addVideo,200)
-        }
+        // if(isEmptyObject(document.getElementById('other').srcObject)){
+        //   setTimeout(addVideo,200)
+        // }
       }
-      setTimeout(addVideo,2000)
+      setTimeout(addVideo,1000)
     });
 
     rtc.on('matchMakerCallAnswer', function(data) {

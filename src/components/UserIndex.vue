@@ -1,13 +1,30 @@
 <template>
   <div>
     UserIndex
-    <button id="online" v-on:click="online">上线</button>
-    <button id="chat" v-on:click="callMatchmaker">连接红娘</button>
+    <!-- <el-button type="primary" round  v-on:click="callMatchmaker">连接红娘</el-button> -->
     <div id="matchMakers"/>
+    <el-row>
+      <el-col :span="4" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="2">
+        <el-card :body-style="{ padding: '0px' }">
+          <img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=998060827,1437492300&fm=27&gp=0.jpg" class="image">
+          <div style="padding: 14px;">
+            <span>红娘:</span>{{matchMaker.name}}
+            <div class="bottom clearfix">
+              <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.name)">连线</el-button>
+              <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callMatchmaker(matchMaker.name)">忙碌</el-button>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+    </el-row>
+    <br>
+    <el-button type="primary" round class="button"  v-on:click="down(uid)">下线</el-button>
+    <br>
     <div id="videos">
       <video id="me" autoplay></video>
       <video id="other" autoplay></video>
     </div>
+
   </div>
 </template>
 
@@ -20,29 +37,40 @@ export default {
   name: 'UserIndex',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      uid: "",
+      matchMakers:
+      [
+         // { name: 'aaa', status: false},
+         // { name: 'bbb', status: false},
+      ]
     }
   },
   methods: {
-    online: function(){
-      console.log("online button is click")
-      rtc.connect(Conf.WS_ADDRESS + "/2/588")
-    },
-
-    callMatchmaker: function(){
+    callMatchmaker: function(mid){
       console.log("callMatchmaker button is click")
       rtc.socket.send(JSON.stringify({
           "eventName": "Call",
           "data": {
-              "mid": "bbb",
+              "mid": mid,
+          }
+      }))
+    },
+    down: function(id){
+      rtc.socket.send(JSON.stringify({
+          "eventName": "End",
+          "data": {
+              "id": id,
           }
       }))
     }
   },
   mounted () {
-      var videos = document.getElementById("videos");
       var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
-
+      console.info(this.userId)
+      var that = this
+      this.uid = this.$route.params.userId
+      console.log("this.uid：" + this.uid)
+      rtc.connect(Conf.WS_ADDRESS + "/2/" + this.uid)
       //创建本地视频流成功
       rtc.on("stream_created", function(stream) {
         document.getElementById('me').srcObject = stream;
@@ -58,38 +86,39 @@ export default {
       rtc.on('pc_add_stream', function(stream) {
         var addVideo = function(){
           document.getElementById('other').srcObject = stream;
-          // var arr = Object.keys(document.getElementById('other').srcObject);
-          if(isEmptyObject(document.getElementById('other').srcObject)){
-            setTimeout(addVideo,200)
-          }
+
+          // if(isEmptyObject(document.getElementById('other').srcObject)){
+          //   setTimeout(addVideo,200)
+          // }
         }
         setTimeout(addVideo,200)
       });
 
       rtc.on('matchMakerChangeStatus', function (data) {
           console.info("receive message:" + data);
-          console.info(data);
-          var matchMakers = document.getElementById("matchMakers");
-          var content = [];
-          Object.keys(data).forEach(function(key){
-              content.push(`<p>${key}:${data[key]}</p>`);
-              console.log(key,data[key]);
+          var flag = true
+          that.matchMakers.forEach(function(matchMaker){
+            if (matchMaker.name == data.mid){
+              matchMaker.status = data.status
+              flag = false
 
+            }
           });
-          matchMakers.innerHTML = content.toString();
+
+          if (flag == true) {
+            that.matchMakers.push({name:data.mid, status: data.status});
+          }
+          console.info(that.matchMakers)
       });
 
       rtc.on('getAllMatchMakerStatus', function (data) {
-          console.info("receive message:" + data);
-          console.info(data);
-          var matchMakers = document.getElementById("matchMakers");
-          var content = [];
           Object.keys(data).forEach(function(key){
-              content.push(`<p>${key}:${data[key]}</p>`);
+              // content.push(`<p>${key}:${data[key]}</p>`);
+              that.matchMakers.push({name:key, status: data[key]});
               console.log(key,data[key]);
-
           });
-          matchMakers.innerHTML = content.toString();
+          console.log(that.matchMakers);
+          // matchMakers.innerHTML = content.toString();
       });
 
       rtc.on('userCallAnswer', function(data) {
@@ -110,9 +139,6 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-.el-button--primary {
-  color: red;
-}
 h1, h2 {
   font-weight: normal;
 }
@@ -138,4 +164,16 @@ a {
   width: 32%;
   border: 3px solid #0f0f0f;
 }
+
+.bottom {
+  margin-top: 13px;
+  line-height: 12px;
+}
+
+.image {
+  width: 100%;
+  display: block;
+}
+
+
 </style>
