@@ -23,13 +23,25 @@ export default {
   },
   methods: {
     login: function(){
-      var postData
+      var postData,
+          that = this
       axios.post(Conf.API + '/matchmakerInfo/login', {
-        mid: 'this.mid',
-        password: 'this.password'
+        mid: that.mid,
+        password: that.password
       })
       .then(function (response) {
-        console.log(response);
+        console.log(response.data.code);
+        if (response.data.code === 107){
+           that.$message.error('用户名或密码错了哦');
+        }
+        if (response.data.code === 0){
+          that.$router.push({
+            name: 'MatchmakerIndex',
+            params: {
+                mid: that.mid
+             }
+          })
+        }
       })
       .catch(function (response) {
         console.log(response);
@@ -40,12 +52,7 @@ export default {
       //   }
       // })
 
-      // this.$router.push({
-      //   name: 'MatchmakerIndex',
-      //   params: {
-      //       mid: this.mid
-      //    }
-      // })
+
     }
   }
 }

@@ -5,8 +5,8 @@ var SkyRTC = function() {
     var nativeRTCSessionDescription = (window.mozRTCSessionDescription || window.RTCSessionDescription); // order is very important: "RTCSessionDescription" defined in Nighly but useless
     var iceServer = {
         "iceServers": [{
-            // "url": "stun:stun.l.google.com:19302"
-            "url": "stun:113.32.111.126:3478"
+            "url": "stun:stun.l.google.com:19302"
+            // "url": "stun:113.32.111.126:3478"
         }]
     };
 
@@ -122,7 +122,7 @@ var SkyRTC = function() {
             that.sendOffers(uid, mid)
           }else {
             that.createPeerConnection(uid);
-            // that.addStreams();
+            that.addStreams();
           }
         });
     };

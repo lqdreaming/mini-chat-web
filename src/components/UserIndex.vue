@@ -130,14 +130,15 @@ export default {
 
       //接收到其他用户的视频流
       rtc.on('pc_add_stream', function(stream) {
+        console.info("sadasd322432424")
         var addVideo = function(){
           document.getElementById('other').srcObject = stream;
-
+          document.getElementById('other').play();
           // if(isEmptyObject(document.getElementById('other').srcObject)){
           //   setTimeout(addVideo,200)
           // }
         }
-        setTimeout(addVideo,200)
+        setTimeout(addVideo,2000)
       });
 
       rtc.on('endAnswer', function (data) {

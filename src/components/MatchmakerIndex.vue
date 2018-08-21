@@ -29,6 +29,14 @@ export default {
 
     var rtc = SkyRTC();
     rtc.connect(Conf.WS_ADDRESS + "/1/" + this.$route.params.mid);
+
+    rtc.createStream({
+      "video": true,
+      "audio": true
+      // "uid" : data.uid,
+      // "mid" : data.mid,
+      // "type" : "user"
+    });
     //创建本地视频流成功
     rtc.on("stream_created", function(stream) {
       document.getElementById('me').srcObject = stream;
@@ -70,14 +78,14 @@ export default {
     rtc.on('matchMakerCallAnswer', function(data) {
       console.log("receive matchMakerCallAnswer");
       if (data.grabFlag === true){
-       rtc.emit("ready", data.mid, data.uid, "matchmaker");
-        // rtc.createStream({
-        //   "video": true,
-        //   "audio": true,
-        //   "uid" : data.uid,
-        //   "mid" : data.mid,
-        //   "type" : "user"
-        // });
+        rtc.emit("ready", data.mid, data.uid, "matchmaker");
+      // rtc.createStream({
+      //   "video": true,
+      //   "audio": true,
+      //   "uid" : data.uid,
+      //   "mid" : data.mid,
+      //   "type" : "matchmaker"
+      // });
       }
     })
   }
