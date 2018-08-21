@@ -16,7 +16,7 @@ export default {
   name: 'MatchmakerIndex',
   data () {
     return {
-      msg: 'Welcome to Your Vue.js App'
+      stream: null
     }
   },
   methods: {
@@ -25,6 +25,7 @@ export default {
   mounted () {
     var videos = document.getElementById("videos");
     var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
+    var that = this
 
     var rtc = SkyRTC();
     rtc.connect(Conf.WS_ADDRESS + "/1/" + this.$route.params.mid);
@@ -41,29 +42,42 @@ export default {
 
     //接收到其他用户的视频流
     rtc.on('pc_add_stream', function(stream) {
-    
       var addVideo = function(){
-        // alert("ready video")
-        document.getElementById('other').srcObject = stream
-        document.getElementById('other').play();
-        // if(isEmptyObject(document.getElementById('other').srcObject)){
-        //   setTimeout(addVideo,200)
-        // }
+        that.stream = stream
+        document.getElementById('other').srcObject = that.stream
+        if(typeof document.getElementById('other').srcObject == "undefined"){
+          // console.info("213132134444444-------5")
+          setTimeout(addVideo,200)
+        }
+        document.getElementById('other').play()
       }
-      setTimeout(addVideo,1000)
+      setTimeout(addVideo,200)
+    });
+
+    rtc.on('closeVideo', function(stream) {
+      document.getElementById('other').srcObject = null
+    });
+
+    rtc.on('openVideo', function(stream) {
+      document.getElementById('other').srcObject = that.stream
+      document.getElementById('me').play()
+    });
+
+    rtc.on('endAnswer', function (data) {
+        rtc.closePeerConnection(rtc.peerConnection)
     });
 
     rtc.on('matchMakerCallAnswer', function(data) {
       console.log("receive matchMakerCallAnswer");
       if (data.grabFlag === true){
+       rtc.emit("ready", data.mid, data.uid, "matchmaker");
         // rtc.createStream({
         //   "video": true,
         //   "audio": true,
         //   "uid" : data.uid,
         //   "mid" : data.mid,
-        //   "type" : "matchmaker"
+        //   "type" : "user"
         // });
-        rtc.emit("ready", data.mid, data.uid, "matchmaker");
       }
     })
   }

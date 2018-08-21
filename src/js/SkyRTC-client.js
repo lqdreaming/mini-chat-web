@@ -51,8 +51,8 @@ var SkyRTC = function() {
         this.localMediaStream = null;
 
         this.socket = null;
-        //本地socket的id，由后台服务器创建
-        this.me = null;
+        // //本地socket的id，由后台服务器创建
+        // this.me = null;
 
         this.peerConnection = null;
 
@@ -122,7 +122,7 @@ var SkyRTC = function() {
             that.sendOffers(uid, mid)
           }else {
             that.createPeerConnection(uid);
-            that.addStreams();
+            // that.addStreams();
           }
         });
     };
@@ -139,14 +139,14 @@ var SkyRTC = function() {
         options.audio = !!options.audio;
 
         if (getUserMedia) {
-            this.numStreams++;
+            // this.numStreams++;
             getUserMedia.call(navigator, options, function(stream) {
                     that.localMediaStream = stream;
-                    that.initializedStreams++;
+                    // that.initializedStreams++;
                     that.emit("stream_created", stream);
-                    if (that.initializedStreams === that.numStreams) {
-                        that.emit("ready", options.mid, options.uid, options.type);
-                    }
+                    // if (that.initializedStreams === that.numStreams) {
+                    // that.emit("ready", options.mid, options.uid, options.type);
+                    // }
                 },
                 function(error) {
                     that.emit("stream_create_error", error);

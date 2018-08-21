@@ -1,29 +1,36 @@
 <template>
   <div>
-    UserIndex
-    <!-- <el-button type="primary" round  v-on:click="callMatchmaker">连接红娘</el-button> -->
-    <div id="matchMakers"/>
-    <el-row>
-      <el-col :span="4" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="2">
-        <el-card :body-style="{ padding: '0px' }">
-          <img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=998060827,1437492300&fm=27&gp=0.jpg" class="image">
-          <div style="padding: 14px;">
-            <span>红娘:</span>{{matchMaker.name}}
-            <div class="bottom clearfix">
-              <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.name)">连线</el-button>
-              <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callMatchmaker(matchMaker.name)">忙碌</el-button>
+    <div v-show="!videoFlagShow">
+      <el-row>
+        <el-col :span="4" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="2">
+          <el-card :body-style="{ padding: '0px' }">
+            <img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=998060827,1437492300&fm=27&gp=0.jpg" class="image">
+            <div style="padding: 14px;">
+              <span>红娘:</span>{{matchMaker.name}}
+              <div class="bottom clearfix">
+                <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.name)">连线</el-button>
+                <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callMatchmaker(matchMaker.name)">忙碌</el-button>
+              </div>
             </div>
-          </div>
-        </el-card>
-      </el-col>
-    </el-row>
-    <br>
-    <el-button type="primary" round class="button"  v-on:click="down(uid)">下线</el-button>
-    <br>
-    <div id="videos">
-      <video id="me" autoplay></video>
-      <video id="other" autoplay></video>
+          </el-card>
+        </el-col>
+      </el-row>
     </div>
+
+    <div v-show="videoFlagShow">
+      <br>
+      <el-button type="primary" round v-on:click="down(uid)">下线</el-button>
+      <el-button type="danger" round v-show="videoOpen" v-on:click="closeVideo()">关闭摄像头</el-button>
+      <el-button type="success" round v-show="!videoOpen" v-on:click="openVideo()">开启摄像头</el-button>
+      <br>
+      <br>
+      <br>
+      <div id="videos">
+        <video id="me" autoplay></video>
+        <video id="other" autoplay></video>
+      </div>
+    </div>
+
 
   </div>
 </template>
@@ -38,6 +45,9 @@ export default {
   data () {
     return {
       uid: "",
+      stream: null,
+      videoFlagShow: false,
+      videoOpen: true,
       matchMakers:
       [
          // { name: 'aaa', status: false},
@@ -48,6 +58,7 @@ export default {
   methods: {
     callMatchmaker: function(mid){
       console.log("callMatchmaker button is click")
+      this.videoFlagShow = true
       rtc.socket.send(JSON.stringify({
           "eventName": "Call",
           "data": {
@@ -56,13 +67,38 @@ export default {
       }))
     },
     down: function(id){
+      rtc.closePeerConnection(rtc.peerConnection)
+      this.videoFlagShow = false
       rtc.socket.send(JSON.stringify({
           "eventName": "End",
           "data": {
               "id": id,
           }
       }))
+    },
+    closeVideo: function(){
+      this.videoOpen = false
+      document.getElementById('me').srcObject = null
+      rtc.socket.send(JSON.stringify({
+          "eventName": "CloseVideo",
+          "data": {
+              "uid": this.uid
+          }
+      }))
+
+    },
+    openVideo: function(){
+      this.videoOpen = true
+      document.getElementById('me').srcObject = this.stream
+      document.getElementById('me').play()
+      rtc.socket.send(JSON.stringify({
+          "eventName": "OpenVideo",
+          "data": {
+              "uid": this.uid
+          }
+      }))
     }
+
   },
   mounted () {
       var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
@@ -71,8 +107,18 @@ export default {
       this.uid = this.$route.params.userId
       console.log("this.uid：" + this.uid)
       rtc.connect(Conf.WS_ADDRESS + "/2/" + this.uid)
+
+      rtc.createStream({
+        "video": true,
+        "audio": true
+        // "uid" : data.uid,
+        // "mid" : data.mid,
+        // "type" : "user"
+      });
+
       //创建本地视频流成功
       rtc.on("stream_created", function(stream) {
+        that.stream = stream
         document.getElementById('me').srcObject = stream;
         document.getElementById('me').play();
       });
@@ -92,6 +138,10 @@ export default {
           // }
         }
         setTimeout(addVideo,200)
+      });
+
+      rtc.on('endAnswer', function (data) {
+          rtc.closePeerConnection(rtc.peerConnection)
       });
 
       rtc.on('matchMakerChangeStatus', function (data) {
@@ -124,13 +174,14 @@ export default {
       rtc.on('userCallAnswer', function(data) {
         console.log("receive UserCallAnswer");
         if (data.grabFlag === true){
-          rtc.createStream({
-            "video": true,
-            "audio": true,
-            "uid" : data.uid,
-            "mid" : data.mid,
-            "type" : "user"
-          });
+          rtc.emit("ready", data.mid, data.uid, "user");
+          // rtc.createStream({
+          //   "video": true,
+          //   "audio": true,
+          //   "uid" : data.uid,
+          //   "mid" : data.mid,
+          //   "type" : "user"
+          // });
         }
       })
     }
