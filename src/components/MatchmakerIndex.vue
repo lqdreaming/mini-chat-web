@@ -50,16 +50,18 @@ export default {
 
     //接收到其他用户的视频流
     rtc.on('pc_add_stream', function(stream) {
-      var addVideo = function(){
-        that.stream = stream
-        document.getElementById('other').srcObject = that.stream
-        if(typeof document.getElementById('other').srcObject == "undefined"){
-          // console.info("213132134444444-------5")
-          setTimeout(addVideo,200)
-        }
-        document.getElementById('other').play()
-      }
-      setTimeout(addVideo,200)
+      that.stream = stream
+      document.getElementById('other').srcObject = that.stream
+      document.getElementById('other').play()
+      // var addVideo = function(){
+      //   that.stream = stream
+      //   document.getElementById('other').srcObject = that.stream
+      //   // if(typeof document.getElementById('other').srcObject == "undefined"){
+      //   //   setTimeout(addVideo,200)
+      //   // }
+      //   document.getElementById('other').play()
+      // }
+      // setTimeout(addVideo,200)
     });
 
     rtc.on('closeVideo', function(stream) {
