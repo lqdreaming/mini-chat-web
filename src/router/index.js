@@ -4,6 +4,7 @@ import MatchmakerIndex from '@/components/MatchmakerIndex'
 import UserIndex from '@/components/UserIndex'
 import Index from '@/components/Index'
 import UserLogin from '@/components/UserLogin'
+import UserWelcome from '@/components/UserWelcome'
 import MatchmakerLogin from '@/components/MatchmakerLogin'
 
 Vue.use(Router)
@@ -31,9 +32,14 @@ export default new Router({
       component: MatchmakerIndex
     },
     {
-      path: '/UserIndex/:userId',
+      path: '/UserIndex',
       name: 'UserIndex',
       component: UserIndex
+    },
+    {
+      path: '/UserWelcome',
+      name: 'UserWelcome',
+      component: UserWelcome
     }
   ]
 })

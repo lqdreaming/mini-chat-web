@@ -1,14 +1,14 @@
 <template>
   <div class="index">
-    <el-input v-model="userId" placeholder="请输入用户id"></el-input>
-    <el-button type="primary" round  v-on:click="login">上线</el-button>
+    假装这里有视频有便签
+    <el-button type="primary" round  v-on:click="login">马上联系红娘</el-button>
   </div>
 </template>
 
 <script>
-import Store from '@/tool/store.js'
+
 export default {
-  name: 'Index',
+  name: 'UserWelcome',
   data () {
     return {
        userId: ''
@@ -16,9 +16,8 @@ export default {
   },
   methods: {
     login: function(){
-      Store.save(this.userId)
       this.$router.push({
-        name: 'UserWelcome'
+        name: 'UserIndex'
       })
     }
   }

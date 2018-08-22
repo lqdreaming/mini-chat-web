@@ -11,7 +11,7 @@
               <span>简介:</span>{{matchMaker.detail}}
               <div class="bottom clearfix">
                 <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">连线</el-button>
-                <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">忙碌</el-button>
+                <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button>
               </div>
             </div>
           </el-card>
@@ -41,6 +41,7 @@
 import SkyRTC from '@/js/SkyRTC-client.js'
 import Conf from '@/conf/conf.js'
 import axios from 'axios'
+import Store from '@/tool/store.js'
 
 var rtc = SkyRTC();
 
@@ -70,6 +71,9 @@ export default {
           }
       }))
     },
+    callBusy: function(){
+      this.$message.error('该红娘正在通话中，请稍等哦~');
+    },
     down: function(id){
       rtc.closePeerConnection(rtc.peerConnection)
       this.videoFlagShow = false
@@ -94,6 +98,7 @@ export default {
     openVideo: function(){
       this.videoOpen = true
       document.getElementById('me').srcObject = this.stream
+      document.getElementById('me').muted = true
       document.getElementById('me').play()
       rtc.socket.send(JSON.stringify({
           "eventName": "OpenVideo",
@@ -108,7 +113,7 @@ export default {
       var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
       console.info(this.userId)
       var that = this
-      this.uid = this.$route.params.userId
+      this.uid = Store.fetch()
       console.log("this.uid：" + this.uid)
 
       rtc.connect(Conf.WS_ADDRESS + "/2/" + this.uid)
