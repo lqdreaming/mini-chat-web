@@ -90,7 +90,7 @@ var SkyRTC = function() {
 
         //关闭连接
         socket.onclose = function(data) {
-            that.localMediaStream.close();
+            // that.localMediaStream.close();
             var pcs = that.peerConnection;
 
             that.closePeerConnection(pcs);
@@ -98,10 +98,12 @@ var SkyRTC = function() {
         };
 
         this.on("iceTo", function(data) {
-            var candidate = new nativeRTCIceCandidate(data);
-            var pc = that.peerConnection;
-            pc.addIceCandidate(candidate);
-            that.emit('get_ice_candidate', candidate);
+            var candidate = new nativeRTCIceCandidate(data)
+            var pc = that.peerConnection
+            if (pc != null){
+              pc.addIceCandidate(candidate)
+              that.emit('get_ice_candidate', candidate)
+            }
         });
 
         this.on('offerTo', function(data) {
@@ -139,14 +141,9 @@ var SkyRTC = function() {
         options.audio = !!options.audio;
 
         if (getUserMedia) {
-            // this.numStreams++;
             getUserMedia.call(navigator, options, function(stream) {
                     that.localMediaStream = stream;
-                    // that.initializedStreams++;
                     that.emit("stream_created", stream);
-                    // if (that.initializedStreams === that.numStreams) {
-                    // that.emit("ready", options.mid, options.uid, options.type);
-                    // }
                 },
                 function(error) {
                     that.emit("stream_create_error", error);

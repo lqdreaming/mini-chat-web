@@ -68,6 +68,7 @@ export default {
           "eventName": "Call",
           "data": {
               "mid": mid,
+              "userId": Store.fetch('uid')
           }
       }))
     },
@@ -77,6 +78,10 @@ export default {
     down: function(id){
       rtc.closePeerConnection(rtc.peerConnection)
       this.videoFlagShow = false
+      this.videoOpen = true
+      document.getElementById('me').srcObject = this.stream
+      document.getElementById('me').muted = true
+      // document.getElementById('me').play()
       rtc.socket.send(JSON.stringify({
           "eventName": "End",
           "data": {
@@ -99,7 +104,7 @@ export default {
       this.videoOpen = true
       document.getElementById('me').srcObject = this.stream
       document.getElementById('me').muted = true
-      document.getElementById('me').play()
+      // document.getElementById('me').play()
       rtc.socket.send(JSON.stringify({
           "eventName": "OpenVideo",
           "data": {
@@ -113,7 +118,7 @@ export default {
       var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
       console.info(this.userId)
       var that = this
-      this.uid = Store.fetch()
+      this.uid = Store.fetch('client-id')
       console.log("this.uid：" + this.uid)
 
       rtc.connect(Conf.WS_ADDRESS + "/2/" + this.uid)
@@ -130,7 +135,8 @@ export default {
       rtc.on("stream_created", function(stream) {
         that.stream = stream
         document.getElementById('me').srcObject = stream;
-        document.getElementById('me').play();
+        document.getElementById('me').muted = true
+        // document.getElementById('me').play();
       });
 
       //创建本地视频流失败
@@ -141,19 +147,15 @@ export default {
       //接收到其他用户的视频流
       rtc.on('pc_add_stream', function(stream) {
         document.getElementById('other').srcObject = stream;
-        document.getElementById('other').play();
-        // var addVideo = function(){
-        //   document.getElementById('other').srcObject = stream;
-        //   document.getElementById('other').play();
-        //   // if(isEmptyObject(document.getElementById('other').srcObject)){
-        //   //   setTimeout(addVideo,200)
-        //   // }
-        // }
-        // setTimeout(addVideo,200)
+        // document.getElementById('other').play();
       });
 
       rtc.on('endAnswer', function (data) {
           rtc.closePeerConnection(rtc.peerConnection)
+          rtc.peerConnection = null
+          that.$router.push({
+            name: 'UserWelcome'
+          })
       });
 
       rtc.on('matchMakerChangeStatus', function (data) {

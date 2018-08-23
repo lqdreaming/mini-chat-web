@@ -12,6 +12,7 @@
 <script>
 import Conf from '@/conf/conf.js'
 import axios from 'axios'
+import Store from '@/tool/store.js'
 
 export default {
   name: 'Index',
@@ -35,23 +36,15 @@ export default {
            that.$message.error('用户名或密码错了哦');
         }
         if (response.data.code === 0){
+          Store.save('mid', that.mid)
           that.$router.push({
-            name: 'MatchmakerIndex',
-            params: {
-                mid: that.mid
-             }
+            name: 'MatchmakerIndex'
           })
         }
       })
       .catch(function (response) {
         console.log(response);
       });
-      // Vue.http.post(Conf.API +　"/matchmakerInfo/login", {mid:this.mid, password:this.password}).then(function(data){
-      //   if(data.code === 0){
-      //       console.info("login success")
-      //   }
-      // })
-
 
     }
   }

@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     login: function(){
-      Store.save(this.userId)
+      Store.save('client-id',this.userId)
       this.$router.push({
         name: 'UserWelcome'
       })

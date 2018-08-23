@@ -1,34 +1,46 @@
 <template>
     <el-container>
     <el-header>
-      <el-button type="primary" round v-show="!videoStatus" v-on:click="up(uid)">上线</el-button>
+      工号:{{mid}}
+      <el-button type="primary" round v-show="!videoStatus" v-on:click="up()">上线</el-button>
       <el-button type="danger" round v-show="videoStatus" v-on:click="down(uid)">下线</el-button>
+      <el-button type="primary" round  v-on:click="closeChat(uid)">结束通话</el-button>
     </el-header>
     <el-container>
 
       <el-main>
         <div id="videos">
-          <video id="me" autoplay></video>
-          <div id="blackBroad"></div>
           <video id="other" autoplay></video>
-
+          <div id="blackBroad" v-show="blackBroadShow">用户关闭了摄像头</div>
+          <video id="me" autoplay></video>
         </div>
       </el-main>
       <el-aside width="500px">
         <h2>用户基本信息</h2>
-        性别：女
         <br>
-        年龄：24
+        状态：
+        <p v-if="userDetail.status == 1" style="color:green">已验证手机号</p>
+        <p v-else style="color:red">未验证手机号</p>
+
+        <br>
+        性别：{{userDetail.gender}}
+        <br>
+        年龄：{{userDetail.age}}
+        <br>
+        情感状态: {{userDetail.marriage}}
+        <br>
+        便签: {{userDetail.memo}}
+
         <br><br>
         <h2>记录小记</h2>
         <el-input
           type="textarea"
           :rows="8"
           placeholder="请输入小记内容"
-          v-model="textarea">
+          v-model="note">
         </el-input>
         <br><br>
-        <el-button type="primary" round>保存</el-button>
+        <el-button type="primary" round v-on:click="saveNote()">保存</el-button>
       </el-aside>
     </el-container>
   </el-container>
@@ -37,20 +49,27 @@
 <script>
 import SkyRTC from '@/js/SkyRTC-client.js'
 import Conf from '@/conf/conf.js'
+import axios from 'axios'
+import Store from '@/tool/store.js'
+
 var rtc = SkyRTC();
+
 export default {
   name: 'MatchmakerIndex',
   data () {
     return {
       stream: null,
       uid: "",
+      userId: "",
       mid: "",
-      videoStatus: true
+      note: "",
+      videoStatus: true,
+      blackBroadShow: false,
+      userDetail: "",
     }
   },
   methods: {
     down: function(id){
-      // rtc.closePeerConnection(rtc.peerConnection)
       this.videoStatus = false
       rtc.socket.send(JSON.stringify({
           "eventName": "End",
@@ -62,25 +81,45 @@ export default {
 
     },
     up: function(){
-      // rtc.closePeerConnection(rtc.peerConnection)
-      // rtc.socket.send(JSON.stringify({
-      //     "eventName": "End",
-      //     "data": {
-      //         "id": id
-      //     }
-      // }))
       rtc.connect(Conf.WS_ADDRESS + "/1/" + this.mid);
       this.videoStatus = true
+    },
+    closeChat: function(id){
+      rtc.socket.send(JSON.stringify({
+          "eventName": "End",
+          "data": {
+              "id": id,
+          }
+      }))
+    },
+    saveNote: function(){
+      var that = this
+      axios.post(Conf.API + '/note', {
+        mid: this.mid,
+        uid: this.userId,
+        note: this.note
+      })
+      .then(function (response) {
+        console.log(response.data.code);
+        if (response.data.code === 0){
+          that.$message.success('保存小记成功');
+        }else {
+          that.$message.error('保存小记失败');
+        }
+      })
+      .catch(function (response) {
+        that.$message.error('保存小记失败');
+      });
     }
   },
   mounted () {
     var videos = document.getElementById("videos");
     var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
     var that = this
-    this.mid = this.$route.params.mid
+    this.mid = Store.fetch('mid')
 
 
-    rtc.connect(Conf.WS_ADDRESS + "/1/" + this.$route.params.mid);
+    rtc.connect(Conf.WS_ADDRESS + "/1/" + this.mid);
 
     rtc.createStream({
       "video": true,
@@ -106,33 +145,40 @@ export default {
       that.stream = stream
       document.getElementById('other').srcObject = that.stream
       document.getElementById('other').play()
+      that.blackBroadShow = false
+      axios.get(Conf.API + '/userInfo/' + that.userId)
+        .then(function (response) {
+          var responseData = response.data.data
+          console.log(response.data.code);
+            if (response.data.code === 0){
+                console.info(responseData)
+                that.userDetail = responseData
+            }
+        })
+        .catch(function (response) {
+          console.log(response)
+        })
     });
 
-    rtc.on('closeVideo', function(stream) {
-      document.getElementById('other').srcObject = null
+    rtc.on('closeVideo', function() {
+      that.blackBroadShow = true
     });
 
-    rtc.on('openVideo', function(stream) {
-      document.getElementById('other').srcObject = that.stream
-      document.getElementById('me').play()
+    rtc.on('openVideo', function() {
+      that.blackBroadShow = false
     });
 
     rtc.on('endAnswer', function (data) {
-        rtc.closePeerConnection(rtc.peerConnection)
+      rtc.closePeerConnection(rtc.peerConnection)
+      rtc.peerConnection = null
     });
 
     rtc.on('matchMakerCallAnswer', function(data) {
-      console.log("receive matchMakerCallAnswer");
+      console.log("receive matchMakerCallAnswer")
       if (data.grabFlag === true){
         that.uid = data.uid
-        rtc.emit("ready", data.mid, data.uid, "matchmaker");
-      // rtc.createStream({
-      //   "video": true,
-      //   "audio": true,
-      //   "uid" : data.uid,
-      //   "mid" : data.mid,
-      //   "type" : "matchmaker"
-      // });
+        that.userId = data.userId
+        rtc.emit("ready", data.mid, data.uid, "matchmaker")
       }
     })
   }
@@ -164,34 +210,40 @@ index {
 }
 
 #videos {
-  position: absolute;
-  overflow: auto;
+  position: relative;
+  /* overflow: auto; */
   background-color: #aab8a3;
+  width: 665px;
+  height: 500px;
 }
 
 #me {
   position: absolute;
-  display: inline-block;
-  right:0px;
+  /* display: inline-block; */
+  right:0;
   bottom:0px;
   width: 200px;
   height: 150px;
+  background-color: #000000;
 }
 
 #blackBroad {
-  ackground-color: #aab8a3;
+  position: absolute;
+  background-color: #aab8a3;
+  /* display: inline-block; */
   right:0px;
   bottom:0px;
-  width: 670px;
+  width: 665px;
   height: 500px;
 }
 
 #other {
+  position: absolute;
   background-color: #aab8a3;
-  display: inline-block;
+  /* display: inline-block; */
   right:0px;
   bottom:0px;
-  width: 670px;
+  width: 665px;
   height: 500px;
 }
 </style>

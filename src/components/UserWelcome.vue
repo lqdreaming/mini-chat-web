@@ -6,19 +6,34 @@
 </template>
 
 <script>
-
+import axios from 'axios'
+import Store from '@/tool/store.js'
+import Conf from '@/conf/conf.js'
 export default {
   name: 'UserWelcome',
   data () {
     return {
-       userId: ''
+
     }
   },
   methods: {
     login: function(){
-      this.$router.push({
-        name: 'UserIndex'
-      })
+      var that = this
+      axios.get(Conf.API + '/userInfo/uid/get')
+        .then(function (response) {
+          var responseData = response.data.data
+          console.log(response.data.code);
+            if (response.data.code === 0){
+              Store.save('uid', responseData)
+              that.$router.push({
+                name: 'UserIndex'
+              })
+            }
+        })
+        .catch(function (response) {
+          that.$message.error('连接服务器失败');
+        })
+
     }
   }
 }

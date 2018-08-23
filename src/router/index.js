@@ -27,7 +27,7 @@ export default new Router({
       component: MatchmakerLogin
     },
     {
-      path: '/MatchmakerIndex/:mid',
+      path: '/MatchmakerIndex',
       name: 'MatchmakerIndex',
       component: MatchmakerIndex
     },

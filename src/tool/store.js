@@ -1,10 +1,9 @@
-const STORAGE_KEY="client-id"
 export default{
-    fetch(){
+    fetch(key){
         return JSON.parse(window.localStorage.getItem(
-            STORAGE_KEY||"[]"))
+            key||"[]"))
     },
-    save(items){
-        window.localStorage.setItem(STORAGE_KEY,JSON.stringify(items))
+    save(key, items){
+        window.localStorage.setItem(key,JSON.stringify(items))
     }
 }
