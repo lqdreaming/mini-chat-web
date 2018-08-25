@@ -1,5 +1,5 @@
 <template>
-  <div class="index">
+  <div class="index" style="margin-top: 450px;margin-left:auto;margin-right:auto">
     假装这里有视频有便签
     <el-button type="primary" round  v-on:click="login">马上联系红娘</el-button>
   </div>
