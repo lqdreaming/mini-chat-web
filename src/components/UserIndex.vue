@@ -1,5 +1,5 @@
 <template>
-  <div id="userIndex">
+  <div id="userIndex" style="margin-top: 100px">
     <div v-show="!videoFlagShow">
       <el-row>
         <el-col :span="6" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="2">
@@ -20,18 +20,24 @@
     </div>
 
     <div v-show="videoFlagShow">
-      <br>
+      <!-- <br>
       <el-button type="primary" round v-on:click="down(uid)">下线</el-button>
       <el-button type="danger" round v-show="videoOpen" v-on:click="closeVideo()">关闭摄像头</el-button>
       <el-button type="success" round v-show="!videoOpen" v-on:click="openVideo()">开启摄像头</el-button>
       <br>
       <br>
-      <br>
+      <br> -->
       <div id="videos">
         <video id="other" autoplay></video>
         <video id="me" autoplay></video>
+        <img id="redSmall" src="../../static/redCircleSmall.png"/>
+        <img id="blackSmall" src="../../static/blackCircleSmall.png"/>
+        <img id="redButton" src="../../static/redButton.png" v-on:click="down(uid)"/>
+        <img id="blackButton" src="../../static/blackButton.png" v-show="videoOpen" v-on:click="closeVideo()"/>
+        <img id="blackBig" src="../../static/blackCircleBig.png" v-show="!videoOpen" v-on:click="openVideo()"/>
       </div>
     </div>
+
 
 
   </div>
@@ -76,18 +82,32 @@ export default {
       this.$message.error('该红娘正在通话中，请稍等哦~');
     },
     down: function(id){
-      rtc.closePeerConnection(rtc.peerConnection)
-      this.videoFlagShow = false
-      this.videoOpen = true
-      document.getElementById('me').srcObject = this.stream
-      document.getElementById('me').muted = true
-      // document.getElementById('me').play()
-      rtc.socket.send(JSON.stringify({
-          "eventName": "End",
-          "data": {
-              "id": id,
-          }
-      }))
+      var that = this
+      this.$confirm('确认断开连线?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消'
+        }).then(() => {
+          rtc.closePeerConnection(rtc.peerConnection)
+          that.videoFlagShow = false
+          that.videoOpen = true
+          document.getElementById('me').srcObject = this.stream
+          document.getElementById('me').muted = true
+          // document.getElementById('me').play()
+          rtc.socket.send(JSON.stringify({
+              "eventName": "End",
+              "data": {
+                  "id": id,
+              }
+          }))
+          that.$router.push({
+            name: 'UserWelcome'
+          })
+        }).catch(() => {
+          // that.$message({
+          //   type: 'info',
+          //   message: '断开失败'
+          // });
+        });
     },
     closeVideo: function(){
       this.videoOpen = false
@@ -233,34 +253,79 @@ li {
 a {
   color: #42b983;
 }
-#userIndex{
-
-}
 #videos {
-  position: absolute;
-  /* overflow: auto; */
-  border: 3px solid #0f0f0f;
+  position: relative;
+  margin-right: 1400px;
+  /* margin-top: 0px; */
 }
 
 
 #me{
+  position: absolute;
   display: inline-block;
-  /* width: 32%; */
+  margin-left: 1051px;
+  margin-top: 500px;
   object-fit: cover;
   width: 400px;
   height: 400px;
-  border: 3px solid #0f0f0f;
+  border-radius:50%;
+}
+
+#blackBig{
+  position: absolute;
+  display: inline-block;
+  margin-left: 1050px;
+  margin-top: 500px;
+  object-fit: cover;
+  width: 402px;
+  height: 402px;
+}
+#blackSmall{
+  position: absolute;
+  display: inline-block;
+  margin-left: 1050px;
+  margin-top: 500px;
+  object-fit: cover;
+  width: 401px;
+  height: 401px;
+  /* border: 3px solid #0f0f0f; */
+  border-radius:50%;
+}
+
+
+#redSmall{
+  position: absolute;
+  display: inline-block;
+  /* margin-right: 100px; */
+  width: 901px;
+  height: 901px;
+  /* border: 3px solid #0f0f0f; */
   border-radius:50%;
 }
 
 #other{
+  position: absolute;
   display: inline-block;
-  /* width: 32%; */
+  margin-left: 1px;
   object-fit: cover;
-  width: 800px;
-  height: 800px;
-  border: 3px solid #0f0f0f;
+  width: 900px;
+  height: 900px;
+  /* border: 3px solid #0f0f0f; */
   border-radius:50%;
+}
+
+#redButton{
+  position: absolute;
+  display: inline-block;
+  margin-left: 400px;
+  margin-top: 750px;
+}
+
+#blackButton{
+  position: absolute;
+  display: inline-block;
+  margin-left: 1225px;
+  margin-top: 815px;
 }
 
 .bottom {
@@ -272,6 +337,4 @@ a {
   width: 100%;
   display: block;
 }
-
-
 </style>

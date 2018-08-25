@@ -25,4 +25,16 @@ export default {
   margin: 0px;
   padding: 0;
 }
+.el-message-box{
+  border-radius: 25px;
+}
+.el-button--primary {
+    border-radius: 5px;
+}
+.el-button {
+    border-radius: 5px;
+}
+.el-main {
+    width: 500px;
+}
 </style>
