@@ -1,6 +1,6 @@
 <template>
     <el-container>
-    <el-header>
+    <el-header style="margin-top:50px">
       工号:{{mid}}
       <el-button type="primary" round v-show="!videoStatus" v-on:click="up()">上线</el-button>
       <el-button type="danger" round v-show="videoStatus" v-on:click="down(uid)">下线</el-button>
@@ -8,14 +8,14 @@
     </el-header>
     <el-container>
 
-      <el-main>
+      <el-main style="margin-left:100px">
         <div id="videos">
           <video id="other" autoplay></video>
           <div id="blackBroad" v-show="blackBroadShow">用户关闭了摄像头</div>
           <video id="me" autoplay></video>
         </div>
       </el-main>
-      <el-aside width="500px">
+      <el-aside width="500px" style="margin-right:150px">
         <h2>用户基本信息</h2>
         <br>
         状态：
@@ -124,9 +124,6 @@ export default {
     rtc.createStream({
       "video": true,
       "audio": true
-      // "uid" : data.uid,
-      // "mid" : data.mid,
-      // "type" : "user"
     });
     //创建本地视频流成功
     rtc.on("stream_created", function(stream) {
@@ -188,7 +185,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
-  color: #409EFF;
+  color: #ebebeb;
 }
 ul {
   list-style-type: none;
@@ -213,8 +210,8 @@ index {
   position: relative;
   /* overflow: auto; */
   background-color: #aab8a3;
-  width: 665px;
-  height: 500px;
+  width: 998px;
+  height: 750px;
 }
 
 #me {
@@ -222,8 +219,8 @@ index {
   /* display: inline-block; */
   right:0;
   bottom:0px;
-  width: 200px;
-  height: 150px;
+  width: 300px;
+  height: 225px;
   background-color: #000000;
 }
 
@@ -233,8 +230,8 @@ index {
   /* display: inline-block; */
   right:0px;
   bottom:0px;
-  width: 665px;
-  height: 500px;
+  width: 998px;
+  height: 750px;
 }
 
 #other {
@@ -243,7 +240,7 @@ index {
   /* display: inline-block; */
   right:0px;
   bottom:0px;
-  width: 665px;
-  height: 500px;
+  width: 998px;
+  height: 750px;
 }
 </style>

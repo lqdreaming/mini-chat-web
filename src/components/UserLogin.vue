@@ -1,7 +1,7 @@
 <template>
-  <div class="index">
-    <el-input v-model="userId" placeholder="请输入用户id"></el-input>
-    <el-button type="primary" round  v-on:click="login">上线</el-button>
+  <div class="UserLogin">
+    <el-input v-model="userId" style="margin-top: 450px;width:500px;margin-left:auto;margin-right:auto" placeholder="请输入机器id"></el-input>
+    <el-button type="primary" style="margin-left: 40px" round v-on:click="login">上线</el-button>
   </div>
 </template>
 

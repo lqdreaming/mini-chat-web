@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="userIndex">
     <div v-show="!videoFlagShow">
       <el-row>
         <el-col :span="6" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="2">
@@ -28,8 +28,8 @@
       <br>
       <br>
       <div id="videos">
-        <video id="me" autoplay></video>
         <video id="other" autoplay></video>
+        <video id="me" autoplay></video>
       </div>
     </div>
 
@@ -233,16 +233,34 @@ li {
 a {
   color: #42b983;
 }
+#userIndex{
+
+}
 #videos {
   position: absolute;
-  overflow: auto;
+  /* overflow: auto; */
   border: 3px solid #0f0f0f;
 }
 
-#videos video {
+
+#me{
   display: inline-block;
-  width: 32%;
+  /* width: 32%; */
+  object-fit: cover;
+  width: 400px;
+  height: 400px;
   border: 3px solid #0f0f0f;
+  border-radius:50%;
+}
+
+#other{
+  display: inline-block;
+  /* width: 32%; */
+  object-fit: cover;
+  width: 800px;
+  height: 800px;
+  border: 3px solid #0f0f0f;
+  border-radius:50%;
 }
 
 .bottom {

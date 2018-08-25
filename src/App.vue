@@ -12,11 +12,17 @@ export default {
 
 <style>
 #app {
+  background:url('../static/background.jpg') no-repeat;
+  background-size: 1920px 1080px;
+  overflow: hidden;
+  height: 1080px;
+  width: 1920px;
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 0px;
+  padding: 0;
 }
 </style>

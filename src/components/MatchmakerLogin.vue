@@ -1,5 +1,5 @@
 <template>
-  <div class="index" style="width:500px;margin-left:auto;margin-right:auto">
+  <div class="index" style="width:500px;margin-top:300px;margin-left:auto;margin-right:auto">
     <h2>红娘登录</h2>
     <el-input v-model="mid" clearable placeholder="请输入红娘工号"></el-input>
     <el-input v-model="password"  clearable type="password"placeholder="请输入红娘密码"></el-input>
@@ -55,7 +55,7 @@ export default {
 <style scoped>
 h1, h2 {
   font-weight: normal;
-  color: #409EFF;
+  color: #ffffff;
 }
 ul {
   list-style-type: none;

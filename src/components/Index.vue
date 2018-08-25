@@ -1,7 +1,7 @@
 <template>
   <div class="index">
-    <el-button type="primary" round v-on:click="user">用户端</el-button>
-    <el-button type="primary" round v-on:click="matchmaker">红娘端</el-button>
+    <el-button style="margin-top: 450px;margin-left:auto;margin-right:auto" type="primary" round v-on:click="user">用户端</el-button>
+    <el-button style="margin-top: 450px;margin-left:50px;margin-right:auto" type="primary" round v-on:click="matchmaker">红娘端</el-button>
   </div>
 </template>
 
