@@ -1,49 +1,49 @@
 <template>
-    <el-container>
-    <el-header style="margin-top:50px">
-      工号:{{mid}}
-      <el-button type="primary" round v-show="!videoStatus" v-on:click="up()">上线</el-button>
-      <el-button type="danger" round v-show="videoStatus" v-on:click="down(uid)">下线</el-button>
-      <el-button type="primary" round  v-on:click="closeChat(uid)">结束通话</el-button>
-    </el-header>
-    <el-container>
 
-      <el-main style="margin-left:100px">
-        <div id="videos">
+    <div>
+      <div style="margin-top:50px">
+        工号:{{mid}}
+        <el-button type="primary" round v-show="!videoStatus" v-on:click="up(uid)">上线</el-button>
+        <el-button type="danger" round v-show="videoStatus" v-on:click="down(uid)">下线</el-button>
+        <el-button type="primary" round  v-on:click="closeChat(uid)">结束通话</el-button>
+        <el-button type="info" round  v-on:click="logout()">注销登录</el-button>
+      </div>
+      <div style="margin-top:50px;">
+        <div id="videos" style=" display:inline-block">
           <video id="other" autoplay></video>
           <div id="blackBroad" v-show="blackBroadShow">用户关闭了摄像头</div>
           <video id="me" autoplay></video>
         </div>
-      </el-main>
-      <el-aside width="500px" style="margin-right:150px">
-        <h2>用户基本信息</h2>
-        <br>
-        状态：
-        <p v-if="userDetail.status == 1" style="color:green">已验证手机号</p>
-        <p v-else style="color:red">未验证手机号</p>
+        <div style="width:500px; margin-left:200px;vertical-align:top;display:inline-block">
+          <h2>用户基本信息</h2>
+          <br>
+          状态：
+          <p v-if="userDetail.status == 1" style="color:green">已验证手机号</p>
+          <p v-else style="color:red">未验证手机号</p>
 
-        <br>
-        性别：{{userDetail.gender}}
-        <br>
-        年龄：{{userDetail.age}}
-        <br>
-        情感状态: {{userDetail.marriage}}
-        <br>
-        便签: {{userDetail.memo}}
+          <br>
+          性别：{{userDetail.gender}}
+          <br>
+          年龄：{{userDetail.age}}
+          <br>
+          情感状态: {{userDetail.marriage}}
+          <br>
+          便签: {{userDetail.memo}}
 
-        <br><br>
-        <h2>记录小记</h2>
-        <el-input
-          type="textarea"
-          :rows="8"
-          placeholder="请输入小记内容"
-          v-model="note">
-        </el-input>
-        <br><br>
-        <el-button type="primary" round v-on:click="saveNote()">保存</el-button>
-      </el-aside>
-    </el-container>
-  </el-container>
+          <br><br>
+          <h2>记录小记</h2>
+          <el-input
+            type="textarea"
+            :rows="8"
+            placeholder="请输入小记内容"
+            v-model="note">
+          </el-input>
+          <br><br>
+          <el-button type="primary" round v-on:click="saveNote()">保存</el-button>
+        </div>
+      </div>
+    </div>
+  
 </template>
 
 <script>
@@ -69,6 +69,17 @@ export default {
     }
   },
   methods: {
+    logout: function(id){
+      rtc.socket.send(JSON.stringify({
+          "eventName": "End",
+          "data": {
+              "id": id,
+          }
+      }))
+      this.$router.push({
+        name: 'MatchmakerLogin'
+      })
+    },
     down: function(id){
       this.videoStatus = false
       rtc.socket.send(JSON.stringify({
@@ -78,7 +89,6 @@ export default {
           }
       }))
       rtc.socket.close()
-
     },
     up: function(){
       rtc.connect(Conf.WS_ADDRESS + "/1/" + this.mid);
