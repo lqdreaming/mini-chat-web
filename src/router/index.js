@@ -5,7 +5,6 @@ import UserIndex from '@/components/UserIndex'
 import Index from '@/components/Index'
 import UserLogin from '@/components/UserLogin'
 import UserWelcome from '@/components/UserWelcome'
-import Register from '@/components/Register'
 import UserInfoInput from '@/components/UserInfoInput'
 import MatchmakerLogin from '@/components/MatchmakerLogin'
 

@@ -25,9 +25,9 @@ export default {
       })
     },
           register: function(){
-      this.$router.push({
-        path:'/Register'
-      })
+      // this.$router.push({
+      //   path:'/Register'
+      // })
     },
 
     login: function(){
