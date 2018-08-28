@@ -6,7 +6,7 @@ import Index from '@/components/Index'
 import UserLogin from '@/components/UserLogin'
 import UserWelcome from '@/components/UserWelcome'
 import MatchmakerLogin from '@/components/MatchmakerLogin'
-
+import zaDailog from '@/components/zaDailog'
 Vue.use(Router)
 
 export default new Router({
@@ -40,6 +40,11 @@ export default new Router({
       path: '/UserWelcome',
       name: 'UserWelcome',
       component: UserWelcome
+    },
+    {
+      path: '/zaDailog',
+      name: 'zaDailog',
+      component: zaDailog
     }
   ]
 })
