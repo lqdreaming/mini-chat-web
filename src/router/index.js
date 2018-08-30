@@ -8,9 +8,8 @@ import UserWelcome from '@/components/UserWelcome'
 import UserInfoInput from '@/components/UserInfoInput'
 import MatchmakerLogin from '@/components/MatchmakerLogin'
 import Register from '@/components/Register'
-// import CountdownButton from '@/components/CountdownButton'
-// import keyboard from '@/components/keyboard'
 
+import zaDailog from '@/components/zaDailog'
 Vue.use(Router)
 
 export default new Router({
@@ -54,16 +53,11 @@ export default new Router({
       path: '/Register',
       name: 'Register',
       component: Register
+    },
+    {
+      path: '/zaDailog',
+      name: 'zaDailog',
+      component: zaDailog
     }
-    // {
-    //   path: '/CountdownButton',
-    //   name: 'CountdownButton',
-    //   component: CountdownButton
-    // },
-    // {
-    //   path: '/keyboard',
-    //   name: 'keyboard',
-    //   component: keyboard
-    // }
   ]
 })

@@ -29,11 +29,12 @@ export default {
   border-radius: 25px;
 }
 .el-button--primary {
-    border-radius: 5px;
+  border-radius: 25px;
 }
 .el-button {
-    border-radius: 5px;
+    border-radius: 10px;
 }
+
 .el-main {
     width: 500px;
 }
