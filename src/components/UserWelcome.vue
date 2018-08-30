@@ -3,7 +3,7 @@
     假装这里有视频有便签
     <el-button type="primary" round  v-on:click="login">马上联系红娘</el-button>
     <el-button type="primary" round  v-on:click="inputUserInfo">输入用户信息</el-button>
-     <el-button type="primary" round  v-on:click="register">输入用户信息</el-button>
+     <el-button type="primary" round  v-on:click="register">注册</el-button>
   </div>
 </template>
 
@@ -25,9 +25,9 @@ export default {
       })
     },
           register: function(){
-      // this.$router.push({
-      //   path:'/Register'
-      // })
+      this.$router.push({
+        path:'/Register'
+      })
     },
 
     login: function(){

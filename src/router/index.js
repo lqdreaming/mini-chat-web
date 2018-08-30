@@ -7,6 +7,9 @@ import UserLogin from '@/components/UserLogin'
 import UserWelcome from '@/components/UserWelcome'
 import UserInfoInput from '@/components/UserInfoInput'
 import MatchmakerLogin from '@/components/MatchmakerLogin'
+import Register from '@/components/Register'
+// import CountdownButton from '@/components/CountdownButton'
+// import keyboard from '@/components/keyboard'
 
 Vue.use(Router)
 
@@ -46,6 +49,21 @@ export default new Router({
       path: '/UserInfoInput',
       name: 'UserInfoInput',
       component: UserInfoInput
+    },
+    {
+      path: '/Register',
+      name: 'Register',
+      component: Register
     }
+    // {
+    //   path: '/CountdownButton',
+    //   name: 'CountdownButton',
+    //   component: CountdownButton
+    // },
+    // {
+    //   path: '/keyboard',
+    //   name: 'keyboard',
+    //   component: keyboard
+    // }
   ]
 })

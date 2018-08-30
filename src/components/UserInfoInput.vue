@@ -76,12 +76,12 @@
           var that = this
 
           var uid = Store.fetch('uid')
-          if (uid==null) {
+          if (uid == null) {
             uid = 'bd235faf-f82f-41bd-bdfb-dda8e9485e37'
           }
           console.log('submitForm：' + Store.fetch('uid'))
           axios.post(Conf.API + '/userInfo', {
-            uid:uid,
+            uid: uid,
             gender: this.gender,
             marriage: this.marriage
           })
@@ -90,6 +90,7 @@
 
               if (response.data.code === 0) {
                 that.$message.success('保存用户基本信息成功')
+                // 需要跳转到其他界面
               } else {
                 that.$message.error('保存用户基本信息失败')
               }
