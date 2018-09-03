@@ -1,42 +1,44 @@
 <template>
-  <div class="index" ref="ruleForm">
+  <div class="index">
     <div>
-      <div class="user-gender">
-        <div>
-          <div class="return-btn"></div>
+      <div class="user-info">
+        <div >
+          <div class="return-btn"  @click="backHome()"></div>
         </div>
         <div>
           <div class="user-gender-title">
             <!--<div>男神/女神</div>-->
             <div>多大啦</div>
           </div>
-          <!--<div class="user-gender-sex">-->
-          <!--<div data-sex="1" class="male" @click="selectGenger(1)">&lt;!&ndash;&ndash;&gt;</div>-->
-          <!--<div data-sex="2" class="female" @click="selectGenger(2)">&lt;!&ndash;&ndash;&gt;</div>-->
+          <!--<div>{{ruleForm.index}}</div>-->
+          <!--<div class="user-gender" v-if="index===0">-->
+            <!--<div data-sex="1" class="male" @click="selectGenger(1)"></div>-->
+            <!--<div data-sex="2" class="female" @click="selectGenger(2)"></div>-->
           <!--</div>-->
 
 
-          <!--<div class="user-gender-sex">-->
-          <!--<div class="box-user-info-radio-group age-radio">-->
-          <!--<el-slider v-model="ruleForm.age" id="el_slider_age" show-input></el-slider>-->
-          <!--</div>-->
-          <!--</div>-->
-
-          <div class="box-user-info-radio-group">
-            <div class="box-radio-group"><label class="radio-item"><input type="radio" name="marriage" value="1"
-                                                                          hidden="hidden">
-              <div class="radio-btn" @click="selectMarriage(1)"></div>
-              <strong>单身</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="2"
-                                                                           hidden="hidden">
-              <div class="radio-btn" @click="selectMarriage(2)"></div>
-              <strong>热恋</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="3"
-                                                                           hidden="hidden">
-              <div class="radio-btn" @click="selectMarriage(3)"></div>
-              <strong>已婚</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="4"
-                                                                           hidden="hidden">
-              <div class="radio-btn" @click="selectMarriage(4)"></div>
-              <strong>离异</strong></label></div>
+          <div class="user-gender-sex">
+          <div class="box-user-info-radio-group age-radio">
+          <el-slider v-model="ruleForm.age" id="el_slider_age" height="400px" show-input></el-slider>
           </div>
+          </div>
+          <input id="slider"  type="range" min="0" max="550" step="1"  />
+
+          <!--<div class="user-marriage" v-if="index===1">-->
+            <!--<div class="box-radio-group"><label class="radio-item"><input type="radio" name="marriage" value="1"-->
+                                                                          <!--hidden="hidden">-->
+              <!--<div class="radio-btn" @click="selectMarriage(1)"></div>-->
+              <!--<strong>单身</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="2"-->
+                                                                           <!--hidden="hidden">-->
+              <!--<div class="radio-btn" @click="selectMarriage(2)"></div>-->
+              <!--<strong>热恋</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="3"-->
+                                                                           <!--hidden="hidden">-->
+              <!--<div class="radio-btn" @click="selectMarriage(3)"></div>-->
+              <!--<strong>已婚</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="4"-->
+                                                                           <!--hidden="hidden">-->
+              <!--<div class="radio-btn" @click="selectMarriage(4)"></div>-->
+              <!--<strong>离异</strong></label></div>-->
+          <!--</div>-->
 
         </div>
       </div> <!----></div>
@@ -79,6 +81,7 @@
   import Conf from '@/conf/conf.js'
   import axios from 'axios'
   import Store from '@/tool/store.js'
+  import index from '../router'
 
   export default {
     data () {
@@ -97,8 +100,9 @@
         ruleForm: {
           gender: '1',
           age: '20',
-          marriage: '2'
-        }
+          marriage: '2',
+        },
+        index:0
         // , rules: {
         //   age: [
         //     {validator: validateAge, trigger: 'blur'}
@@ -107,7 +111,13 @@
       }
     },
     methods: {
+      backHome() {
+        alert("回到主页");
+      },
+
+
       selectGenger (gender) {
+        this.index++;
         this.gender = gender
         alert(gender)
       },
@@ -181,15 +191,15 @@
     top: -400px;
     right: -600px;
     z-index: 66;
-    background: url("../assets/return-btn.png") 0 0/100% no-repeat;
+    background: url("../assets/return-btn.png") no-repeat;
   }
 
-  .user-gender-sex {
+  .user-gender {
     display: flex;
     justify-content: center;
   }
 
-  .user-gender {
+  .user-info {
     position: absolute;
     left: 0;
     right: 0;
@@ -199,7 +209,7 @@
     background-size: cover;
   }
 
-  .user-gender > div {
+  .user-info > div {
     position: absolute;
     left: 50%;
     top: 50%;
@@ -244,8 +254,38 @@
 
   #el_slider_age {
     padding: 250px 60px 0;
-    width: 400px;
+    width: 800px;
+    height: 400px;
   }
+
+
+  input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+  }
+
+  input::-webkit-slider-runnable-track {
+    height: 10.1px;
+    border-radius: 10px; /*将轨道设为圆角的*/
+    /*box-shadow: 0 1px 1px #def3f8, inset 0 .125em .125em #0d1112; !*轨道内置阴影效果*!*/
+  }
+
+  input::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 50px;
+    width: 25px;
+    margin-top: -5px; /*使滑块超出轨道部分的偏移量相等*/
+    background: #ffffff;
+    border-radius: 15px; /*外观设置为圆形*/
+    /*transform: translateX(-50%);*/
+    border: 2px solid #fff;
+    background: #F14E87;
+  }
+  input{
+    -webkit-appearance: none;
+    width: 1000px;
+    border-radius: 10px; /*这个属性设置使填充进度条时的图形为圆角*/
+  }
+
 
   /*.box-slider {*/
   /*padding: 0;*/
@@ -272,7 +312,7 @@
   /*}*/
 
   /*--------------年龄选择器----------------------*/
-  .box-user-info-radio-group {
+  .user-marriage {
     width: 1250px;
     height: 350px;
     background: url(../assets/info-bg.png) no-repeat;

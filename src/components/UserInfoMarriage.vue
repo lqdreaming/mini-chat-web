@@ -1,7 +1,7 @@
 <template>
   <div class="index" ref="ruleForm">
     <div>
-      <div class="user-gender">
+      <div class="user-info">
         <div>
           <div class="return-btn"></div>
         </div>
@@ -166,12 +166,12 @@
     background: url("../assets/return-btn.png") 0 0/100% no-repeat;
   }
 
-  .user-gender-sex {
+  .user-gender {
     display: flex;
     justify-content: center;
   }
 
-  .user-gender {
+  .user-info {
     position: absolute;
     left: 0;
     right: 0;
@@ -181,7 +181,7 @@
     background-size: cover;
   }
 
-  .user-gender > div {
+  .user-info > div {
     position: absolute;
     left: 50%;
     top: 50%;
