@@ -116,8 +116,17 @@ export default {
       this.showCancelDailog = false
     },
     commitReason: function(textarea){
+      var that = this
       this.showInputDailog = false
       console.info("reason:" + textarea)
+
+      rtc.socket.send(JSON.stringify({
+          "eventName": "IsOk",
+          "data": {
+              "mid": that.mid,
+              "isOk": true,
+          }
+      }))
     },
     // rejectVideo: function(done){
     //   var that = this
@@ -140,20 +149,21 @@ export default {
     doCountDown: function(){
       var that = this
       this.showDailog = false
-      rtc.socket.send(JSON.stringify({
-          "eventName": "SureCall",
-          "data": {
-              "mid": that.mid,
-              "uid": that.uid,
-              "userId": that.userId,
-              "grabFlag": false
-          }
-      }))
+
       //write the reject reason
       if (this.chatFlag == true){
         this.chatFlag = false
       }else {
         this.showInputDailog = true
+        rtc.socket.send(JSON.stringify({
+            "eventName": "SureCall",
+            "data": {
+                "mid": that.mid,
+                "uid": that.uid,
+                "userId": that.userId,
+                "grabFlag": false
+            }
+        }))
       }
     },
     receiveVideo: function(){
@@ -172,12 +182,13 @@ export default {
       }))
     },
     closeChat: function(id){
+      var that = this
       this.showInputDailog = true
       this.showCancelDailog = false
       rtc.socket.send(JSON.stringify({
           "eventName": "End",
           "data": {
-              "id": id,
+              "id": this.mid,
           }
       }))
     },

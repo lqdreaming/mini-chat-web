@@ -1,21 +1,36 @@
 <template>
   <div id="userIndex" style="margin-top: 100px">
     <div v-show="!videoFlagShow">
+      <div class="matchMakerListTitle">
+        请选择你要联系的老师
+      </div>
+      <br><br><br><br><br><br>
       <el-row>
-        <el-col :span="6" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="2">
-          <el-card :body-style="{ padding: '0px' }">
+        <el-col :span="5" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="2">
+          <el-card shadow="always" :body-style="{ padding: '0px' }">
             <img v-bind:src="matchMaker.picUrl" class="image">
             <div style="padding: 14px;">
-              {{matchMaker.name}}
+              <b>{{matchMaker.name}}</b>
               <br>
-              <span>简介:</span>{{matchMaker.detail}}
-              <div class="bottom clearfix">
+              <div style="height:80px;margin-top:10px">
+                <b>简介:</b>{{matchMaker.detail}}
+              </div>
+              <div style="margin-top:10px">
                 <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">连线</el-button>
                 <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button>
               </div>
             </div>
           </el-card>
         </el-col>
+        <el-col :span="5" :offset="1" v-show="matchMakers[0] != null">
+          <el-card shadow="always">
+            <img style="margin-top:100px" src="../../static/question.png">
+            <div style="margin-top:80px">
+              <el-button type="primary" v-on:click="callMatchmakerRandom()">随机连线</el-button>
+            </div>
+          </el-card>
+        </el-col>
+
       </el-row>
     </div>
 
@@ -80,6 +95,19 @@ export default {
               "userId": Store.fetch('uid')
           }
       }))
+    },
+    callMatchmakerRandom: function(){
+      var flag = false
+      for (var matchMaker of this.matchMakers){
+        if (matchMaker.status == true){
+          this.callMatchmaker(matchMaker.mid)
+          flag = true
+          break
+        }
+      }
+      if(!flag){
+        this.$message.error('目前暂时没有空闲中的红娘，请耐心等待');
+      }
     },
     callBusy: function(){
       this.$message.error('该红娘正在通话中，请稍等哦~');
@@ -422,6 +450,20 @@ a {
 
 .image {
   width: 100%;
+  height: 300px;
   display: block;
+}
+
+.matchMakerListTitle{
+  color: #ffffff;
+  font-size: 35px;
+}
+.el-card {
+  height: 490px;
+  width: 350px;
+}
+.el-button {
+  width: 120px;
+  font-size: 18px;
 }
 </style>
