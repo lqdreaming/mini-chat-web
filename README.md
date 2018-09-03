@@ -1,6 +1,14 @@
 # mini-project
 
 > A Vue.js project
+>启动服务：https://10.1.12.127:8123
+>登陆页面：https://10.1.12.137:8080
+
+
+## 用到的框架
+* Vue教程：
+    * [01、Vue-入门基础 - 简书 ](https://www.jianshu.com/p/611f638ed990)
+    * [史上最详细VUE2.0全套demo讲解 基础1（模板语法） - 掘金 ](https://juejin.im/post/58d4a19e5c497d0057e9afc0)
 
 ## Build Setup
 
