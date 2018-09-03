@@ -22,21 +22,8 @@
           <!--</div>-->
           <!--</div>-->
 
-          <div class="box-user-info-radio-group">
-            <div class="box-radio-group"><label class="radio-item"><input type="radio" name="marriage" value="1"
-                                                                          hidden="hidden">
-              <div class="radio-btn" @click="selectMarriage(1)"></div>
-              <strong>单身</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="2"
-                                                                           hidden="hidden">
-              <div class="radio-btn" @click="selectMarriage(2)"></div>
-              <strong>热恋</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="3"
-                                                                           hidden="hidden">
-              <div class="radio-btn" @click="selectMarriage(3)"></div>
-              <strong>已婚</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="4"
-                                                                           hidden="hidden">
-              <div class="radio-btn" @click="selectMarriage(4)"></div>
-              <strong>离异</strong></label></div>
-          </div>
+
+
 
         </div>
       </div> <!----></div>
@@ -110,11 +97,6 @@
       selectGenger (gender) {
         this.gender = gender
         alert(gender)
-      },
-
-      selectMarriage (marriage) {
-        this.marriage = marriage
-        alert(marriage)
       }
 
     }
@@ -247,6 +229,8 @@
     width: 400px;
   }
 
+
+
   /*.box-slider {*/
   /*padding: 0;*/
   /*align-items: center;*/
@@ -271,58 +255,5 @@
   /*background: #5eced6;*/
   /*}*/
 
-  /*--------------年龄选择器----------------------*/
-  .box-user-info-radio-group {
-    width: 1250px;
-    height: 350px;
-    background: url(../assets/info-bg.png) no-repeat;
-    padding: 194px 40px 0;
-    color: #fff;
-  }
-
-  .box-radio-group {
-    height: 10px;
-    padding: 0 15px;
-    background: #fff;
-    position: relative;
-    display: flex;
-    justify-content: space-between;
-    border-radius: 6px;
-    font-size: 15px;
-  }
-
-  .radio-item {
-    display: block;
-    text-align: center;
-    width: 105px;
-    height: 0;
-    padding-top: 105px;
-    position: relative;
-  }
-
-  .radio-btn {
-    position: absolute;
-    left: 50%;
-    top: 0;
-    transform: translate(-50%, -50%);
-    width: 70px;
-    height: 70px;
-    border: 4px solid #fff;
-    border-radius: 50%;
-    margin: 0 auto;
-    background: #FFB3C4;
-    transition: all 0.1s ease;
-  }
-
-  strong {
-    white-space: nowrap;
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    width: 93px;
-    height: 46px;
-    padding: 0 41px 0 53px;
-    transform: translate(-50%, 23px);
-  }
 
 </style>
