@@ -175,13 +175,15 @@ li {
   right: 0;
 }
 .content{
-  height: 125px;
+  height: 95px;
   font-size:19px;
   color: #666666;
-  /* margin-top:15px; */
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-top:26px;
   vertical-align:middle;
-  text-align:center;
-  line-height: 125px;
+  text-align:left;
+  line-height: 20px;
 }
 .buttom{
   position: absolute;

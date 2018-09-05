@@ -1,23 +1,35 @@
 <template>
   <div id="userIndex" style="margin-top: 100px">
+    <div v-show="noMatchmakerDailog && !videoFlagShow && matchMakers[0] == null">
+      <zaDailog  @doCancel="leave" :bgClose=false @doBg="closeDailog" cancel="离开" confirm="确定" message="很抱歉，目前没有红娘在服务中，服务时间为09:00-22:00。请您留下手机号，情感咨询师将在第一时间与您取得联系。"></zaDailog>
+    </div>
+
     <div v-show="!videoFlagShow">
-      <div class="matchMakerListTitle">
+      <div v-show="matchMakers[0] != null" class="matchMakerListTitle">
         请选择你要联系的老师
+        <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
       </div>
+
       <br><br><br><br><br><br>
       <el-row>
         <el-col :span="5" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="2">
           <el-card shadow="always" :body-style="{ padding: '0px' }">
             <img v-bind:src="matchMaker.picUrl" class="image">
             <div style="padding: 14px;">
-              <b>{{matchMaker.name}}</b>
-              <br>
-              <div style="height:80px;margin-top:10px">
-                <b>简介:</b>{{matchMaker.detail}}
+              <div id="matchMakerDetial">
+                <b>{{matchMaker.name}}</b>
+                <br>
+                <div style="height:80px;margin-top:10px">
+                  <b>简介:</b>{{matchMaker.detail}}
+                </div>
               </div>
+
               <div style="margin-top:10px">
                 <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">连线</el-button>
-                <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button>
+                <!-- <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button> -->
+                <div v-show="!matchMaker.status" id="busy">
+                  忙碌
+                </div>
               </div>
             </div>
           </el-card>
@@ -35,6 +47,9 @@
     </div>
 
     <div v-show="videoFlagShow">
+      <div v-show="onChat" id="timeOnChat">
+        {{minShow}}:{{secondShow}}
+      </div>
       <div id="videos">
         <video id="other" autoplay></video>
         <video id="me" autoplay></video>
@@ -49,6 +64,9 @@
       </div>
     </div>
     <zaDailog v-if="showDailog" @doCancel="closeDailog" @doBg="closeDailog" confirm="断开" message="确认断开连线?" @doConfirm="over"></zaDailog>
+    <zaDailog v-if="noMatchmaker":showCancel=false  @doBg="closeDailog"  @doConfirm="closeDailog" message="目前沒有空闲中的红娘，请耐心等待"></zaDailog>
+    <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="请问您还在吗？"></zaDailog>
+
   </div>
 </template>
 
@@ -74,6 +92,15 @@ export default {
       callContent: '正在连线红娘中  请耐心等待',
       countDown: 20,
       showDailog: false,
+      cancelCountDown: false,
+      timeOut: '',
+      min: 0,
+      second: 0,
+      minShow: '',
+      secondShow: '',
+      onChat: false,
+      noMatchmaker: false,
+      noMatchmakerDailog: false,
       matchMakers:
       [
           // { mid: 'aaa', status: true, name:'红娘1好',detail:"sdfds fsf dsf sd",picUrl:"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=998060827,1437492300&fm=27&gp=0.jpg"},
@@ -106,14 +133,22 @@ export default {
         }
       }
       if(!flag){
-        this.$message.error('目前暂时没有空闲中的红娘，请耐心等待');
+        // this.$message.error('目前暂时没有空闲中的红娘，请耐心等待');
+        this.noMatchmaker = true
       }
     },
     callBusy: function(){
-      this.$message.error('该红娘正在通话中，请稍等哦~');
+      // this.$message.error('该红娘正在通话中，请稍等哦~');
+    },
+    returnBtn: function(){
+      this.$router.push({
+        name: 'UserWelcome'
+      })
     },
     closeDailog: function(){
       this.showDailog = false
+      this.cancelCountDown = false
+      this.noMatchmaker = false
     },
     over: function(){
       var that = this
@@ -135,32 +170,20 @@ export default {
       })
     },
     down: function(id){
-      // var that = this
-      // this.$confirm('确认断开连线?', '提示', {
-      //     confirmButtonText: '确定',
-      //     cancelButtonText: '取消'
-      //   }).then(() => {
-      //     rtc.closePeerConnection(rtc.peerConnection)
-      //     that.videoFlagShow = false
-      //     that.videoOpen = true
-      //     document.getElementById('me').srcObject = this.stream
-      //     document.getElementById('me').muted = true
-      //     // document.getElementById('me').play()
-      //     rtc.socket.send(JSON.stringify({
-      //         "eventName": "End",
-      //         "data": {
-      //             "id": id,
-      //         }
-      //     }))
-      //     that.$router.push({
-      //       name: 'UserWelcome'
-      //     })
-      //   }).catch(() => {
-      //     // that.$message({
-      //     //   type: 'info',
-      //     //   message: '断开失败'
-      //     // });
-      //   });
+
+    },
+    leave: function(){
+      this.$router.push({
+        name: 'UserWelcome'
+      })
+    },
+    leaveAuto: function(){
+      if(this.cancelCountDown){
+        this.cancelCountDown = false
+        this.$router.push({
+          name: 'UserWelcome'
+        })
+      }
     },
     closeVideo: function(){
       this.videoOpen = false
@@ -184,8 +207,56 @@ export default {
               "uid": this.uid
           }
       }))
-    }
+    },
+    startTimer: function(){
+      var that = this;
+        clearInterval(that.timeOut);
+        that.timeOut = setInterval(function () {
+          if ( that.onChat == false){
+            that.cancelCountDown = true
+          }
+        },1000*30)
+    },
+    isTimeOut: function(){
+      this.startTimer();
+      document.body.onmouseup = this.startTimer;
+      // document.body.onmousemove = this.startTimer;
+      document.body.onkeyup  = this.startTimer;
+      document.body.onclick  = this.startTimer;
+      document.body.ontouchend  = this.startTimer;
+    },
+    countTime: function () {
+      if (this.onChat){
+        if (this.second < 59){
+          this.second++
+          if (this.second <= 9){
+            this.secondShow = '0' + this.second
+          }else {
+            this.secondShow = this.second
+          }
+        }else {
+          this.second = 0
+          this.secondShow = '0' + this.second
+          this.min++
+          if (this.min <= 9){
+            this.minShow = '0' + this.min
+          }else {
+            this.minShow = this.min
+          }
 
+        }
+        //递归每秒调用countTime方法，显示动态时间效果
+        setTimeout(this.countTime, 1000);
+      }else {
+        this.second = 0
+        this.min = 0
+        this.minShow = ''
+        this.secondShow = ''
+      }
+    }
+  },
+  created() {
+    this.isTimeOut()
   },
   mounted () {
       var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
@@ -227,6 +298,7 @@ export default {
 
       rtc.on('endAnswer', function (data) {
           rtc.closePeerConnection(rtc.peerConnection)
+          that.onChat = false
           // rtc.peerConnection = null
           that.$router.push({
             name: 'UserWelcome'
@@ -249,7 +321,7 @@ export default {
                 var responseData = response.data.data
                 console.log(response.data.code);
                   if (response.data.code === 0){
-                      that.matchMakers.push({mid:data.mid, status: data.status, name:responseData.name, detail:responseData.detail,picUrl:responseData.picUrl});
+                      that.matchMakers.push({mid:data.mid, status: data.status, name:responseData.name, detail:responseData.detail,picUrl:responseData.picUrl})
                   }
               })
               .catch(function (response) {
@@ -261,6 +333,7 @@ export default {
 
       rtc.on('getAllMatchMakerStatus', function (data) {
           // var that2 = that
+          that.noMatchmakerDailog = true
           Object.keys(data).forEach(function(key){
               // content.push(`<p>${key}:${data[key]}</p>`);
               axios.get(Conf.API + '/matchmakerInfo/' + key)
@@ -269,7 +342,6 @@ export default {
                 console.log(response.data);
                   if (response.data.code === 0){
                       that.matchMakers.push({mid:key, status: data[key], name:responseData.name, detail:responseData.detail, picUrl:responseData.picUrl});
-                      // that.matchMakers.push({mid:6666, status: false, name:responseData.name});
                   }
               })
               .catch(function (response) {
@@ -288,6 +360,10 @@ export default {
           that.redBigShow = false
           that.callContent = ''
           that.countDownShow = false
+          that.onChat = true
+          that.minShow = '00'
+          that.secondShow = '00'
+          that.countTime()
           rtc.emit("ready", data.mid, data.uid, "user");
         }
       })
@@ -305,10 +381,11 @@ export default {
                   that.countDownShow = false
                   that.callContent = '红娘貌似不在哦'
                   setTimeout(function(){
-                    console.info('quit ---- ')
-                    that.$router.push({
-                      name: 'UserWelcome'
-                    })
+                    // console.info('quit ---- ')
+                    // that.$router.push({
+                    //   name: 'UserWelcome'
+                    // })
+                    that.videoFlagShow = false
                   },3000)
                 }
                 doCountDown()
@@ -339,6 +416,14 @@ li {
 }
 a {
   color: #42b983;
+}
+#timeOnChat {
+  position: absolute;
+  /* display: inline-block; */
+  margin-left: 50px;
+  /* margin-top: 10px; */
+  font-size: 50px;
+  color: #ffffff;
 }
 #videos {
   position: relative;
@@ -465,5 +550,33 @@ a {
 .el-button {
   width: 120px;
   font-size: 18px;
+}
+#busy{
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom: 50px;
+  line-height:19px;
+  text-align:center;
+  height:20px;
+  width:90px;
+  background-color: #ff4949;
+  color: #fff;
+  padding: 10px 15px;
+  border-radius: 10px;
+  font-size: 18px;
+  -moz-user-select:none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+#matchMakerDetial {
+  -moz-user-select:none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+}
+#returnBtn{
+  position: absolute;
+  height: 60px;
+  width: 120px;
+  margin-left: 500px;
 }
 </style>

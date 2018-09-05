@@ -1,26 +1,33 @@
 <template>
   <div class="index">
-     <!-- <zaInputDailog @doCancel="test" ref="dialog"></zaInputDailog> -->
+    <VerifyPhone v-if="show" id="VerifyPhone"></VerifyPhone>
+
     <!-- <el-button type="primary" round v-on:click="test">open</el-button> -->
-    <el-button style="margin-top: 450px;margin-left:auto;margin-right:auto" type="primary" round v-on:click="user">用户端</el-button>
-    <el-button style="margin-top: 450px;margin-left:50px;margin-right:auto" type="primary" round v-on:click="matchmaker">红娘端</el-button>
+    <div class="button">
+      <el-button type="primary" round v-on:click="show=!show">驗證</el-button>
+      <el-button type="primary" round v-on:click="user">用户端</el-button>
+      <el-button type="primary" round v-on:click="matchmaker">红娘端</el-button>
+    </div>
+
   </div>
 </template>
 
 <script>
 import zaDailog from './zaDailog.vue'
 import zaInputDailog from './zaInputDailog.vue'
+import VerifyPhone from './VerifyPhone.vue'
 
 export default {
   name: 'Index',
   data () {
     return {
-        // show: false
+        show: true
     }
   },
   components:{
     zaDailog,
-    zaInputDailog
+    zaInputDailog,
+    VerifyPhone
   },
   methods: {
     // test: function(){
@@ -54,5 +61,30 @@ li {
   display: inline-block;
   margin: 0 10px;
 }
-
+.index{
+  position: relative;
+  width: 1920px;
+  /* overflow: hidden; */
+}
+.button{
+  position:absolute;
+  margin-top: 450px;
+  left: 0;
+  right: 0;
+}
+#VerifyPhone
+{
+    position:absolute;
+    animation:myfirst 1s;
+    -webkit-animation:myfirst 1s;
+    animation-fill-mode: forwards;
+    /* margin-left: 2500px */
+}
+@-webkit-keyframes myfirst /* Safari and Chrome */
+{
+    0%   {width:0px; margin-left: 1919px}
+    10%   {width:0px; margin-left: 2500px}
+    20%   {width:580px; margin-left: 2500px}
+    100% {width:580px; margin-left: 1340px}
+}
 </style>

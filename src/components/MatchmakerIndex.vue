@@ -5,7 +5,7 @@
         工号:{{mid}}
         <el-button type="primary" round v-show="!videoStatus" :disabled=isChatting v-on:click="up(uid)">上线</el-button>
         <el-button type="danger" round v-show="videoStatus" :disabled=isChatting v-on:click="down(uid)">下线</el-button>
-        <el-button type="primary" round  v-on:click="showCancelDailog = true">结束通话</el-button>
+        <el-button type="primary" round  :disabled=!isChatting v-on:click="showCancelDailog = true">结束通话</el-button>
         <el-button type="info" round :disabled=isChatting v-on:click="logout()">注销登录</el-button>
       </div>
       <div style="margin-top:50px;">
@@ -32,6 +32,8 @@
           便签: {{userDetail.memo}}
 
           <br><br>
+          <h2>用户称谓</h2>
+            <el-input v-model="userName" placeholder="请输入用户称谓"></el-input>
           <h2>记录小记</h2>
           <el-input
             type="textarea"
@@ -45,7 +47,7 @@
       </div>
       <zaDailog v-if="showDailog" @doCountDown="doCountDown()" :bgClose=false :showCountDown=true :showCancel=false confirm="开始连线" message="有用户正在请求视频，确认接听连线?" @doConfirm="receiveVideo" ref="dialog"></zaDailog>
       <zaInputDailog v-if="showInputDailog" :bgClose=false @doConfirm="commitReason"></zaInputDailog>
-      <zaDailog v-if="showCancelDailog" @doCancel="closeDailog" @doBg="closeDailog" confirm="断开" message="确认断开连线?" @doConfirm="closeChat(uid)"></zaDailog>
+      <zaDailog v-if="showCancelDailog" @doCancel="closeDailog" @doBg="closeDailog" confirm="断开" message="确认断开连线?（用户会直接退回欢迎页，非特殊情况请勿进行此操作）" @doConfirm="closeChat(uid)"></zaDailog>
     </div>
 
 </template>
@@ -79,7 +81,8 @@ export default {
       showInputDailog: false,
       showCancelDailog: false,
       chatFlag: false,
-      isChatting: false
+      isChatting: false,
+      userName: ''
     }
   },
   components:{

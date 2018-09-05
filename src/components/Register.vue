@@ -179,7 +179,7 @@
     top: 0;
     bottom: 0;
     z-index: 600;
-    background: url("../assets/register-bg.png") fixed no-repeat;
+    // background: url("../assets/register-bg.png") fixed no-repeat;
     background-size: 100% 100%;
 
     .box-register-form {

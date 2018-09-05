@@ -8,8 +8,9 @@ import UserWelcome from '@/components/UserWelcome'
 import UserInfoInput from '@/components/UserInfoInput'
 import MatchmakerLogin from '@/components/MatchmakerLogin'
 import Register from '@/components/Register'
-
 import zaDailog from '@/components/zaDailog'
+import VerifyPhone from '@/components/VerifyPhone'
+
 Vue.use(Router)
 
 export default new Router({
@@ -58,6 +59,11 @@ export default new Router({
       path: '/zaDailog',
       name: 'zaDailog',
       component: zaDailog
+    },
+    {
+      path: '/VerifyPhone',
+      name: 'VerifyPhone',
+      component: VerifyPhone
     }
   ]
 })
