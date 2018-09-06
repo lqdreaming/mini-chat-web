@@ -54,4 +54,30 @@ export default {
   color: #ffffff;
   text-align:center;
 }
+.el-slider__bar{
+  height: 0px;
+}
+.el-slider__runway{
+  height: 0px;
+}
+.el-slider__button{
+  width: 20px;
+  height: 40px;
+  border-radius: 10px;
+  border: 2px;
+  border-style: solid;
+  border-color: #ffffff;
+}
+.el-tooltip__popper.is-dark{
+  /* background: #fa8dcc */
+}
+.el-tooltip__popper{
+  /* background: #fa8dcc; */
+  width:60px;
+  height: 60px;
+  border-radius: 20px;
+  font-size: 25px;
+  text-align: center;
+  line-height: 60px;
+}
 </style>
