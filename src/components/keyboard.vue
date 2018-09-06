@@ -4,8 +4,10 @@
       <template v-for="item in buttonList">
         <span v-if="item.type === 'num'" :class="`${item.type} item-${item.value}`"
               @click="handleClick('num', item.value)">{{item.value}}</span>
-        <span v-if="item.type === 'delete'" :class="item.type" @click="handleClick('delete')"></span>
-        <span v-if="item.type === 'end'" :class="item.type" @click="handleClick('end')"></span>
+        <span v-if="item.type === 'delete'" :class="item.type" @click="handleClick('delete')">
+          <img  ondragstart="return false" style="margin-top:5px" src="../assets/icon-delete.png"/>
+        </span>
+        <!-- <span v-if="item.type === 'end'" :class="item.type" @click="handleClick('end')"></span> -->
 
         <!-- <span v-if="item.type === 'sure'" :class="item.type" @touchstart="handleClick('sure')">确认</span> -->
       </template>
@@ -69,9 +71,9 @@
 
 .keyboard-box {
   position: absolute;
-  z-index: 600;
+  z-index: 10;
   right: 0;
-  margin-top: 600px;
+  margin-top: 680px;
   margin-right: 10px;
   // bottom: 0;
   .content {
@@ -102,12 +104,12 @@
       user-select:none;
     }
     .end {
-      background-image: url("../assets/icon-close.png");
+      // background-image: url("../assets/icon-close.png");
       background-repeat: no-repeat;
       background-position: center;
     }
     .delete {
-      background-image: url("../assets/icon-delete.png");
+      // background-image: url("../assets/icon-delete.png");
       background-repeat: no-repeat;
       background-position: center;
       &:active {

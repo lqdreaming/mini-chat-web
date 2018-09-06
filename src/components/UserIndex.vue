@@ -1,18 +1,62 @@
 <template>
-  <div id="userIndex" style="margin-top: 100px">
-    <div v-show="noMatchmakerDailog && !videoFlagShow && matchMakers[0] == null">
-      <zaDailog  @doCancel="leave" :bgClose=false @doBg="closeDailog" cancel="离开" confirm="确定" message="很抱歉，目前没有红娘在服务中，服务时间为09:00-22:00。请您留下手机号，情感咨询师将在第一时间与您取得联系。"></zaDailog>
+  <div id="userIndex">
+    <div  v-show="noMatchmakerDailog && !videoFlagShow && matchMakers[0] == null">
+      <!-- 虚假页面 -->
+      <div class="fake">
+        <div  class="matchMakerListTitle">
+          请选择你要联系的老师
+          <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
+        </div>
+
+        <br><br><br><br><br><br>
+        <el-row>
+          <el-col :span="5" v-for="(matchMaker, index) in matchMakersFake" :key="index" :offset="1">
+            <el-card shadow="always" :body-style="{ padding: '0px' }">
+              <img ondragstart="return false" v-bind:src="matchMaker.picUrl" class="image">
+              <div style="padding: 14px;">
+                <div id="matchMakerDetial">
+                  <b>{{matchMaker.name}}</b>
+                  <br>
+                  <div style="height:80px;margin-top:10px">
+                    <b>简介:</b>{{matchMaker.detail}}
+                  </div>
+                </div>
+
+                <div style="margin-top:10px">
+                  <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">连线</el-button>
+                  <!-- <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button> -->
+                  <div v-show="!matchMaker.status" id="busy">
+                    离线
+                  </div>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="5" :offset="1">
+            <el-card shadow="always">
+              <img  ondragstart="return false" style="margin-top:100px" src="../../static/question.png">
+              <div style="margin-top:80px">
+                <el-button type="primary" v-on:click="callMatchmakerRandom()">随机连线</el-button>
+              </div>
+            </el-card>
+          </el-col>
+
+        </el-row>
+      </div>
+      <VerifyPhone style="position:absolute" v-if="verifyPhoneShow" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" @close="closeVerify" contentTitle="温馨提示" contentDetail="亲，我们的服务时间为09:00-22:00,请您预留手机号，情感专家会在第一时间与您联系哦！"></VerifyPhone>
     </div>
+    <!-- <zaDailog style="position:absolute;" v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=1000 :showCancel=false confirm="继续操作" message="您已超过2分钟内未进行任何操作，是否回到首页"></zaDailog> -->
+
 
     <div v-show="!videoFlagShow">
-      <div v-show="matchMakers[0] != null" class="matchMakerListTitle">
+      <div v-show="matchMakers[0] != null" class="matchMakerListTitle"  style="margin-top: 100px">
         请选择你要联系的老师
         <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
       </div>
 
       <br><br><br><br><br><br>
       <el-row>
-        <el-col :span="5" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="2">
+        <el-col :span="5" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="1">
           <el-card shadow="always" :body-style="{ padding: '0px' }">
             <img v-bind:src="matchMaker.picUrl" class="image">
             <div style="padding: 14px;">
@@ -46,7 +90,7 @@
       </el-row>
     </div>
 
-    <div v-show="videoFlagShow">
+    <div v-show="videoFlagShow" style="margin-top: 100px">
       <div v-show="onChat" id="timeOnChat">
         {{minShow}}:{{secondShow}}
       </div>
@@ -63,10 +107,11 @@
         <div id="countDown" v-show="countDownShow">{{countDown}} s</div>
       </div>
     </div>
+    <zaDailog v-if="verifyPhoneFailShow" @doConfirm="closeDailog" @doBg="closeDailog" :showCancel=false confirm="确认" message="验证码错误，请重试" ></zaDailog>
     <zaDailog v-if="showDailog" @doCancel="closeDailog" @doBg="closeDailog" confirm="断开" message="确认断开连线?" @doConfirm="over"></zaDailog>
     <zaDailog v-if="noMatchmaker":showCancel=false  @doBg="closeDailog"  @doConfirm="closeDailog" message="目前沒有空闲中的红娘，请耐心等待"></zaDailog>
-    <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="请问您还在吗？"></zaDailog>
-
+    <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=10 :showCancel=false confirm="继续操作" message="您已超过2分钟内未进行任何操作，是否回到首页"></zaDailog>
+    <zaDailog v-if="verifyPhoneOKShow" @doConfirm="leave" :bgClose=false @doCountDown="leave" :showCountDown=true :countDown=10 :showCancel=false title="成功提示" confirm="关闭" message="恭喜您，信息提交成功，预祝生活愉快！如有疑问请拨打咨询电话：8098099"></zaDailog>
   </div>
 </template>
 
@@ -76,10 +121,12 @@ import Conf from '@/conf/conf.js'
 import axios from 'axios'
 import Store from '@/tool/store.js'
 import zaDailog from './zaDailog.vue'
+import VerifyPhone from './VerifyPhone.vue'
 
 var rtc = SkyRTC();
 
 export default {
+  // inject: ['reload'],
   name: 'UserIndex',
   data () {
     return {
@@ -101,15 +148,25 @@ export default {
       onChat: false,
       noMatchmaker: false,
       noMatchmakerDailog: false,
+      verifyPhoneShow: true,
+      verifyPhoneOKShow: false,
+      verifyPhoneFailShow: false,
       matchMakers:
       [
-          // { mid: 'aaa', status: true, name:'红娘1好',detail:"sdfds fsf dsf sd",picUrl:"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=998060827,1437492300&fm=27&gp=0.jpg"},
+          // { mid: 'aaa', status: true, name:'红娘1好',detail:"sdfds fsf dsf sd",picUrl:"../../static/pic/1.png"},
          // { name: 'bbb', status: false},
+      ],
+      matchMakersFake:
+      [
+        { mid: '666666', status: false, name:'鳁老师',detail:"有12年的专业经验，成功撮合99对情侣，帮助100人找到灵魂伴侣",picUrl:"../../static/pic/1.png"},
+        { mid: '666666', status: false, name:'文老师',detail:"有12年的专业经验，成功撮合99对情侣，帮助100人找到灵魂伴侣",picUrl:"../../static/pic/2.png"},
+        { mid: '666666', status: false, name:'静老师',detail:"有12年的专业经验，成功撮合99对情侣，帮助100人找到灵魂伴侣",picUrl:"../../static/pic/3.png"},
       ]
     }
   },
   components:{
-    zaDailog
+    zaDailog,
+    VerifyPhone
   },
   methods: {
     callMatchmaker: function(mid){
@@ -140,7 +197,19 @@ export default {
     callBusy: function(){
       // this.$message.error('该红娘正在通话中，请稍等哦~');
     },
+    verifyPhoneOK: function(){
+      this.verifyPhoneOKShow = true
+    },
+    verifyPhoneFail: function(){
+      this.$message("验证码错误，请重试")
+      // this.verifyPhoneFailShow = true
+    },
     returnBtn: function(){
+      this.$router.push({
+        name: 'UserWelcome'
+      })
+    },
+    closeVerify: function(){
       this.$router.push({
         name: 'UserWelcome'
       })
@@ -149,6 +218,8 @@ export default {
       this.showDailog = false
       this.cancelCountDown = false
       this.noMatchmaker = false
+      this.verifyPhoneOKShow = false
+      this.verifyPhoneFailShow = false
     },
     over: function(){
       var that = this
@@ -259,6 +330,7 @@ export default {
     this.isTimeOut()
   },
   mounted () {
+      rtc = SkyRTC()
       var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
       console.info(this.userId)
       var that = this
@@ -300,6 +372,9 @@ export default {
           rtc.closePeerConnection(rtc.peerConnection)
           that.onChat = false
           // rtc.peerConnection = null
+          // window.location.reload(false);
+          // window.location.href=window.location.href;
+          // that.reload()
           that.$router.push({
             name: 'UserWelcome'
           })
@@ -332,17 +407,17 @@ export default {
       });
 
       rtc.on('getAllMatchMakerStatus', function (data) {
-          // var that2 = that
-          that.noMatchmakerDailog = true
+          if(Object.keys(data).length == 0){
+            that.noMatchmakerDailog = true
+          }
           Object.keys(data).forEach(function(key){
-              // content.push(`<p>${key}:${data[key]}</p>`);
               axios.get(Conf.API + '/matchmakerInfo/' + key)
               .then(function (response) {
                 var responseData = response.data.data
                 console.log(response.data);
-                  if (response.data.code === 0){
-                      that.matchMakers.push({mid:key, status: data[key], name:responseData.name, detail:responseData.detail, picUrl:responseData.picUrl});
-                  }
+                if (response.data.code === 0){
+                    that.matchMakers.push({mid:key, status: data[key], name:responseData.name, detail:responseData.detail, picUrl:responseData.picUrl});
+                }
               })
               .catch(function (response) {
                 console.log(response);
@@ -356,6 +431,7 @@ export default {
 
       rtc.on('userSureCallAnswer', function(data) {
         console.log("receive userSureCallAnswer");
+        console.info("-----------3333333333----------")
         if (data.grabFlag === true){
           that.redBigShow = false
           that.callContent = ''
@@ -372,6 +448,8 @@ export default {
         console.log("receive userCallAnswer");
         if (data.grabFlag === true){
           that.videoFlagShow = true
+          that.countDownShow = true
+          that.countDown = 20
           var doCountDown = function(){
             setTimeout(function(){
               if(that.countDown >= 1 && that.redBigShow && that.countDownShow){
@@ -379,13 +457,10 @@ export default {
                 console.info(that.countDown)
                 if(that.countDown === 0){
                   that.countDownShow = false
-                  that.callContent = '红娘貌似不在哦'
+                  that.callContent = '情感咨询师正在繁忙中，请重新选择'
                   setTimeout(function(){
-                    // console.info('quit ---- ')
-                    // that.$router.push({
-                    //   name: 'UserWelcome'
-                    // })
                     that.videoFlagShow = false
+                    that.callContent = '正在连线红娘中  请耐心等待'
                   },3000)
                 }
                 doCountDown()
@@ -416,6 +491,11 @@ li {
 }
 a {
   color: #42b983;
+}
+#userIndex{
+  -moz-user-select:none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 #timeOnChat {
   position: absolute;
@@ -534,9 +614,10 @@ a {
 }
 
 .image {
-  width: 100%;
+  width: 350px;
   height: 300px;
   display: block;
+
 }
 
 .matchMakerListTitle{
@@ -578,5 +659,25 @@ a {
   height: 60px;
   width: 120px;
   margin-left: 500px;
+}
+#VerifyPhone{
+  position:absolute;
+  animation:myfirst 0.5s;
+  -webkit-animation:myfirst 0.5s;
+  animation-fill-mode: forwards;
+  /* margin-left: 2500px */
+}
+.fake{
+  position: absolute;
+  margin-top: 100px;
+  width: 1920px;
+  z-index: 0;
+}
+@-webkit-keyframes myfirst /* Safari and Chrome */
+{
+    0%   {width:0px; margin-left: 1919px}
+    10%   {width:0px; margin-left: 2500px}
+    20%   {width:580px; margin-left: 2500px}
+    100% {width:580px; margin-left: 1340px}
 }
 </style>

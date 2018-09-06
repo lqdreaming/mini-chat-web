@@ -43,7 +43,10 @@ export default new Router({
     {
       path: '/UserWelcome',
       name: 'UserWelcome',
-      component: UserWelcome
+      component: UserWelcome,
+      meta: {
+        keepAlive: true  // 通过此字段判断是否需要缓存当前组件
+      }
     },
     {
       path: '/UserInfoInput',

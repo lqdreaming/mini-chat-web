@@ -4,16 +4,26 @@
     </div>
     <div>
       <div class="content">
+        <div class="title">
+          {{contentTitle}}
+        </div>
+        <div class="details">
+            {{contentDetail}}
+        </div>
         <input class="input phone" type="tel" maxlength="11"  @focus="phoneNumFocus()" autofocus="autofocus"
                v-model="phone" placeholder="请输入手机号码">
         <div class="code-content">
           <input class="input code" type="tel" maxlength="6"  @focus="codeFocus()"
                 v-model="code" placeholder="请输入验证码">
-          <el-button id="codeBtn" type="primary" round class="button">获取验证码</el-button>
+          <el-button id="codeBtn" :disabled=getCodeBtnDisable type="primary" round class="button" v-on:click="getVerifyCode()">{{codeContent}}</el-button>
         </div>
+        <el-button id="confirmBtn" :disabled=confirmBtnDisable type="primary" round class="button" v-on:click="checkVerifyCode()">确认</el-button>
       </div>
       <div class="keyboard">
         <keyboard @_getInput="getInput"/>
+      </div>
+      <div>
+        <img  ondragstart="return false" @click="close" class="closeBtn" src="../../static/close.png">
       </div>
     </div>
     <!-- <keyboard/> -->
@@ -22,6 +32,9 @@
 
 <script>
 import Keyboard from './keyboard.vue'
+import Conf from '@/conf/conf.js'
+import axios from 'axios'
+
 
 export default {
   name: 'VerifyPhone',
@@ -30,14 +43,30 @@ export default {
       inputPhone: true,
       phone: '',
       code: '',
+      confirmBtnDisable: true,
+      confirmBtnflag: true,
+      getCodeBtnDisable: true,
+      isCount: false,
+      count: 60,
+      codeContent: '获取验证码',
     }
+  },
+  props: {
+    contentDetail: {
+       type: String,
+       default: '验证完立即开始连线，老师正在等您噢~',
+    },
+    contentTitle: {
+       type: String,
+       default: '手机号验证',
+    },
   },
   components:{
     Keyboard
   },
   methods: {
     getInput: function(type, value){
-      console.info(type)
+      // console.info(type)
       if(type == 'num'){
         if(this.inputPhone){
           this.phone += value
@@ -52,6 +81,17 @@ export default {
         }else{
           this.code = this.code.slice(0,-1)
         }
+        this.confirmBtnflag = true
+      }
+      if(this.phone.slice(10,11) != "" && this.code.slice(5,6) != "" && this.confirmBtnflag){
+        this.confirmBtnDisable = false
+      }else{
+        this.confirmBtnDisable = true
+      }
+      if(this.phone.slice(10,11) != "" && !this.isCount){
+        this.getCodeBtnDisable = false
+      }else{
+        this.getCodeBtnDisable = true
       }
     },
     phoneNumFocus: function(){
@@ -60,6 +100,69 @@ export default {
     codeFocus: function(){
       this.inputPhone = false
     },
+    close: function(){
+      this.$emit('close')
+    },
+    getVerifyCode: function(){
+      var that = this
+      console.info('clockskd')
+      axios.get(Conf.API + '/smsCode/' + that.phone)
+        .then(function (response) {
+          var responseData = response.data.data
+          console.log(response.data.code);
+            if (response.data.code === 0){
+                that.getCodeBtnDisable = true
+                that.isCount = true
+                // that.$message('验证码发送成功');
+                var doingCountDown = function(){
+                  setTimeout(function(){
+                    if(that.count >= 1){
+                      that.count--
+                      that.codeContent = that.count +　's'
+                      if(that.count === 0){
+                        setTimeout(function(){
+                          that.isCount = false
+                          that.getCodeBtnDisable = false
+                          that.codeContent = '获取验证码'
+                          that.count = 60
+                        },1000)
+                      }else{
+                        doingCountDown()
+                      }
+                    }
+                  },1000)
+                }
+                doingCountDown()
+
+            }else if(response.data.code === 400){
+              that.getCodeBtnDisable = true
+              that.$message({
+                message: '输入手机号格式不正确'
+              });
+            }
+        })
+        .catch(function (response) {
+          console.log(response)
+        })
+    },
+    checkVerifyCode: function(){
+      var that = this
+      axios.get(Conf.API + '/smsCode/' + that.phone + '/' + that.code)
+        .then(function (response) {
+          var responseData = response.data.data
+          console.log(response.data.code);
+            if (response.data.code === 0){
+              that.$emit('verify')
+            }else{
+              that.$emit('verifyFail')
+              that.confirmBtnDisable = true
+              that.confirmBtnflag = false
+            }
+        })
+        .catch(function (response) {
+          console.log(response)
+        })
+    }
   }
 }
 </script>
@@ -78,7 +181,7 @@ li {
   margin: 0 10px;
 }
 .VerifyPhone{
-  position: absolute;
+  position: relative;
   // // width: 200px;
   height: 1080px;
   overflow: hidden;
@@ -91,7 +194,7 @@ li {
   margin: auto;
   height: 1080px;
   width: 550px;
-  background-color: rgba(90, 90, 90, 0.5);
+  background-color: rgba(90, 90, 90, 0.8);
   z-index: 0;
   box-shadow: 0 4px 8px 2px rgba(204, 99, 128, 0.50);
 }
@@ -100,13 +203,13 @@ li {
   right: 0;
   width: 450px;
   margin-right: 50px;
-  margin-top: 200px;
+  margin-top: 100px;
 }
 .input {
   color: #999999;
   height: 70px;
   font-size: 25px;
-  margin-top: 30px;
+  margin-top: 50px;
   border-radius: 15px;
   border: none;
   padding-left: 60px;
@@ -123,11 +226,37 @@ li {
   left: 0;
   background: url("../assets/register-icon-code.png") 10px no-repeat #F5F0F0;
 }
+.title{
+  color: #ffffff;
+  font-size: 35px;
+}
+.details{
+  margin-top: 30px;
+  color: #ffffff;
+  font-size: 20px;
+}
+#confirmBtn{
+  position: absolute;
+  margin-top: 175px;
+  right: 0;
+  margin-right: 15px;
+  height: 70px;
+  width: 400px;
+  font-size: 25px;
+}
 #codeBtn{
   position: absolute;
-  margin-top: 32px;
+  margin-top: 52px;
   margin-left: 78px;
   height: 70px;
+  width: 155px;
   font-size: 25px;
+}
+.closeBtn{
+  position: absolute;
+  z-index: 1;
+  right: 0;
+  width: 80px;
+  // margin-left: 100px;
 }
 </style>

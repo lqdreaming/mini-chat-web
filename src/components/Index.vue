@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <VerifyPhone v-if="show" id="VerifyPhone"></VerifyPhone>
+    <VerifyPhone v-if="show" id="VerifyPhone" @close="showDailog = true"></VerifyPhone>
 
     <!-- <el-button type="primary" round v-on:click="test">open</el-button> -->
     <div class="button">
@@ -8,7 +8,7 @@
       <el-button type="primary" round v-on:click="user">用户端</el-button>
       <el-button type="primary" round v-on:click="matchmaker">红娘端</el-button>
     </div>
-
+    <zaDailog v-if="showDailog" @doCancel="showDailog = false" @doConfirm="showDailog = false" @doBg="showDailog = false" cancel="跳过" confirm="去验证" message="完成验证即可以连线长达10分钟，而跳过只能连线5分钟噢~"></zaDailog>
   </div>
 </template>
 
@@ -21,7 +21,8 @@ export default {
   name: 'Index',
   data () {
     return {
-        show: true
+        show: true,
+        showDailog: false,
     }
   },
   components:{
@@ -62,7 +63,7 @@ li {
   margin: 0 10px;
 }
 .index{
-  position: relative;
+  /* position: relative; */
   width: 1920px;
   /* overflow: hidden; */
 }
@@ -72,13 +73,12 @@ li {
   left: 0;
   right: 0;
 }
-#VerifyPhone
-{
-    position:absolute;
-    animation:myfirst 1s;
-    -webkit-animation:myfirst 1s;
-    animation-fill-mode: forwards;
-    /* margin-left: 2500px */
+#VerifyPhone{
+  position:absolute;
+  animation:myfirst 0.5s;
+  -webkit-animation:myfirst 0.5s;
+  animation-fill-mode: forwards;
+  /* margin-left: 2500px */
 }
 @-webkit-keyframes myfirst /* Safari and Chrome */
 {

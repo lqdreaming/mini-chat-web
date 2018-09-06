@@ -36,6 +36,22 @@ export default {
 }
 
 .el-main {
-    width: 500px;
+  width: 500px;
+}
+
+.el-message{
+  border-radius: 25px;
+  background-color: rgba(90, 90, 90, 0.9);
+  /* width: 200px; */
+  /* height: 80px; */
+  /* font-size: 20px;
+  text-align:center; */
+  /* line-height: 80px; */
+}
+.el-message__content{
+  padding-bottom: 20px;
+  font-size: 20px;
+  color: #ffffff;
+  text-align:center;
 }
 </style>

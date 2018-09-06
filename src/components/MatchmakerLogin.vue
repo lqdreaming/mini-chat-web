@@ -33,7 +33,7 @@ export default {
       .then(function (response) {
         console.log(response.data.code);
         if (response.data.code === 107){
-           that.$message.error('用户名或密码错了哦');
+           that.$message.error('账号和密码不匹配，请重试');
         }
         if (response.data.code === 0){
           Store.save('mid', that.mid)

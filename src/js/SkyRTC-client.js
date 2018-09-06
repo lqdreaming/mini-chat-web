@@ -32,6 +32,7 @@ var SkyRTC = function() {
         if (!events) {
             return;
         }
+        console.info('----------'+eventName)
         for (i = 0, m = events.length; i < m; i++) {
             events[i].apply(null, args);
         }
@@ -57,9 +58,10 @@ var SkyRTC = function() {
         this.peerConnection = null;
 
         // //初始时需要构建链接的数目
-        this.numStreams = 0;
-        //初始时已经连接的数目
-        this.initializedStreams = 0;
+        // this.numStreams = 0;
+        // //初始时已经连接的数目
+        // this.initializedStreams = 0;
+
     }
     //继承自事件处理器，提供绑定事件和触发事件的功能
     skyrtc.prototype = new EventEmitter();
@@ -77,6 +79,7 @@ var SkyRTC = function() {
         //解析websocket服务器的消息
         socket.onmessage = function(message) {
             var json = JSON.parse(message.data);
+            console.info('收到消息：' + json.eventName)
             if (json.eventName) {
                 that.emit(json.eventName, json.data);
             } else {
@@ -119,9 +122,9 @@ var SkyRTC = function() {
 
         this.on('ready', function(mid, uid, type) {
           if (type === "user"){
-            that.createPeerConnection(mid);
+            that.createPeerConnectionByUser(uid,mid);
             that.addStreams();
-            that.sendOffers(uid, mid)
+            // that.sendOffers(uid, mid)
           }else {
             that.createPeerConnection(uid);
             that.addStreams();
@@ -166,29 +169,53 @@ var SkyRTC = function() {
 
 
     //向所有PeerConnection发送Offer类型信令
-    skyrtc.prototype.sendOffers = function(fromId, toId) {
-        var i, m,
-            pc,
-            that = this,
-            pcCreateOfferCbGen = function(pc, fromId2, toId2) {
-                return function(session_desc) {
-                    pc.setLocalDescription(session_desc);
-                    that.socket.send(JSON.stringify({
-                        "eventName": "Offer",
-                        "data": {
-                            "sdp": session_desc,
-                            "toId": toId2,
-                            "fromId": fromId2
-                        }
-                    }));
-                };
-            },
-            pcCreateOfferErrorCb = function(error) {
-                console.log(error);
-            };
+    skyrtc.prototype.sendOffers = async function(fromId, toId) {
+        // var i, m,
+        //     pc,
+        //     that = this,
+        //     pcCreateOfferCbGen = function(pc, fromId2, toId2) {
+        //         return function(session_desc) {
+        //             pc.setLocalDescription(session_desc).then(
+        //               function(){
+        //                 that.socket.send(JSON.stringify({
+        //                     "eventName": "Offer",
+        //                     "data": {
+        //                         "sdp": session_desc,
+        //                         "toId": toId2,
+        //                         "fromId": fromId2
+        //                     }
+        //                 }));
+        //               }
+        //             )
+        //
+        //         };
+        //     },
+        //     pcCreateOfferErrorCb = function(error) {
+        //         console.log(error);
+        //     };
 
-       pc = this.peerConnection
-       pc.createOffer(pcCreateOfferCbGen(pc, fromId, toId), pcCreateOfferErrorCb)
+       var pc = this.peerConnection
+       // pc.createOffer(pcCreateOfferCbGen(pc, fromId, toId), pcCreateOfferErrorCb)
+       var that =  this
+
+       var session_desc =await new Promise((resolve) => {
+         resolve(pc.createOffer())
+       })
+       await new Promise((resolve) => {
+         pc.setLocalDescription(session_desc)
+         resolve()
+       })
+       await new Promise((resolve) => {
+         that.socket.send(JSON.stringify({
+             "eventName": "Offer",
+             "data": {
+                 "sdp": session_desc,
+                 "toId": toId,
+                 "fromId": fromId
+             }
+         }))
+         resolve()
+       })
     };
 
     //接收到Offer类型信令后作为回应返回answer类型信令
@@ -197,22 +224,40 @@ var SkyRTC = function() {
     };
 
     //发送answer类型信令
-    skyrtc.prototype.sendAnswer = function(toId, sdp) {
-        var pc = this.peerConnection;
-        var that = this;
-        pc.setRemoteDescription(new nativeRTCSessionDescription(sdp));
-        pc.createAnswer(function(session_desc) {
-            pc.setLocalDescription(session_desc);
-            that.socket.send(JSON.stringify({
-                "eventName": "Answer",
-                "data": {
-                    "toId": toId,
-                    "sdp": session_desc
-                }
-            }));
-        }, function(error) {
-            console.log(error);
-        });
+    skyrtc.prototype.sendAnswer =async function(toId, sdp) {
+        var pc = this.peerConnection
+        var that = this
+        await new Promise((resolve) => {
+          pc.setRemoteDescription(new nativeRTCSessionDescription(sdp))
+          resolve()
+        })
+        var session_desc = await new Promise((resolve) => {
+          resolve(pc.createAnswer())
+        })
+        // pc.setRemoteDescription(new nativeRTCSessionDescription(sdp))
+        // let session_desc = await pc.createAnswer()
+        await new Promise((resolve) => {
+          pc.setLocalDescription(session_desc)
+          resolve()
+        })
+        await new Promise((resolve) => {
+          that.socket.send(JSON.stringify({
+            "eventName": "Answer",
+            "data": {
+                "toId": toId,
+                "sdp": session_desc
+            }
+          }))
+          resolve()
+        })
+        // pc.setLocalDescription(session_desc);
+        // that.socket.send(JSON.stringify({
+        //   "eventName": "Answer",
+        //   "data": {
+        //       "toId": toId,
+        //       "sdp": session_desc
+        //   }
+        // }))
     };
 
     //接收到answer类型信令后将对方的session描述写入PeerConnection中
@@ -227,6 +272,7 @@ var SkyRTC = function() {
     //创建单个PeerConnection
     skyrtc.prototype.createPeerConnection = function(toId) {
         var that = this;
+        this.isNegotiating = true;
         var pc = new PeerConnection(iceServer);
         this.peerConnection = pc;
         pc.onicecandidate = function(evt) {
@@ -243,8 +289,53 @@ var SkyRTC = function() {
         };
 
         pc.onaddstream = function(evt) {
-              that.emit('pc_add_stream', evt.stream, toId, pc);
+            that.emit('pc_add_stream', evt.stream, toId, pc);
         };
+
+
+        return pc;
+    };
+
+    skyrtc.prototype.createPeerConnectionByUser= function(uid,mid) {
+        var that = this;
+        this.isNegotiating = true;
+        var isNegotiating = false;
+        console.info('createPeerConnectionByUser')
+        var pc = new PeerConnection(iceServer);
+        this.peerConnection = pc;
+        pc.onicecandidate = function(evt) {
+            //通過websocket傳送到服務器
+            if (evt.candidate)
+                that.socket.send(JSON.stringify({
+                    "eventName": "Ice",
+                    "data": {
+                        "label": evt.candidate.sdpMLineIndex,
+                        "candidate": evt.candidate.candidate,
+                        "toId": mid
+                    }
+                }));
+        };
+
+        pc.onaddstream = function(evt) {
+            that.emit('pc_add_stream', evt.stream, mid, pc);
+        };
+
+        pc.onsignalingstatechange = function(evt) { // Workaround for Chrome: skip nested negotiations
+          isNegotiating = (pc.signalingState != "stable");
+        }
+
+        pc.onnegotiationneeded = function(evt) {
+          if (isNegotiating) {
+            console.log("SKIP nested negotiations");
+            return;
+          }
+          isNegotiating = true;
+          try {
+            that.sendOffers(uid, mid)
+          } catch (e) {
+            console.log(e);
+          }
+        }
 
         return pc;
     };
@@ -252,7 +343,12 @@ var SkyRTC = function() {
     //关闭PeerConnection连接
     skyrtc.prototype.closePeerConnection = function(pc) {
         if (!pc) return;
+        console.info('closePeerConnection')
         pc.close();
+        // pc.events = null
+        pc = null
+        // this.localMediaStream = null
+
     };
 
      return new skyrtc();

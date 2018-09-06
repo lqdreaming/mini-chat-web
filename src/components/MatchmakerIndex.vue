@@ -284,6 +284,7 @@ export default {
         that.uid = data.uid
         that.userId = data.userId
         that.isChatting = true
+        that.showDailog = false
         rtc.emit("ready", data.mid, data.uid, "matchmaker")
       }
     })
