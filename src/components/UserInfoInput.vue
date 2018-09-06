@@ -2,8 +2,8 @@
   <div class="index">
     <div>
       <div class="user-info">
-        <div >
-          <div class="return-btn"  @click="backHome()"></div>
+        <div>
+          <div class="return-btn" @click="backHome()"></div>
         </div>
         <div>
           <div class="user-gender-title">
@@ -12,32 +12,162 @@
           </div>
           <!--<div>{{ruleForm.index}}</div>-->
           <!--<div class="user-gender" v-if="index===0">-->
-            <!--<div data-sex="1" class="male" @click="selectGenger(1)"></div>-->
-            <!--<div data-sex="2" class="female" @click="selectGenger(2)"></div>-->
+          <!--<div data-sex="1" class="male" @click="selectGenger(1)"></div>-->
+          <!--<div data-sex="2" class="female" @click="selectGenger(2)"></div>-->
           <!--</div>-->
 
 
-          <div class="user-gender-sex">
+          <!--<div class="user-gender-sex">-->
+          <!--<div class="box-user-info-radio-group age-radio">-->
+          <!--<input id="slider"  type="range" min="0" max="550" step="1"  />-->
+          <!--</div>-->
+          <!--</div>-->
+
           <div class="box-user-info-radio-group age-radio">
-          <el-slider v-model="ruleForm.age" id="el_slider_age" height="400px" show-input></el-slider>
+            <div class="box-slider">
+              <div class="box-slider-item">
+                <div class="age-number">18岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">19岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">20岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">21岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">22岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">23岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">24岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">25岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">26岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">27岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">28岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">29岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">30岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">31岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">32岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">33岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">34岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">35岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">36岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">37岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">38岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">39岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">40岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">41岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">42岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">43岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">44岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">45岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">46岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">47岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">48岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">49岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">50岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">51岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">52岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">53岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">54岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">55岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">56岁</div>
+              </div>
+              <div class="box-slider-item">
+                <div class="age-number">57岁</div>
+              </div>
+              <div class="box-slider-bar" style="transform: translateX(185.474px);">
+                <div>
+                  25岁
+                </div>
+              </div>
+            </div>
           </div>
-          </div>
-          <input id="slider"  type="range" min="0" max="550" step="1"  />
+
 
           <!--<div class="user-marriage" v-if="index===1">-->
-            <!--<div class="box-radio-group"><label class="radio-item"><input type="radio" name="marriage" value="1"-->
-                                                                          <!--hidden="hidden">-->
-              <!--<div class="radio-btn" @click="selectMarriage(1)"></div>-->
-              <!--<strong>单身</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="2"-->
-                                                                           <!--hidden="hidden">-->
-              <!--<div class="radio-btn" @click="selectMarriage(2)"></div>-->
-              <!--<strong>热恋</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="3"-->
-                                                                           <!--hidden="hidden">-->
-              <!--<div class="radio-btn" @click="selectMarriage(3)"></div>-->
-              <!--<strong>已婚</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="4"-->
-                                                                           <!--hidden="hidden">-->
-              <!--<div class="radio-btn" @click="selectMarriage(4)"></div>-->
-              <!--<strong>离异</strong></label></div>-->
+          <!--<div class="box-radio-group"><label class="radio-item"><input type="radio" name="marriage" value="1"-->
+          <!--hidden="hidden">-->
+          <!--<div class="radio-btn" @click="selectMarriage(1)"></div>-->
+          <!--<strong>单身</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="2"-->
+          <!--hidden="hidden">-->
+          <!--<div class="radio-btn" @click="selectMarriage(2)"></div>-->
+          <!--<strong>热恋</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="3"-->
+          <!--hidden="hidden">-->
+          <!--<div class="radio-btn" @click="selectMarriage(3)"></div>-->
+          <!--<strong>已婚</strong></label> <label class="radio-item"><input type="radio" name="marriage" value="4"-->
+          <!--hidden="hidden">-->
+          <!--<div class="radio-btn" @click="selectMarriage(4)"></div>-->
+          <!--<strong>离异</strong></label></div>-->
           <!--</div>-->
 
         </div>
@@ -102,7 +232,7 @@
           age: '20',
           marriage: '2',
         },
-        index:0
+        index: 0
         // , rules: {
         //   age: [
         //     {validator: validateAge, trigger: 'blur'}
@@ -111,13 +241,12 @@
       }
     },
     methods: {
-      backHome() {
-        alert("回到主页");
+      backHome () {
+        alert('回到主页')
       },
 
-
       selectGenger (gender) {
-        this.index++;
+        this.index++
         this.gender = gender
         alert(gender)
       },
@@ -243,49 +372,172 @@
     background: url(../assets/woman.png) no-repeat;
   }
 
-  /*--------------年龄选择器----------------------*/
-  .age-ra {
-    width: 1372px;
-    height: 561px;
+
+  /*--------------年龄选择器0906----------------------*/
+
+  .box-user-info-radio-group.age-radio {
+    /*padding: 166.537px 92.951px 0;*/
+    padding: 167px 93px 0;
+  }
+
+  .box-user-info-radio-group {
+    width: 1143px;
+    height: 377px;
+    /*width: 1142.508px;*/
+    /*height: 376.635px;*/
     background: url(../assets/info-bg.png) no-repeat;
+    background-size: 100%;
+    padding: 167px 93px 0;
+    box-sizing: border-box;
     color: #fff;
-    margin: 0 auto;
   }
 
-  #el_slider_age {
-    padding: 250px 60px 0;
-    width: 800px;
-    height: 400px;
+  .box-slider {
+    padding: 0;
+    align-items: center;
+    position: relative;
   }
 
-
-  input::-webkit-slider-thumb {
-    -webkit-appearance: none;
+  .box-slider, .box-radio-group {
+    height: 10px;
+    background: #fff;
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    border-radius: 6px;
+    font-size: 46px;
   }
 
-  input::-webkit-slider-runnable-track {
-    height: 10.1px;
-    border-radius: 10px; /*将轨道设为圆角的*/
-    /*box-shadow: 0 1px 1px #def3f8, inset 0 .125em .125em #0d1112; !*轨道内置阴影效果*!*/
+  .box-slider-item:first-child {
+    transform: translateX(-50%);
   }
 
-  input::-webkit-slider-thumb {
-    -webkit-appearance: none;
-    height: 50px;
-    width: 25px;
-    margin-top: -5px; /*使滑块超出轨道部分的偏移量相等*/
-    background: #ffffff;
-    border-radius: 15px; /*外观设置为圆形*/
-    /*transform: translateX(-50%);*/
-    border: 2px solid #fff;
+  .box-slider-item:nth-child(10n), .box-slider-item:first-child {
+    width: 8px;
+    /*width: 7.734px;*/
+    border: 4px solid #fff;
+    /*border: 3.859px solid #fff;*/
+    border-radius: 6px;
+    background: #5eced6;
+  }
+
+  .box-slider-item {
+    width: 2px;
+    /*width: 1.922px;*/
+    height: 31px;
+    /*height: 30.984px;*/
+    background: #fff;
+    position: relative;
+  }
+
+  .box-slider-item:nth-child(10n).age-number, .box-slider-item:first-child.age-number {
+    display: block;
+  }
+
+  .age-number {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, 85px);
+    color: #fff;
+    font-size: 46px;
+    white-space: nowrap;
+    display: none;
+  }
+
+  /*划线*/
+  .box-slider-bar {
+    position: absolute;
+    /*top: -69.711rem;*/
+    top: -70rem;
+    left: 0;
+    /*width: 38.719px;*/
+    /*height: 232.359px;*/
+
+    width: 39px;
+    height: 232px;
+  }
+
+  .box-slider-bar::before {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 232px;
+    background: #fff;
+    border-radius: 6px;
+  }
+
+   .box-slider-bar > div {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, 248px);
+    white-space: nowrap;
+  }
+
+  .box-slider-bar::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    /*top: 38.730px;*/
+    top: 39px;
+    transform: translateX(-50%);
+    width: 23px;
+    height: 62px;
+    /*width: 23.234px;*/
+    /*height: 61.953px;*/
+    /*border: 3.859px solid #fff;*/
+    border: 4px solid #fff;
+    border-radius: 6px;
     background: #F14E87;
   }
-  input{
-    -webkit-appearance: none;
-    width: 1000px;
-    border-radius: 10px; /*这个属性设置使填充进度条时的图形为圆角*/
-  }
 
+  --------------年龄选择器----------------------
+  /*.age-ra {*/
+    /*width: 1372px;*/
+    /*height: 561px;*/
+    /*background: url(../assets/info-bg.png) no-repeat;*/
+    /*color: #fff;*/
+    /*margin: 0 auto;*/
+  /*}*/
+
+  /*#el_slider_age {*/
+    /*padding: 250px 60px 0;*/
+    /*width: 800px;*/
+    /*height: 400px;*/
+  /*}*/
+
+  /*input::-webkit-slider-thumb {*/
+    /*-webkit-appearance: none;*/
+  /*}*/
+
+  /*input::-webkit-slider-runnable-track {*/
+    /*height: 10.1px;*/
+    /*border-radius: 10px; !*将轨道设为圆角的*!*/
+    /*!*box-shadow: 0 1px 1px #def3f8, inset 0 .125em .125em #0d1112; !*轨道内置阴影效果*!*!*/
+  /*}*/
+
+  /*input::-webkit-slider-thumb {*/
+    /*-webkit-appearance: none;*/
+    /*height: 50px;*/
+    /*width: 25px;*/
+    /*margin-top: -5px; !*使滑块超出轨道部分的偏移量相等*!*/
+    /*background: #ffffff;*/
+    /*border-radius: 15px; !*外观设置为圆形*!*/
+    /*!*transform: translateX(-50%);*!*/
+    /*border: 2px solid #fff;*/
+    /*background: #F14E87;*/
+  /*}*/
+
+  /*input {*/
+    /*-webkit-appearance: none;*/
+    /*width: 1000px;*/
+    /*border-radius: 10px; !*这个属性设置使填充进度条时的图形为圆角*!*/
+  /*}*/
 
   /*.box-slider {*/
   /*padding: 0;*/
@@ -311,7 +563,7 @@
   /*background: #5eced6;*/
   /*}*/
 
-  /*--------------年龄选择器----------------------*/
+  /*--------------婚姻状态选择器----------------------*/
   .user-marriage {
     width: 1250px;
     height: 350px;
