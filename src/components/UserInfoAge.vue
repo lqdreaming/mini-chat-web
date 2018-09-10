@@ -2,8 +2,57 @@
   <div >
      <div id="title"> 多大了</div>
      <img ondragstart="return false" id="bg" src="../../static/info-bg.png"/>
-      <el-slider id="slider" v-model="value" :format-tooltip="formatTooltip"></el-slider>
+      <el-slider id="slider" :min="15" :max="55" :step="1" v-model="age" ></el-slider>
      <div id="line"/>
+     <div id="whites">
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+        <div class="white"/>
+
+        <div class="white"/>
+
+     </div>
+
      <div id="greens">
         <div class="greenBox"/>
         <div class="greenBox"/>
@@ -11,6 +60,13 @@
         <div class="greenBox"/>
         <div class="greenBox"/>
         <div class="greenBox"/>
+     </div>
+     <div id="texts">
+        <div class="text">15</div>
+        <div class="text">25</div>
+        <div class="text">35</div>
+        <div class="text">45</div>
+        <div class="text">55</div>
      </div>
      <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
   </div>
@@ -21,14 +77,11 @@ export default {
   name: 'UserInfoAge',
   data () {
     return {
-      value: 10
+      age: 18
     }
   },
 
   methods: {
-    formatTooltip(val) {
-       return parseInt(val / 100 * 40) + 18;
-    },
     returnBtn: function(){
       this.$router.push({
         name: 'UserWelcome'
@@ -110,17 +163,27 @@ li {
   margin-top: 653px;
   width: 1000px;
 }
-#greens{
+#greens, #texts{
   position:absolute;
   width: 1400px;
   height:1080px;
   margin-left: 220px;
-  /* right: 0;
-  left: 0;
-  margin-right: 100px;
-  margin: auto; */
 }
-.greenBox{
+#whites{
+  position:absolute;
+  width: 1400px;
+  height:1080px;
+  margin-left: 437px;
+}
+.white{
+  margin-top:663px;
+  float:left;
+  margin-left: 22px;
+  width: 3px;
+  height: 20px;
+  background-color: #FFFFFF;
+}
+.greenBox {
   margin-top: 657px;
   float:left;
   margin-left: 235px;
@@ -133,6 +196,15 @@ li {
   background-color: #5eced6;
   /* margin-left: 10px;
   padding-left: 100px; */
+}
+.text{
+  margin-top:720px;
+  float:left;
+  margin-left: 236px;
+  width: 10px;
+  height: 30px;
+  font-size: 25px;
+  color: #FFFFFF;
 }
 
 </style>
