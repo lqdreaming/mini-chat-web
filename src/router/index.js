@@ -11,6 +11,7 @@ import Register from '@/components/Register'
 import zaDailog from '@/components/zaDailog'
 import VerifyPhone from '@/components/VerifyPhone'
 import UserInfoAge from '@/components/UserInfoAge'
+import EndPage from '@/components/EndPage'
 
 Vue.use(Router)
 
@@ -68,10 +69,16 @@ export default new Router({
       path: '/VerifyPhone',
       name: 'VerifyPhone',
       component: VerifyPhone
-    },{
+    },
+    {
       path: '/UserInfoAge',
       name: 'UserInfoAge',
       component: UserInfoAge
+    },
+    {
+      path: '/EndPage',
+      name: 'EndPage',
+      component: EndPage
     }
   ]
 })

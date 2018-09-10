@@ -2,49 +2,70 @@
 
     <div>
       <div style="margin-top:50px">
-        工号:{{mid}}
-        <el-button type="primary" round v-show="!videoStatus" :disabled=isChatting v-on:click="up(uid)">上线</el-button>
-        <el-button type="danger" round v-show="videoStatus" :disabled=isChatting v-on:click="down(uid)">下线</el-button>
-        <el-button type="primary" round  :disabled=!isChatting v-on:click="showCancelDailog = true">结束通话</el-button>
-        <el-button type="info" round :disabled=isChatting v-on:click="logout()">注销登录</el-button>
+        <div id="worker">
+          <div id="workerInfo">工号:{{mid}}</div>
+          <div id="workerStatus">状态:
+            <a v-if="workerStatus == 1" style="color:#ff6d6d">繁忙</a>
+            <a v-else-if="workerStatus == 2" style="color:#50bfff">空闲</a>
+            <a v-else style="color:#FFFFFF">离线</a>
+          </div>
+        </div>
+        <div id="buttonDiv">
+          <el-button type="primary" round v-show="!videoStatus" :disabled=isChatting v-on:click="up(uid)">上线</el-button>
+          <el-button type="danger" round v-show="videoStatus" :disabled=isChatting v-on:click="down(uid)">下线</el-button>
+          <el-button type="primary" round  :disabled=!isChatting v-on:click="showCancelDailog = true">结束通话</el-button>
+          <el-button type="info" round :disabled=isChatting v-on:click="logout()">注销登录</el-button>
+        </div>
       </div>
-      <div style="margin-top:50px;">
+      <div id="content" >
         <div id="videos" style=" display:inline-block">
           <video id="other" autoplay></video>
           <div id="blackBroad" v-show="blackBroadShow"><br><br><br><br><br><br><br><br><br><br>{{blackBroadContent}}</div>
           <video id="me" autoplay></video>
           <div id="smallBlackBroad" v-show="!videoStatus"><p><br><br>已下线</p></div>
+          <div id="smallBlackBroad" style="background:#fa8dcc" v-show="workerStatus == 1 && isChatting == false"><p><br><br>繁忙中</p></div>
+          <div v-show="isChatting" id="timeOnChat">
+            {{minShow}}:{{secondShow}}
+          </div>
         </div>
-        <div style="width:500px; margin-left:200px;vertical-align:top;display:inline-block">
-          <h2>用户基本信息</h2>
-          <br>
-          状态：
-          <p v-if="userDetail.status == 1" style="color:green">已验证手机号</p>
-          <p v-else style="color:red">未验证手机号</p>
+        <div id="text">
+          <div id="text1">
+            <h2>用户基本信息</h2>
+            <br>
+            状态：
+            <a v-if="userDetail.status == 1" style="color:#50bfff">已验证手机号</a>
+            <a v-else style="color:#ff6d6d">未验证手机号</a>
 
-          <br>
-          性别：{{userDetail.gender}}
-          <br>
-          年龄：{{userDetail.age}}
-          <br>
-          情感状态: {{userDetail.marriage}}
-          <br>
-          便签: {{userDetail.memo}}
+            <br>
+            性别：{{userDetail.gender}}
+            <br>
+            年龄：{{userDetail.age}}
+            <br>
+            情感状态: {{userDetail.marriage}}
+            <br>
+            便签: {{userDetail.memo}}
+          </div>
 
-          <br><br>
-          <h2>用户称谓</h2>
-            <el-input v-model="userName" placeholder="请输入用户称谓"></el-input>
-          <h2>记录小记</h2>
-          <el-input
-            type="textarea"
-            :rows="8"
-            placeholder="请输入小记内容"
-            v-model="note">
-          </el-input>
-          <br><br>
-          <el-button type="primary" round v-on:click="saveNote()">保存</el-button>
+
+          <div id="text2">
+            <h2>用户称谓</h2>
+              <el-input v-model="userName" placeholder="请输入用户称谓"></el-input>
+            <h2>记录小记</h2>
+            <el-input
+              type="textarea"
+              :rows="8"
+              resize = "none"
+              placeholder="请输入小记内容"
+              v-model="note">
+            </el-input>
+            <br><br>
+            <el-button type="primary" :disabled="workerStatus == 3 || workerStatus == 2" round v-on:click="saveNote()">保存</el-button>
+            <el-button :disabled="isChatting || workerStatus == 3 || workerStatus == 2" type="info" v-on:click="saveNoteAndUp()" round>提交并变更状态为空闲</el-button>
+          </div>
+
         </div>
       </div>
+
       <zaDailog v-if="showDailog" @doCountDown="doCountDown()" :bgClose=false :showCountDown=true :showCancel=false confirm="开始连线" message="有用户正在请求视频，确认接听连线?" @doConfirm="receiveVideo" ref="dialog"></zaDailog>
       <zaInputDailog v-if="showInputDailog" :bgClose=false @doConfirm="commitReason"></zaInputDailog>
       <zaDailog v-if="showCancelDailog" @doCancel="closeDailog" @doBg="closeDailog" confirm="断开" message="确认断开连线?（用户会直接退回欢迎页，非特殊情况请勿进行此操作）" @doConfirm="closeChat(uid)"></zaDailog>
@@ -82,7 +103,14 @@ export default {
       showCancelDailog: false,
       chatFlag: false,
       isChatting: false,
-      userName: ''
+      workerStatus: 2,
+      userName: '',
+      onChat: true,
+      min: 0,
+      second: 0,
+      minShow: '00',
+      secondShow: '00',
+
     }
   },
   components:{
@@ -103,6 +131,7 @@ export default {
     },
     down: function(id){
       this.videoStatus = false
+      this.workerStatus = 3
       rtc.socket.send(JSON.stringify({
           "eventName": "End",
           "data": {
@@ -113,6 +142,7 @@ export default {
     },
     up: function(){
       rtc.connect(Conf.WS_ADDRESS + "/1/" + this.mid);
+      this.workerStatus = 2
       this.videoStatus = true
     },
     closeDailog: function(){
@@ -131,24 +161,37 @@ export default {
           }
       }))
     },
-    // rejectVideo: function(done){
-    //   var that = this
-    //   // dialogVisible: false
-    //   this.$confirm('确认拒绝连线？')
-    //     .then(_ => {
-    //       done();
-    //       rtc.socket.send(JSON.stringify({
-    //           "eventName": "SureCall",
-    //           "data": {
-    //               "mid": that.mid,
-    //               "uid": that.uid,
-    //               "userId": that.userId,
-    //               "grabFlag": false
-    //           }
-    //       }))
-    //     })
-    //     .catch(_ => {});
-    // },
+    countTime: function () {
+      if (this.isChatting){
+        if (this.second < 59){
+          this.second++
+          if (this.second <= 9){
+            this.secondShow = '0' + this.second
+          }else {
+            this.secondShow = this.second
+          }
+        }else {
+          this.second = 0
+          this.secondShow = '0' + this.second
+          this.min++
+          if (this.min <= 9){
+            this.minShow = '0' + this.min
+          }else {
+            this.minShow = this.min
+          }
+        }
+        if(this.min == 9 && this.second == 0){
+            this.$message.success('您的连线时间只剩一分钟');
+        }
+        //递归每秒调用countTime方法，显示动态时间效果
+        setTimeout(this.countTime, 1000);
+      }else {
+        this.second = 0
+        this.min = 0
+        this.minShow = ''
+        this.secondShow = ''
+      }
+    },
     doCountDown: function(){
       var that = this
       this.showDailog = false
@@ -213,8 +256,23 @@ export default {
       .catch(function (response) {
         that.$message.error('保存小记失败');
       });
-    }
+    },
+    saveNoteAndUp: function(){
+      var that = this
+      this.saveNote()
+      this.workerStatus = 2
+      this.note = ""
+      this.userName = ""
+      rtc.socket.send(JSON.stringify({
+          "eventName": "MatchMakerStatus",
+          "data": {
+              "mid": that.mid,
+              "status": true
+          }
+      }))
+    },
   },
+
   mounted () {
     var videos = document.getElementById("videos");
     var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
@@ -276,6 +334,7 @@ export default {
       that.isChatting = false
       that.blackBroadContent = '连线结束'
       rtc.peerConnection = null
+      that.$message.success('用户结束连线，请及时提交小记，并将状态改为空闲中');
     });
 
     rtc.on('matchMakerSureCallAnswer', function(data) {
@@ -284,7 +343,13 @@ export default {
         that.uid = data.uid
         that.userId = data.userId
         that.isChatting = true
+        that.workerStatus = 1
         that.showDailog = false
+        that.min = 0
+        that.second = 0
+        that.minShow = '00'
+        that.secondShow = '00'
+        that.countTime()
         rtc.emit("ready", data.mid, data.uid, "matchmaker")
       }
     })
@@ -308,7 +373,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
-  color: #ebebeb;
+  color: #50bfff;
 }
 ul {
   list-style-type: none;
@@ -338,6 +403,7 @@ index {
   background-color: #aab8a3;
   width: 998px;
   height: 750px;
+  border-radius: 20px;
 }
 
 #me {
@@ -348,6 +414,7 @@ index {
   width: 300px;
   height: 225px;
   background-color: #000000;
+  border-radius: 20px;
 }
 
 #smallBlackBroad{
@@ -364,6 +431,7 @@ index {
   line-height: 225px;
   vertical-align: middle;
   display: table-cell;
+  border-radius: 20px;
 }
 #blackBroad {
   position: absolute;
@@ -375,6 +443,7 @@ index {
   width: 998px;
   height: 750px;
   text-align:center;
+  border-radius: 20px;
 }
 
 #other {
@@ -385,5 +454,86 @@ index {
   bottom:0px;
   width: 998px;
   height: 750px;
+  border-radius: 20px;
+}
+
+#timeOnChat {
+  position: absolute;
+  font-size: 50px;
+  color: #ffffff;
+  border-style: solid;
+  border-color: #5eced6;
+  background-color: #5eced6;
+  border-radius: 20px;
+}
+
+#text{
+  width:500px;
+  height: 400px;
+  margin-left: 100px;
+  vertical-align:top;
+  display: inline-block;
+  text-align: left;
+}
+
+#text1{
+  background-color: rgba(240, 235, 213, 1);
+  padding: 20px;
+  color: #000000;
+  border-radius: 20px;
+  margin-top: 5px;
+}
+#text2{
+  background-color: rgba(240, 235, 213, 1);
+  padding: 20px;
+  color: #000000;
+  border-radius: 20px;
+  margin-top: 55px;
+}
+#buttonDiv{
+  position: absolute;
+  height: 60px;
+  width: 300px;
+  right: 0;
+  margin-right: 60px;
+  /* margin-top: 20px; */
+  background-color: rgba(90, 90, 90, 0.5);
+  text-align: center;
+  border-radius: 20px;
+  padding-top: 20px;
+}
+#worker{
+  position: absolute;
+  height: 80px;
+  width: 200px;
+  margin-left: 60px;
+  /* margin-top: 20px; */
+  background-color: rgba(90, 90, 90, 0.5);
+  text-align: center;
+  border-radius: 20px;
+}
+#workerStatus{
+  margin-top: 1px;
+  margin-left: 50px;
+  float:left;
+  color: #FFFFFF;
+  font-size: 20px;
+}
+#workerInfo{
+  float:left;
+  margin-top: 12px;
+  margin-left: 40px;
+  color: #FFFFFF;
+  font-size: 20px;
+}
+#content{
+  position: absolute;
+  margin-top:120px;
+  /* background-color: rgba(90, 90, 90, 0.5); */
+  width: 1800px;
+  margin-left: 60px;
+  height: 800px;
+  padding-top: 50px;
+  border-radius: 20px;
 }
 </style>

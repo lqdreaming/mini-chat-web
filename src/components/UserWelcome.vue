@@ -3,8 +3,14 @@
     假装这里有视频有便签
     <el-button type="primary" round  v-on:click="login">马上联系红娘</el-button>
     <el-button type="primary" round  v-on:click="inputUserInfo">输入用户信息</el-button>
-     <el-button type="primary" round  v-on:click="register">注册</el-button>
+    <el-button type="primary" round  v-on:click="register">注册</el-button>
+    <ul>
+      <li v-for="label in labels">
+        {{ label.id }} : {{ label.content }}
+      </li>
+    </ul>
   </div>
+
 </template>
 
 <script>
@@ -15,7 +21,7 @@ export default {
   name: 'UserWelcome',
   data () {
     return {
-
+      labels : []
     }
   },
   methods: {
@@ -50,7 +56,18 @@ export default {
     }
   },
   mounted() {
-    // window.location.reload();
+    var that = this
+    axios.get(Conf.API + '/label/')
+      .then(function (response) {
+        var responseData = response.data.data
+        console.log(response.data.code);
+          if (response.data.code === 0){
+              that.labels = responseData
+          }
+      })
+      .catch(function (response) {
+        console.log(response)
+      })
   },
 }
 </script>

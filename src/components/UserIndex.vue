@@ -43,6 +43,8 @@
 
         </el-row>
       </div>
+      <div class="bg">
+      </div>
       <VerifyPhone style="position:absolute" v-if="verifyPhoneShow" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" @close="closeVerify" contentTitle="温馨提示" contentDetail="亲，我们的服务时间为09:00-22:00,请您预留手机号，情感专家会在第一时间与您联系哦！"></VerifyPhone>
     </div>
     <!-- <zaDailog style="position:absolute;" v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=1000 :showCancel=false confirm="继续操作" message="您已超过2分钟内未进行任何操作，是否回到首页"></zaDailog> -->
@@ -72,7 +74,7 @@
                 <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">连线</el-button>
                 <!-- <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button> -->
                 <div v-show="!matchMaker.status" id="busy">
-                  忙碌
+                  繁忙
                 </div>
               </div>
             </div>
@@ -237,7 +239,7 @@ export default {
           }
       }))
       that.$router.push({
-        name: 'UserWelcome'
+        name: 'EndPage'
       })
     },
     down: function(id){
@@ -375,9 +377,15 @@ export default {
           // window.location.reload(false);
           // window.location.href=window.location.href;
           // that.reload()
-          that.$router.push({
-            name: 'UserWelcome'
-          })
+          if (data.byWho == 1){
+            that.$router.push({
+              name: 'EndPage'
+            })
+          }else {
+            that.$router.push({
+              name: 'UserWelcome'
+            })
+          }
       });
 
       rtc.on('matchMakerChangeStatus', function (data) {
@@ -431,7 +439,6 @@ export default {
 
       rtc.on('userSureCallAnswer', function(data) {
         console.log("receive userSureCallAnswer");
-        console.info("-----------3333333333----------")
         if (data.grabFlag === true){
           that.redBigShow = false
           that.callContent = ''
@@ -672,6 +679,19 @@ a {
   margin-top: 100px;
   width: 1920px;
   z-index: 0;
+}
+.bg{
+  /* text-align: center; */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* margin: auto; */
+  height: 1080px;
+  width: 1920px;
+  background-color: rgba(90, 90, 90, 0.5);
+  z-index: 0s;
 }
 @-webkit-keyframes myfirst /* Safari and Chrome */
 {
