@@ -4,7 +4,7 @@
 
     <!-- <el-button type="primary" round v-on:click="test">open</el-button> -->
     <div class="button">
-      <el-button type="primary" round v-on:click="show=!show">驗證</el-button>
+      <!-- <el-button type="primary" round v-on:click="show=!show">驗證</el-button> -->
       <el-button type="primary" round v-on:click="user">用户端</el-button>
       <el-button type="primary" round v-on:click="matchmaker">红娘端</el-button>
     </div>

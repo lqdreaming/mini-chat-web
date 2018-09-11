@@ -73,6 +73,7 @@
 </template>
 
 <script>
+import Store from '@/tool/store.js'
   export default {
     name: 'UserInfoAge',
     data () {
@@ -85,19 +86,17 @@
     methods: {
       returnBtn: function () {
         this.$router.push({
-          name: 'UserWelcome'
+          name: 'UserInfoInput'
         })
       },
       changeNum: function () {
+        Store.save('user-age', this.age);
         window.clearTimeout(this.time)
         var that = this
         this.time = window.setTimeout(function () {
-
-          console.info('66ddd')
           that.$router.push({
             path: '/UserInfoMarriage'
           })
-
         }, 2000)  //timer2->2 当前是第二个定时器
       },
       mounted () {

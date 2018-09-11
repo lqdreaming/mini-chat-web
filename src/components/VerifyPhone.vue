@@ -150,8 +150,9 @@ export default {
       axios.get(Conf.API + '/smsCode/' + that.phone + '/' + that.code)
         .then(function (response) {
           var responseData = response.data.data
-          console.log(response.data.code);
+
             if (response.data.code === 0){
+              console.log("验证码正确");
               that.$emit('verify')
             }else{
               that.$emit('verifyFail')

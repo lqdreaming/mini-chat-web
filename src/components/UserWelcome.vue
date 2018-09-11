@@ -2,8 +2,8 @@
   <div class="index" style="margin-top: 450px;margin-left:auto;margin-right:auto">
     假装这里有视频有便签
     <el-button type="primary" round  v-on:click="login">马上联系红娘</el-button>
-    <el-button type="primary" round  v-on:click="inputUserInfo">输入用户信息</el-button>
-    <el-button type="primary" round  v-on:click="register">注册</el-button>
+    <!-- <el-button type="primary" round  v-on:click="inputUserInfo">输入用户信息</el-button>
+    <el-button type="primary" round  v-on:click="register">注册</el-button> -->
     <ul>
       <li v-for="label in labels">
         {{ label.id }} : {{ label.content }}
@@ -45,7 +45,7 @@ export default {
             if (response.data.code === 0){
               Store.save('uid', responseData)
               that.$router.push({
-                name: 'UserIndex'
+                name: 'UserInfoInput'
               })
             }
         })

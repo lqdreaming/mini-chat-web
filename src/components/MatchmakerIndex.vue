@@ -1,7 +1,8 @@
 <template>
 
     <div>
-      <div style="margin-top:50px">
+      <div id="bg" />
+      <div id="banner">
         <div id="worker">
           <div id="workerInfo">工号:{{mid}}</div>
           <div id="workerStatus">状态:
@@ -11,10 +12,10 @@
           </div>
         </div>
         <div id="buttonDiv">
-          <el-button type="primary" round v-show="!videoStatus" :disabled=isChatting v-on:click="up(uid)">上线</el-button>
-          <el-button type="danger" round v-show="videoStatus" :disabled=isChatting v-on:click="down(uid)">下线</el-button>
-          <el-button type="primary" round  :disabled=!isChatting v-on:click="showCancelDailog = true">结束通话</el-button>
-          <el-button type="info" round :disabled=isChatting v-on:click="logout()">注销登录</el-button>
+          <el-button type="text" round v-show="!videoStatus" :disabled=isChatting v-on:click="up(uid)">上线</el-button>
+          <el-button type="text" round v-show="videoStatus" :disabled=isChatting v-on:click="down(uid)">下线</el-button>
+          <el-button type="text" round  :disabled=!isChatting v-on:click="showCancelDailog = true">结束通话</el-button>
+          <el-button type="text" round :disabled=isChatting v-on:click="logout()">注销登录</el-button>
         </div>
       </div>
       <div id="content" >
@@ -23,7 +24,7 @@
           <div id="blackBroad" v-show="blackBroadShow"><br><br><br><br><br><br><br><br><br><br>{{blackBroadContent}}</div>
           <video id="me" autoplay></video>
           <div id="smallBlackBroad" v-show="!videoStatus"><p><br><br>已下线</p></div>
-          <div id="smallBlackBroad" style="background:#fa8dcc" v-show="workerStatus == 1 && isChatting == false"><p><br><br>繁忙中</p></div>
+          <div id="smallBlackBroad"  v-show="workerStatus == 1 && isChatting == false"><p><br><br>繁忙中</p></div>
           <div v-show="isChatting" id="timeOnChat">
             {{minShow}}:{{secondShow}}
           </div>
@@ -110,7 +111,7 @@ export default {
       second: 0,
       minShow: '00',
       secondShow: '00',
-
+      overByMatchMaker: false
     }
   },
   components:{
@@ -152,14 +153,17 @@ export default {
       var that = this
       this.showInputDailog = false
       console.info("reason:" + textarea)
-
-      rtc.socket.send(JSON.stringify({
-          "eventName": "IsOk",
-          "data": {
-              "mid": that.mid,
-              "isOk": true,
-          }
-      }))
+      if (this.overByMatchMaker == false){
+        rtc.socket.send(JSON.stringify({
+            "eventName": "IsOk",
+            "data": {
+                "mid": that.mid,
+                "isOk": true,
+            }
+        }))
+      }else {
+        this.overByMatchMaker == false
+      }
     },
     countTime: function () {
       if (this.isChatting){
@@ -231,6 +235,7 @@ export default {
       var that = this
       this.showInputDailog = true
       this.showCancelDailog = false
+      this.overByMatchMaker = true
       rtc.socket.send(JSON.stringify({
           "eventName": "End",
           "data": {
@@ -302,7 +307,7 @@ export default {
     rtc.on('pc_add_stream', function(stream) {
       that.stream = stream
       document.getElementById('other').srcObject = that.stream
-      document.getElementById('other').play()
+      // document.getElementById('other').play()
       // that.blackBroadShow = false
       axios.get(Conf.API + '/userInfo/' + that.userId)
         .then(function (response) {
@@ -332,6 +337,7 @@ export default {
       rtc.closePeerConnection(rtc.peerConnection)
       that.blackBroadShow = true
       that.isChatting = false
+      that.chatFlag = false
       that.blackBroadContent = '连线结束'
       rtc.peerConnection = null
       that.$message.success('用户结束连线，请及时提交小记，并将状态改为空闲中');
@@ -373,7 +379,7 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 h1, h2 {
-  color: #50bfff;
+  color: #3d444c;
 }
 ul {
   list-style-type: none;
@@ -403,7 +409,10 @@ index {
   background-color: #aab8a3;
   width: 998px;
   height: 750px;
-  border-radius: 20px;
+  border: solid;
+  border-width: 1px;
+  border-color: #e0e0e0;
+  /* border-radius: 20px; */
 }
 
 #me {
@@ -414,7 +423,9 @@ index {
   width: 300px;
   height: 225px;
   background-color: #000000;
-  border-radius: 20px;
+  margin-right: 1px;
+  margin-bottom: 1px;
+  /* border-radius: 20px; */
 }
 
 #smallBlackBroad{
@@ -424,14 +435,16 @@ index {
   bottom:0px;
   width: 300px;
   height: 225px;
-  background-color: #000000;
+  background-color: #3d444c;
   color: #ffffff;
   font-size: 25px;
   text-align:center;//水平居中
   line-height: 225px;
   vertical-align: middle;
   display: table-cell;
-  border-radius: 20px;
+  margin-right: 1px;
+  margin-bottom: 1px;
+  /* border-radius: 20px; */
 }
 #blackBroad {
   position: absolute;
@@ -443,7 +456,10 @@ index {
   width: 998px;
   height: 750px;
   text-align:center;
-  border-radius: 20px;
+  border: solid;
+  border-width: 1px;
+  border-color: #e0e0e0;
+  /* border-radius: 20px; */
 }
 
 #other {
@@ -454,7 +470,7 @@ index {
   bottom:0px;
   width: 998px;
   height: 750px;
-  border-radius: 20px;
+  /* border-radius: 20px; */
 }
 
 #timeOnChat {
@@ -464,76 +480,114 @@ index {
   border-style: solid;
   border-color: #5eced6;
   background-color: #5eced6;
-  border-radius: 20px;
+  /* border-radius: 20px; */
 }
 
 #text{
   width:500px;
   height: 400px;
-  margin-left: 100px;
+  margin-left: 50px;
   vertical-align:top;
   display: inline-block;
   text-align: left;
 }
 
 #text1{
-  background-color: rgba(240, 235, 213, 1);
+  background-color: rgba(255, 255, 255, 1);
   padding: 20px;
   color: #000000;
-  border-radius: 20px;
+  /* border-radius: 20px; */
   margin-top: 5px;
+  border: solid;
+  border-width: 1px;
+  border-color: #e0e0e0;
 }
 #text2{
-  background-color: rgba(240, 235, 213, 1);
+  background-color: rgba(255, 255, 255, 1);
   padding: 20px;
   color: #000000;
-  border-radius: 20px;
+  /* border-radius: 20px; */
   margin-top: 55px;
+  border: solid;
+  border-width: 1px;
+  border-color: #e0e0e0;
 }
 #buttonDiv{
   position: absolute;
   height: 60px;
   width: 300px;
   right: 0;
-  margin-right: 60px;
+  margin-right: 10px;
+  margin-top: 12px;
   /* margin-top: 20px; */
-  background-color: rgba(90, 90, 90, 0.5);
+  /* background-color: rgba(90, 90, 90, 0.5); */
   text-align: center;
-  border-radius: 20px;
-  padding-top: 20px;
+  /* border-radius: 20px; */
+  /* padding-top: 20px; */
 }
 #worker{
   position: absolute;
   height: 80px;
-  width: 200px;
-  margin-left: 60px;
+  width: 400px;
+  /* margin-left: 60px; */
   /* margin-top: 20px; */
-  background-color: rgba(90, 90, 90, 0.5);
+  /* background-color: rgba(90, 90, 90, 0.5); */
   text-align: center;
-  border-radius: 20px;
+  /* border-radius: 20px; */
 }
 #workerStatus{
-  margin-top: 1px;
-  margin-left: 50px;
+  margin-top: 15px;
+  margin-left: 25px;
   float:left;
   color: #FFFFFF;
-  font-size: 20px;
+  font-size: 17px;
 }
 #workerInfo{
   float:left;
-  margin-top: 12px;
-  margin-left: 40px;
+  margin-top: 15px;
+  margin-left: 20px;
   color: #FFFFFF;
-  font-size: 20px;
+  font-size: 17px;
 }
 #content{
   position: absolute;
-  margin-top:120px;
+  margin-top:70px;
   /* background-color: rgba(90, 90, 90, 0.5); */
   width: 1800px;
+  /* height: 1080px; */
   margin-left: 60px;
   height: 800px;
-  padding-top: 50px;
-  border-radius: 20px;
+  padding-top: 60px;
+  padding-bottom: 100px;
+  /* border-radius: 20px; */
+}
+#bg{
+  /* text-align: center; */
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  /* margin: auto; */
+  height: 1080px;
+  width: 1920px;
+  background-color: #eeeeee;
+  z-index: 0;
+}
+#banner{
+  position: absolute;
+  /* margin-top:10px; */
+  width: 1920px;
+  height: 60px;
+  background-color: #3d444c;
+}
+.el-button--text {
+  color: #ffffff;
+}
+.el-button.is-disabled, .el-button.is-disabled:focus, .el-button.is-disabled:hover {
+  color: #cccccc;
+}
+.el-button{
+  border-radius: 0px;
 }
 </style>
