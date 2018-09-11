@@ -8,13 +8,14 @@
         <div>
           <div class="user-gender-title">
             <!--<div>男神/女神</div>-->
-            <div>多大啦</div>
+            <div>男神/女神</div>
           </div>
-          <!--<div>{{ruleForm.index}}</div>-->
-          <!--<div class="user-gender" v-if="index===0">-->
-          <!--<div data-sex="1" class="male" @click="selectGenger(1)"></div>-->
-          <!--<div data-sex="2" class="female" @click="selectGenger(2)"></div>-->
-          <!--</div>-->
+
+
+          <div class="user-gender">
+          <div data-sex="1" class="male" @click="selectGenger(1)"></div>
+          <div data-sex="2" class="female" @click="selectGenger(2)"></div>
+          </div>
 
 
           <!--<div class="user-gender-sex">-->
@@ -22,136 +23,6 @@
           <!--<input id="slider"  type="range" min="0" max="550" step="1"  />-->
           <!--</div>-->
           <!--</div>-->
-
-          <div class="box-user-info-radio-group age-radio">
-            <div class="box-slider">
-              <div class="box-slider-item">
-                <div class="age-number">18岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">19岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">20岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">21岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">22岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">23岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">24岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">25岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">26岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">27岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">28岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">29岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">30岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">31岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">32岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">33岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">34岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">35岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">36岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">37岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">38岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">39岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">40岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">41岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">42岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">43岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">44岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">45岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">46岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">47岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">48岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">49岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">50岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">51岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">52岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">53岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">54岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">55岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">56岁</div>
-              </div>
-              <div class="box-slider-item">
-                <div class="age-number">57岁</div>
-              </div>
-              <div class="box-slider-bar" style="transform: translateX(185.474px);">
-                <div>
-                  25岁
-                </div>
-              </div>
-            </div>
-          </div>
 
 
           <!--<div class="user-marriage" v-if="index===1">-->
@@ -232,7 +103,7 @@
           age: '20',
           marriage: '2',
         },
-        index: 0
+
         // , rules: {
         //   age: [
         //     {validator: validateAge, trigger: 'blur'}
@@ -246,9 +117,15 @@
       },
 
       selectGenger (gender) {
-        this.index++
-        this.gender = gender
+        // this.gender = gender
+        Store.save('user-gender',gender);
+
+        this.$router.push({
+          path:'/UserInfoAge'
+        })
+
         alert(gender)
+
       },
 
       selectMarriage (marriage) {
