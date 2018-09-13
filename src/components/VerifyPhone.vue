@@ -34,7 +34,7 @@
 import Keyboard from './keyboard.vue'
 import Conf from '@/conf/conf.js'
 import axios from 'axios'
-
+import Store from '@/tool/store.js'
 
 export default {
   name: 'VerifyPhone',
@@ -147,7 +147,10 @@ export default {
     },
     checkVerifyCode: function(){
       var that = this
-      axios.get(Conf.API + '/smsCode/' + that.phone + '/' + that.code)
+      axios.get(Conf.API + '/smsCode/' + that.phone + '/' + that.code, {
+        headers: {
+            'X-Uid': Store.fetch('uid')
+        }})
         .then(function (response) {
           var responseData = response.data.data
 

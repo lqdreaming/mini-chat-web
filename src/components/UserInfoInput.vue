@@ -55,6 +55,7 @@
   left: 0;
   top: 0;
   margin: auto;
+  margin-left: 850px;
   font-size: 30px;
   color: #ffffff;
   background-color: #5eced6;
@@ -101,7 +102,8 @@
   position: absolute;
   margin-top: 400px;
   left: 0;
-  right: 0;
+
+  margin-left: 500px;
   display: flex;
   justify-content: center;
 }

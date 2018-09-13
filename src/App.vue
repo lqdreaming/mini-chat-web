@@ -26,58 +26,50 @@ export default {
   padding: 0;
 }
 .el-message-box{
-  border-radius: 25px;
+  border-radius: 25px !important;
 }
 .el-button--primary {
-  border-radius: 25px;
+  border-radius: 25px !important;
 }
 .el-button {
-    border-radius: 10px;
+    border-radius: 10px !important;
 }
 
-.el-main {
-  width: 500px;
-}
+/* .el-main {
+  width: 500px !important;
+} */
 
 .el-message{
-  border-radius: 25px;
-  background-color: rgba(90, 90, 90, 0.9);
-  /* width: 200px; */
-  /* height: 80px; */
-  /* font-size: 20px;
-  text-align:center; */
-  /* line-height: 80px; */
+  border-radius: 25px !important;
+  background-color: rgba(90, 90, 90, 0.9) !important;
 }
 .el-message__content{
-  padding-bottom: 20px;
-  font-size: 20px;
-  color: #ffffff;
-  text-align:center;
+  padding-bottom: 20px !important;
+  font-size: 20px !important;
+  color: #ffffff !important;
+  text-align:center !important;
 }
 .el-slider__bar{
-  height: 0px;
+  height: 0px !important;
 }
 .el-slider__runway{
-  height: 0px;
+  height: 0px !important;
 }
 .el-slider__button{
-  width: 20px;
-  height: 40px;
-  border-radius: 10px;
-  border: 2px;
-  border-style: solid;
-  border-color: #ffffff;
+  width: 20px !important;
+  height: 40px !important;
+  border-radius: 10px !important;
+  border: 2px !important;
+  border-style: solid !important;
+  border-color: #ffffff !important;
 }
-.el-tooltip__popper.is-dark{
-  /* background: #fa8dcc */
-}
+
 .el-tooltip__popper{
-  /* background: #fa8dcc; */
-  width:60px;
-  height: 60px;
-  border-radius: 20px;
-  font-size: 25px;
-  text-align: center;
-  line-height: 60px;
+  width:60px !important;
+  height: 60px !important;
+  border-radius: 20px !important;
+  font-size: 25px !important;
+  text-align: center !important;
+  line-height: 60px !important;
 }
 </style>

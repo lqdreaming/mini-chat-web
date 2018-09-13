@@ -1,6 +1,6 @@
 <template>
   <div class="index">
-    <VerifyPhone v-if="show" id="VerifyPhone" @close="showDailog = true"></VerifyPhone>
+    <!-- <VerifyPhone v-if="show" id="VerifyPhone" @close="showDailog = true"></VerifyPhone> -->
 
     <!-- <el-button type="primary" round v-on:click="test">open</el-button> -->
     <div class="button">

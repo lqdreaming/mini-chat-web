@@ -62,6 +62,9 @@
       passPhone: function(){
         this.showDailog = false
         Store.save('hasPhone', 0)
+        this.$router.push({
+          path:'/UserIndex'
+        })
       },
       selectMarriage (marriage) {
         this.marriage = marriage
@@ -70,6 +73,28 @@
         window.clearTimeout(this.time)
         this.time = window.setTimeout(function () {
           that.show = true
+          axios.post(Conf.API + '/userInfo',  {
+              uid: Store.fetch('uid'),
+              gender: Store.fetch('user-gender'),
+              age: Store.fetch('user-age'),
+              marriage: Store.fetch('user-marriage'),
+              label: Store.fetch('user-label')
+            },{
+            headers: {
+                'X-Uid': Store.fetch('uid')
+            }})
+            .then(function (response) {
+              var responseData = response.data.data
+                if (response.data.code === 0){
+                  console.log("上传用户信息成功");
+                }else{
+                  console.log("上传用户信息失败");
+                }
+            })
+            .catch(function (response) {
+              console.log(response)
+            })
+
         }, 2000)
       },
       verifyPhoneOK: function(){
@@ -77,6 +102,7 @@
         this.$router.push({
           path:'/UserIndex'
         })
+
       },
       verifyPhoneFail: function(){
         this.$message("验证码错误，请重试")
@@ -103,6 +129,7 @@ strong{
   width: 1200px;
   margin-top: 450px;
   z-index: 0;
+  margin-left: 360px;
 }
   /*--------------婚姻状态选择器----------------------*/
   .user-marriage {
@@ -168,6 +195,7 @@ strong{
     top: 0;
     margin: auto;
     font-size: 30px;
+    margin-left: 850px;
     color: #ffffff;
     background-color: #5eced6;
     width: 200px;
@@ -243,10 +271,10 @@ strong{
   z-index: 0;
 }
 #VerifyPhone{
-  position:absolute;
-  animation:myfirst 0.5s;
-  -webkit-animation:myfirst 0.5s;
-  animation-fill-mode: forwards;
+  position:absolute !important;
+  animation:myfirst 0.5s !important;
+  -webkit-animation:myfirst 0.5s !important;
+  animation-fill-mode: forwards !important;
   /* margin-left: 2500px */
 }
 @-webkit-keyframes myfirst /* Safari and Chrome */

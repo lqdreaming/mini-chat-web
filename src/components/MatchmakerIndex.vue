@@ -35,7 +35,7 @@
             <br>
             状态：
             <a v-if="userDetail.status == 1" style="color:#50bfff">已验证手机号</a>
-            <a v-else style="color:#ff6d6d">未验证手机号</a>
+            <a v-else-if="userDetail.status == 0" style="color:#ff6d6d">未验证手机号</a>
 
             <br>
             性别：{{userDetail.gender}}
@@ -44,7 +44,7 @@
             <br>
             情感状态: {{userDetail.marriage}}
             <br>
-            便签: {{userDetail.memo}}
+            便签: {{userDetail.label}}
           </div>
 
 
@@ -111,7 +111,8 @@ export default {
       second: 0,
       minShow: '00',
       secondShow: '00',
-      overByMatchMaker: false
+      overByMatchMaker: false,
+      chatTime: 5
     }
   },
   components:{
@@ -152,7 +153,22 @@ export default {
     commitReason: function(textarea){
       var that = this
       this.showInputDailog = false
-      console.info("reason:" + textarea)
+      axios.post(Conf.API + '/note', {
+        uid: this.userId,
+        rejectReason: textarea,
+      })
+      .then(function (response) {
+        console.log(response.data.code);
+        if (response.data.code === 0){
+          that.$message.success('保存理由成功');
+        }else {
+          that.$message.error('保存理由失败');
+        }
+      })
+      .catch(function (response) {
+        that.$message.error('保存理由失败');
+      });
+
       if (this.overByMatchMaker == false){
         rtc.socket.send(JSON.stringify({
             "eventName": "IsOk",
@@ -184,8 +200,8 @@ export default {
             this.minShow = this.min
           }
         }
-        if(this.min == 9 && this.second == 0){
-            this.$message.success('您的连线时间只剩一分钟');
+        if(this.second == 0 && this.chatTime - this.min == 1){
+          this.$message.success('您的连线时间只剩一分钟');
         }
         //递归每秒调用countTime方法，显示动态时间效果
         setTimeout(this.countTime, 1000);
@@ -248,7 +264,8 @@ export default {
       axios.post(Conf.API + '/note', {
         mid: this.mid,
         uid: this.userId,
-        note: this.note
+        note: this.note,
+        nickname: this.userName,
       })
       .then(function (response) {
         console.log(response.data.code);
@@ -268,6 +285,7 @@ export default {
       this.workerStatus = 2
       this.note = ""
       this.userName = ""
+      this.userDetail = ""
       rtc.socket.send(JSON.stringify({
           "eventName": "MatchMakerStatus",
           "data": {
@@ -283,6 +301,8 @@ export default {
     var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
     var that = this
     this.mid = Store.fetch('mid')
+
+
 
 
     rtc.connect(Conf.WS_ADDRESS + "/1/" + this.mid);
@@ -316,6 +336,11 @@ export default {
             if (response.data.code === 0){
                 console.info(responseData)
                 that.userDetail = responseData
+                if(responseData.status == 1){
+                  that.chatTime = 10
+                }else{
+                  that.chatTime = 5
+                }
             }
         })
         .catch(function (response) {

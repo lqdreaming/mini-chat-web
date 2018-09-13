@@ -106,7 +106,7 @@ import Store from '@/tool/store.js'
   }
 </script>
 
-
+</style>
 <style scoped>
   h1, h2 {
     font-weight: normal;
@@ -128,6 +128,7 @@ import Store from '@/tool/store.js'
     left: 0;
     top: 0;
     margin: auto;
+    margin-left: 850px;
     font-size: 30px;
     color: #ffffff;
     background-color: #5eced6;
@@ -152,6 +153,7 @@ import Store from '@/tool/store.js'
     width: 1200px;
     margin-top: 450px;
     z-index: 0;
+    margin-left: 360px;
   }
 
   #line {
@@ -162,6 +164,7 @@ import Store from '@/tool/store.js'
     bottom: 0;
     margin: auto;
     margin-top: 670px;
+    margin-left: 460px;
     width: 1000px;
     height: 6px;
     background-color: #FFFFFF
@@ -184,6 +187,7 @@ import Store from '@/tool/store.js'
     margin: auto;
     margin-top: 653px;
     width: 1000px;
+    margin-left: 460px;
   }
 
   #greens, #texts {

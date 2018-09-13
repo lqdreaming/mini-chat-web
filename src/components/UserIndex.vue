@@ -47,8 +47,6 @@
       </div>
       <VerifyPhone style="position:absolute" v-if="verifyPhoneShow" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" @close="closeVerify" contentTitle="温馨提示" contentDetail="亲，我们的服务时间为09:00-22:00,请您预留手机号，情感专家会在第一时间与您联系哦！"></VerifyPhone>
     </div>
-    <!-- <zaDailog style="position:absolute;" v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=1000 :showCancel=false confirm="继续操作" message="您已超过2分钟内未进行任何操作，是否回到首页"></zaDailog> -->
-
 
     <div v-show="!videoFlagShow">
       <div v-show="matchMakers[0] != null" class="matchMakerListTitle"  style="margin-top: 100px">
@@ -92,28 +90,34 @@
       </el-row>
     </div>
 
-    <div v-show="videoFlagShow" style="margin-top: 100px">
-      <div v-show="onChat" id="timeOnChat">
-        {{minShow}}:{{secondShow}}
+    <div v-show="videoFlagShow">
+      <div style="margin-top: 100px">
+        <div v-show="onChat" id="timeOnChat">
+          {{minShow}}:{{secondShow}}
+        </div>
+        <div id="videos">
+          <video id="other" autoplay></video>
+          <video id="me" autoplay></video>
+          <img id="redSmall" src="../../static/redCircleSmall.png"  v-show="!redBigShow"/>
+          <img id="blackSmall" src="../../static/blackCircleSmall.png"/>
+          <img id="redButton" src="../../static/redButton.png" v-on:click="showDailog = true"/>
+          <img id="blackButton" src="../../static/blackButton.png" v-show="videoOpen" v-on:click="closeVideo()"/>
+          <img id="blackBig" src="../../static/blackCircleBig.png" v-show="!videoOpen" v-on:click="openVideo()"/>
+          <img id="redBig" src="../../static/redCircleBig.png" v-show="redBigShow"/>
+          <div id="callContent">{{callContent}}</div>
+          <div id="countDown" v-show="countDownShow">{{countDown}} s</div>
+        </div>
       </div>
-      <div id="videos">
-        <video id="other" autoplay></video>
-        <video id="me" autoplay></video>
-        <img id="redSmall" src="../../static/redCircleSmall.png"  v-show="!redBigShow"/>
-        <img id="blackSmall" src="../../static/blackCircleSmall.png"/>
-        <img id="redButton" src="../../static/redButton.png" v-on:click="showDailog = true"/>
-        <img id="blackButton" src="../../static/blackButton.png" v-show="videoOpen" v-on:click="closeVideo()"/>
-        <img id="blackBig" src="../../static/blackCircleBig.png" v-show="!videoOpen" v-on:click="openVideo()"/>
-        <img id="redBig" src="../../static/redCircleBig.png" v-show="redBigShow"/>
-        <div id="callContent">{{callContent}}</div>
-        <div id="countDown" v-show="countDownShow">{{countDown}} s</div>
-      </div>
+
+      <div class="bg" v-if="verifyPhoneShowAfterChat"/>
+      <VerifyPhone style="position:absolute;top:0" v-if="verifyPhoneShowAfterChat" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOKAfteChat" @close="closeVerifyAfteChat" contentTitle="温馨提示" contentDetail="请留下您的手机号码，我们将把老师的联系方式发送给您。"></VerifyPhone>
     </div>
     <zaDailog v-if="verifyPhoneFailShow" @doConfirm="closeDailog" @doBg="closeDailog" :showCancel=false confirm="确认" message="验证码错误，请重试" ></zaDailog>
     <zaDailog v-if="showDailog" @doCancel="closeDailog" @doBg="closeDailog" confirm="断开" message="确认断开连线?" @doConfirm="over"></zaDailog>
     <zaDailog v-if="noMatchmaker":showCancel=false  @doBg="closeDailog"  @doConfirm="closeDailog" message="目前沒有空闲中的红娘，请耐心等待"></zaDailog>
     <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=10 :showCancel=false confirm="继续操作" message="您已超过2分钟内未进行任何操作，是否回到首页"></zaDailog>
     <zaDailog v-if="verifyPhoneOKShow" @doConfirm="leave" :bgClose=false @doCountDown="leave" :showCountDown=true :countDown=10 :showCancel=false title="成功提示" confirm="关闭" message="恭喜您，信息提交成功，预祝生活愉快！如有疑问请拨打咨询电话：8098099"></zaDailog>
+
   </div>
 </template>
 
@@ -153,6 +157,8 @@ export default {
       verifyPhoneShow: true,
       verifyPhoneOKShow: false,
       verifyPhoneFailShow: false,
+      verifyPhoneShowAfterChat: false,
+      chatTime: 5,
       matchMakers:
       [
           // { mid: 'aaa', status: true, name:'红娘1好',detail:"sdfds fsf dsf sd",picUrl:"../../static/pic/1.png"},
@@ -204,7 +210,15 @@ export default {
     },
     verifyPhoneFail: function(){
       this.$message("验证码错误，请重试")
-      // this.verifyPhoneFailShow = true
+    },
+    verifyPhoneOKAfteChat: function(){
+      this.$message({
+         message: '发送成功，请注意查收短信。',
+         duration: 5000
+       });
+      this.$router.push({
+        name: 'EndPage'
+      })
     },
     returnBtn: function(){
       this.$router.push({
@@ -216,12 +230,18 @@ export default {
         name: 'UserWelcome'
       })
     },
+    closeVerifyAfteChat: function(){
+      this.$router.push({
+        name: 'EndPage'
+      })
+    },
     closeDailog: function(){
       this.showDailog = false
       this.cancelCountDown = false
       this.noMatchmaker = false
       this.verifyPhoneOKShow = false
       this.verifyPhoneFailShow = false
+      this.verifyPhoneShowAfterChat = false
     },
     over: function(){
       var that = this
@@ -299,6 +319,7 @@ export default {
       document.body.ontouchend  = this.startTimer;
     },
     countTime: function () {
+      var that = this
       if (this.onChat){
         if (this.second < 59){
           this.second++
@@ -318,8 +339,28 @@ export default {
           }
 
         }
-        //递归每秒调用countTime方法，显示动态时间效果
-        setTimeout(this.countTime, 1000);
+
+        if(this.second == 0 && this.chatTime - this.min == 1){
+          this.$message.success('您的连线时间只剩一分钟');
+        }
+
+        if(this.second == 0 && this.chatTime - this.min == 0){
+          rtc.closePeerConnection(rtc.peerConnection)
+          // this.videoFlagShow = false
+          // this.videoOpen = false
+          document.getElementById('me').srcObject = this.stream
+          document.getElementById('me').muted = true
+          rtc.socket.send(JSON.stringify({
+              "eventName": "End",
+              "data": {
+                  "id": that.uid,
+              }
+          }))
+          // 3333
+        }else {
+          setTimeout(this.countTime, 1000);
+        }
+
       }else {
         this.second = 0
         this.min = 0
@@ -337,7 +378,11 @@ export default {
       console.info(this.userId)
       var that = this
       this.uid = Store.fetch('client-id')
-      console.log("this.uid：" + this.uid)
+      if(Store.fetch('hasPhone') == 1){
+        this.chatTime = 10
+      }else{
+        this.chatTime = 5
+      }
 
       rtc.connect(Conf.WS_ADDRESS + "/2/" + this.uid)
 
@@ -378,9 +423,14 @@ export default {
           // window.location.href=window.location.href;
           // that.reload()
           if (data.byWho == 1){
-            that.$router.push({
-              name: 'EndPage'
-            })
+            if (that.hasPhone == 1){
+              that.$router.push({
+                name: 'EndPage'
+              })
+            }else {
+              that.verifyPhoneShowAfterChat = true
+            }
+
           }else {
             that.$router.push({
               name: 'UserWelcome'
