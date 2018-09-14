@@ -7,7 +7,6 @@ import UserLogin from '@/components/UserLogin'
 import UserWelcome from '@/components/UserWelcome'
 import UserInfoInput from '@/components/UserInfoInput'
 import MatchmakerLogin from '@/components/MatchmakerLogin'
-import Register from '@/components/Register'
 import zaDailog from '@/components/zaDailog'
 import VerifyPhone from '@/components/VerifyPhone'
 import UserInfoAge from '@/components/UserInfoAge'
@@ -56,11 +55,7 @@ export default new Router({
       name: 'UserInfoInput',
       component: UserInfoInput
     },
-    {
-      path: '/Register',
-      name: 'Register',
-      component: Register
-    },
+
     {
       path: '/zaDailog',
       name: 'zaDailog',
