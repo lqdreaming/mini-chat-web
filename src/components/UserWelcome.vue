@@ -9,23 +9,25 @@
     <div class="containerTop">
       <div class="bgOpacity"></div>
       <div class="index">
-        <div class="zhenai12 containerTopBasetext">珍爱12年，专业情感咨询服务</div>
+        <div class="containerTopBasetext">珍爱12年，专业情感咨询服务</div>
         <div class="zhenaiMianDuiMian">珍心面对面</div>
-        <div class="zhenaiXinLiHua containerTopBasetext">免费与情感咨询师面对面诉说您的情感“心里话”</div>
-        <div class="zhenaiLJjieNi containerTopBasetext">这里会有人理解你，并且给你指明前行的路灯</div>
+        <div class="containerTopBasetext">免费与情感咨询师面对面诉说您的情感“心里话”</div>
+        <div class="containerTopBasetext">这里会有人理解你，并且给你指明前行的路灯</div>
 
-        <el-button type="primary" round id="linkMatchmaker">开始连线咨询师</el-button>
-
-        <div id="circleButtonSet">
-          <div class="circleButton" style="margin-left: 0">专业</div>
-          <div class="circleButton">真诚</div>
-          <div class="circleButton" style="margin-right: 0">免费</div>
-        </div>
+        <el-button type="primary" round id="linkMatchmaker" v-on:click="login">开始连线咨询师</el-button>
       </div>
+    </div>
 
+    <div id="circleButtonSet">
+      <div class="circleButton" style="margin-left: 0">专业</div>
+      <div class="circleButton">真诚</div>
+      <div class="circleButton" style="margin-right: 0">免费</div>
     </div>
 
 
+    <div class="containerBottom">
+      <div class="containerTopBasetext">珍爱12年，专业情感咨询服务</div>
+    </div>
   </div>
 
 
@@ -157,7 +159,7 @@
   }
 
   #linkMatchmaker {
-    padding:20px;
+    padding: 20px;
     font-size: 20px;
     border-radius: 50px !important;
     margin: 30px 0 50px;
@@ -165,14 +167,11 @@
 
   #circleButtonSet {
     position: absolute;
-    bottom: -70px;
-    left: 0;
-    right: 0;
     margin: auto;
-    width: 400px;
+    bottom: 14%;
+    width: 100%;
     height: auto;
   }
-
 
   .circleButton {
     display: inline-block;
@@ -185,6 +184,15 @@
     width: 60px;
     height: 60px;
     color: #ffffff;
+  }
+
+  .containerBottom {
+    background: #fff;
+    position: absolute;
+    width: 100%;
+    height: 15%;
+    bottom: 0;
+    left: 0;
   }
 
   ul {
