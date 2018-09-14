@@ -55,7 +55,7 @@
         })
       },
       labelClick: function (lableIndex) {
-        Store.save('user-label',lableIndex);
+        Store.save('user-label', lableIndex);
         this.login();
       },
 
@@ -78,6 +78,10 @@
 
       }
     },
+
+    created() {
+    },
+
     mounted() {
       var that = this;
       axios.get(Conf.API + '/label/')
