@@ -165,7 +165,7 @@
 
   #matchmakerInfo {
     margin-top: 100px;
-    margin-left: 600px;
+    margin-left: 550px;
     position: absolute;
     background: #ffffff;
     width: 400px;
@@ -178,7 +178,7 @@
     position: absolute;
     width: 400px;
     height: 600px;
-    margin-left: 1000px;
+    margin-left: 950px;
   }
 
   .addressBaseText {
