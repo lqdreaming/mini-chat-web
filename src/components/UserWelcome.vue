@@ -1,10 +1,4 @@
 <template>
-  <!--<el-container class="container-bg">-->
-  <!--<el-main>Main</el-main>-->
-  <!--<el-footer>footer</el-footer>-->
-  <!--</el-container>-->
-
-
   <div class='container'>
     <div class="containerTop">
       <div class="bgOpacity"></div>
@@ -26,24 +20,15 @@
 
 
     <div class="containerBottom">
-      <div class="containerTopBasetext">珍爱12年，专业情感咨询服务</div>
+      <div class="containerTopBasetext containerBottomTitle">点击以下任意标签，免费开启何专业情感咨询师的视频对话吧</div>
+
+      <ul>
+        <li v-for="label in labels" :key="label.id" v-on:click="labelClick(label.id)">{{ label.content }}</li>
+      </ul>
+
     </div>
   </div>
 
-
-  <!--<div class="container-bg">-->
-  <!--<div class="index">-->
-  <!--假装这里有视频有便签-->
-  <!--<el-button type="primary" round v-on:click="login">马上联系红娘</el-button>-->
-  <!--&lt;!&ndash; <el-button type="primary" round  v-on:click="inputUserInfo">输入用户信息</el-button>-->
-  <!--<el-button type="primary" round  v-on:click="register">注册</el-button> &ndash;&gt;-->
-  <!--<ul>-->
-  <!--<li v-for="label in labels">-->
-  <!--{{ label.id }} : {{ label.content }}-->
-  <!--</li>-->
-  <!--</ul>-->
-  <!--</div>-->
-  <!--</div>-->
 </template>
 
 <script>
@@ -69,9 +54,13 @@
           path: '/Register'
         })
       },
+      labelClick: function (lableIndex) {
+        Store.save('user-label',lableIndex);
+        this.login();
+      },
 
       login: function () {
-        var that = this
+        var that = this;
         axios.get(Conf.API + '/userInfo/uid/get')
           .then(function (response) {
             var responseData = response.data.data;
@@ -90,7 +79,7 @@
       }
     },
     mounted() {
-      var that = this
+      var that = this;
       axios.get(Conf.API + '/label/')
         .then(function (response) {
           var responseData = response.data.data;
@@ -195,14 +184,27 @@
     left: 0;
   }
 
+  .containerBottomTitle {
+    color: #000;
+    left: 0;
+    text-align: left;
+    padding-left: 10px;
+    padding-top: 15px;
+  }
+
   ul {
     list-style-type: none;
     padding: 0;
   }
 
   li {
+    color: #ff5292;
     display: inline-block;
     margin: 0 10px;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 50px !important;
+    border: 1px solid #ff5292;
   }
 
 
