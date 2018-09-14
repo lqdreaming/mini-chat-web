@@ -415,7 +415,7 @@ export default {
 
       //创建本地视频流失败
       rtc.on("stream_create_error", function() {
-        alert("create stream failed!");
+        alert("请检查一下你的摄像头等硬件设备");
       });
 
       //接收到其他用户的视频流
