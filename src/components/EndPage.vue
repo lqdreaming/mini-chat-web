@@ -17,7 +17,7 @@
     <div id="addressInfo" style="text-align: left">
       <div id="addressInfoName" class="addressBaseText">{{deptName}}距您<span id="addressDistance">{{distance}}</span>
       </div>
-      <div class="addressBaseText">联系电话：<span id="phoneCall">0755-82800181</span></div>
+      <div class="addressBaseText">联系电话：<span id="phoneCall">{{phone}}</span></div>
       <div class="addressBaseText">地址：{{deptAddr}}</div>
       <img id="addressSnipaste" src="../assets/endpage-address-snipaste.png"/>
     </div>
@@ -39,6 +39,7 @@
         distance: '',
         deptAddr: '',
         matchmakerName: '',
+        phone: '',
       }
     },
     components: {},
@@ -73,6 +74,7 @@
           console.log(response.data.code);
           if (response.data.code === 0) {
             that.matchmakerName = responseData.name;
+            that.phone = responseData.phone;
           }
         })
         .catch(function (response) {
