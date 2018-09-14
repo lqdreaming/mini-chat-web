@@ -37,6 +37,7 @@
   import Conf from '@/conf/conf.js'
   import axios from 'axios'
   import Store from '@/tool/store.js'
+  import Connect from '@/tool/connect.js'
   import index from '../router'
   import zaDailog from './zaDailog.vue'
   import VerifyPhone from './VerifyPhone.vue'
@@ -87,6 +88,7 @@
               var responseData = response.data.data
                 if (response.data.code === 0){
                   console.log("上传用户信息成功");
+                  Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
                 }else{
                   console.log("上传用户信息失败");
                 }

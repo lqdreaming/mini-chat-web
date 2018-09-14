@@ -128,8 +128,9 @@ import axios from 'axios'
 import Store from '@/tool/store.js'
 import zaDailog from './zaDailog.vue'
 import VerifyPhone from './VerifyPhone.vue'
+import Connect from '@/tool/connect.js'
 
-var rtc = SkyRTC();
+var rtc
 
 export default {
   // inject: ['reload'],
@@ -373,9 +374,10 @@ export default {
     this.isTimeOut()
   },
   mounted () {
-      rtc = SkyRTC()
+      // rtc = SkyRTC()
+      rtc = Connect.getConnect()
       var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
-      console.info(this.userId)
+
       var that = this
       this.uid = Store.fetch('client-id')
       if(Store.fetch('hasPhone') == 1){
@@ -383,9 +385,16 @@ export default {
       }else{
         this.chatTime = 5
       }
+      console.info("connect:"+new Date());
+      console.info(rtc);
+      rtc.socket.send(JSON.stringify({
+          "eventName": "GetAllMatchmaker",
+          "data": {
 
-      rtc.connect(Conf.WS_ADDRESS + "/2/" + this.uid)
+          }
+      }))
 
+      // rtc.connect(Conf.WS_ADDRESS + "/2/" + this.uid)
 
 
       rtc.createStream({
@@ -440,6 +449,7 @@ export default {
 
       rtc.on('matchMakerChangeStatus', function (data) {
           console.info("receive message:" + data);
+
           var flag = true
           that.matchMakers.forEach(function(matchMaker){
             if (matchMaker.mid == data.mid){
@@ -465,6 +475,7 @@ export default {
       });
 
       rtc.on('getAllMatchMakerStatus', function (data) {
+          console.info("getAllMatchMakerStatus"+new Date());
           if(Object.keys(data).length == 0){
             that.noMatchmakerDailog = true
           }

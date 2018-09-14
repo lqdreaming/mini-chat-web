@@ -133,6 +133,9 @@
     position: absolute;
     width: 100%;
     height: 600px;
+    -moz-user-select:none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
   }
 
   .containerTopBasetext {
@@ -173,6 +176,9 @@
     width: 60px;
     height: 60px;
     color: #ffffff;
+    -moz-user-select:none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
   }
 
   .containerBottom {
@@ -190,11 +196,17 @@
     text-align: left;
     padding-left: 10px;
     padding-top: 15px;
+    -moz-user-select:none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
   }
 
   ul {
     list-style-type: none;
     padding: 0;
+    -moz-user-select:none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
   }
 
   li {
@@ -205,6 +217,9 @@
     font-size: 20px;
     border-radius: 50px !important;
     border: 1px solid #ff5292;
+    -moz-user-select:none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
   }
 
 
