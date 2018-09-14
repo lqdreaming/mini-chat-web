@@ -22,6 +22,10 @@
       <img id="addressSnipaste" src="../assets/endpage-address-snipaste.png"/>
     </div>
 
+    <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto"
+              :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="请问您还在吗？">
+    </zaDailog>
+
   </div>
 
 </template>
@@ -30,6 +34,7 @@
   import Conf from '@/conf/conf.js'
   import axios from 'axios'
   import Store from '@/tool/store.js'
+  import zaDailog from './zaDailog.vue'
 
   export default {
     name: 'EndPage',
@@ -40,16 +45,54 @@
         deptAddr: '',
         matchmakerName: '',
         phone: '',
+        cancelCountDown: false,
       }
     },
-    components: {},
+
+    components: {
+      zaDailog
+    },
+
     methods: {
       returnBtn: function () {
         this.$router.push({
           name: 'UserWelcome'
         })
       },
+
+      leaveAuto: function () {
+        if (this.cancelCountDown) {
+          this.cancelCountDown = false;
+          this.returnBtn();
+        }
+      },
+
+      closeDailog: function () {
+        this.cancelCountDown = false;
+      },
+
+      startTimer: function () {
+        var that = this;
+        clearInterval(that.timeOut);
+        that.timeOut = setInterval(function () {
+          that.cancelCountDown = true
+        }, 1000 * 30) //这里设置30秒无操作弹出提示弹窗
+      },
+
+      isTimeOut: function () {
+        this.startTimer();
+        document.body.onmouseup = this.startTimer;
+        document.body.onkeyup = this.startTimer;
+        document.body.onclick = this.startTimer;
+        document.body.ontouchend = this.startTimer;
+      }
+
     },
+
+    created() {
+      this.isTimeOut()
+    },
+
     mounted() {
       var that = this;
       axios.get(Conf.API + '/boxPosition/' + Store.fetch('client-id'))
@@ -65,8 +108,6 @@
           console.log(response)
         });
 
-
-      Store.save('mid', '123456');
       axios.get(Conf.API + '/matchmakerInfo/' + Store.fetch('mid'))
         .then(function (response) {
           console.log('response  ' + response.data);
