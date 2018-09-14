@@ -155,6 +155,7 @@ export default {
       this.showInputDailog = false
       axios.post(Conf.API + '/note', {
         uid: this.userId,
+        mid: this.mid,
         rejectReason: textarea,
       })
       .then(function (response) {
