@@ -1,23 +1,47 @@
 <template>
   <!--<el-container class="container-bg">-->
-    <!--<el-main>Main</el-main>-->
-    <!--<el-footer>footer</el-footer>-->
+  <!--<el-main>Main</el-main>-->
+  <!--<el-footer>footer</el-footer>-->
   <!--</el-container>-->
 
 
-  <div class="container-bg">
-    <div class="index">
-      假装这里有视频有便签
-      <el-button type="primary" round v-on:click="login">马上联系红娘</el-button>
-      <!-- <el-button type="primary" round  v-on:click="inputUserInfo">输入用户信息</el-button>
-      <el-button type="primary" round  v-on:click="register">注册</el-button> -->
-      <ul>
-        <li v-for="label in labels">
-          {{ label.id }} : {{ label.content }}
-        </li>
-      </ul>
+  <div class='container'>
+    <div class="containerTop">
+      <div class="bgOpacity"></div>
+      <div class="index">
+        <div class="zhenai12 containerTopBasetext">珍爱12年，专业情感咨询服务</div>
+        <div class="zhenaiMianDuiMian">珍心面对面</div>
+        <div class="zhenaiXinLiHua containerTopBasetext">免费与情感咨询师面对面诉说您的情感“心里话”</div>
+        <div class="zhenaiLJjieNi containerTopBasetext">这里会有人理解你，并且给你指明前行的路灯</div>
+
+        <el-button type="primary" round id="linkMatchmaker">开始连线咨询师</el-button>
+
+        <div id="circleButtonSet">
+          <div class="circleButton" style="margin-left: 0">专业</div>
+          <div class="circleButton">真诚</div>
+          <div class="circleButton" style="margin-right: 0">免费</div>
+        </div>
+      </div>
+
     </div>
+
+
   </div>
+
+
+  <!--<div class="container-bg">-->
+  <!--<div class="index">-->
+  <!--假装这里有视频有便签-->
+  <!--<el-button type="primary" round v-on:click="login">马上联系红娘</el-button>-->
+  <!--&lt;!&ndash; <el-button type="primary" round  v-on:click="inputUserInfo">输入用户信息</el-button>-->
+  <!--<el-button type="primary" round  v-on:click="register">注册</el-button> &ndash;&gt;-->
+  <!--<ul>-->
+  <!--<li v-for="label in labels">-->
+  <!--{{ label.id }} : {{ label.content }}-->
+  <!--</li>-->
+  <!--</ul>-->
+  <!--</div>-->
+  <!--</div>-->
 </template>
 
 <script>
@@ -48,10 +72,10 @@
         var that = this
         axios.get(Conf.API + '/userInfo/uid/get')
           .then(function (response) {
-            var responseData = response.data.data
+            var responseData = response.data.data;
             console.log(response.data.code);
             if (response.data.code === 0) {
-              Store.save('uid', responseData)
+              Store.save('uid', responseData);
               that.$router.push({
                 name: 'UserInfoInput'
               })
@@ -67,7 +91,7 @@
       var that = this
       axios.get(Conf.API + '/label/')
         .then(function (response) {
-          var responseData = response.data.data
+          var responseData = response.data.data;
           console.log(response.data.code);
           if (response.data.code === 0) {
             that.labels = responseData
@@ -86,40 +110,81 @@
     font-weight: normal;
   }
 
-  .container-bg{
-    background: url("../assets/user-welcome-bg.png");
+  .container {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
   }
 
-
-  .el-header, .el-footer {
-    background-color: #B3C0D1;
-    color: #333;
-    text-align: center;
-    line-height: 60px;
+  .containerTop {
+    background: url("../assets/user-welcome-bg.png") no-repeat;
+    background-size: 100%;
+    position: absolute;
+    width: 100%;
+    height: 85%;
   }
 
-  .el-aside {
-    background-color: #D3DCE6;
-    color: #333;
-    text-align: center;
-    line-height: 200px;
+  .bgOpacity {
+    opacity: 0.7;
+    background: #515151;
+    background-size: 100%;
+    position: absolute;
+    width: 100%;
+    height: 100%;
   }
-
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    line-height: 160px;
-  }
-
-   el-container {
-    margin-bottom: 40px;
-  }
-
-
 
   .index {
-    margin: 450px auto 0;
+    padding-top: 15px;
+    text-align: center;
+    margin: 250px auto 0;
+    position: absolute;
+    width: 100%;
+    height: 600px;
+  }
+
+  .containerTopBasetext {
+    color: #fff;
+    font-size: 22px;
+  }
+
+  .zhenaiMianDuiMian {
+    color: #fff;
+    font-size: 50px;
+    font-weight: bold;
+    padding: 10px 0;
+  }
+
+  #linkMatchmaker {
+    padding:20px;
+    font-size: 20px;
+    border-radius: 50px !important;
+    margin: 30px 0 50px;
+  }
+
+  #circleButtonSet {
+    position: absolute;
+    bottom: -70px;
+    left: 0;
+    right: 0;
+    margin: auto;
+    width: 400px;
+    height: auto;
+  }
+
+
+  .circleButton {
+    display: inline-block;
+    background: #000000;
+    margin-left: 60px;
+    z-index: 100;
+    position: relative;
+    line-height: 60px;
+    border-radius: 60px !important;
+    width: 60px;
+    height: 60px;
+    color: #ffffff;
   }
 
   ul {
