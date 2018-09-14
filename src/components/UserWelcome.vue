@@ -56,11 +56,27 @@
       },
       labelClick: function (lableIndex) {
         Store.save('user-label', lableIndex);
-        this.login();
+        var that = this;
+        axios.get(Conf.API + '/userInfo/uid/get')
+          .then(function (response) {
+            var responseData = response.data.data;
+            console.log(response.data.code);
+            if (response.data.code === 0) {
+              Store.save('uid', responseData);
+              that.$router.push({
+                name: 'UserInfoInput'
+              })
+            }
+          })
+          .catch(function (response) {
+            that.$message.error('连接服务器失败');
+          })
+
       },
 
       login: function () {
         var that = this;
+        Store.delete('user-label');
         axios.get(Conf.API + '/userInfo/uid/get')
           .then(function (response) {
             var responseData = response.data.data;
