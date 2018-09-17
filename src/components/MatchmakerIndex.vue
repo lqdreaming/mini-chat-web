@@ -30,7 +30,7 @@
           </div>
         </div>
         <div id="text">
-          <div id="text1">
+          <div v-if="workerStatus == 1" id="text1">
             <h2>用户基本信息</h2>
             <br>
             状态：
@@ -46,7 +46,9 @@
             <br>
             便签: {{userDetail.label}}
           </div>
-
+          <div v-else id="text1">
+            <h2>等待用户连线</h2>
+          </div>
 
           <div id="text2">
             <h2>用户称谓</h2>

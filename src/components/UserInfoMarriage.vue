@@ -73,6 +73,7 @@
         var that = this
         window.clearTimeout(this.time)
         this.time = window.setTimeout(function () {
+          Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
           that.show = true
           axios.post(Conf.API + '/userInfo',  {
               uid: Store.fetch('uid'),
@@ -88,7 +89,7 @@
               var responseData = response.data.data
                 if (response.data.code === 0){
                   console.log("上传用户信息成功");
-                  Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
+
                 }else{
                   console.log("上传用户信息失败");
                 }

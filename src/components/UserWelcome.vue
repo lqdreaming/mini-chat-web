@@ -84,6 +84,7 @@
 
     mounted() {
       var that = this;
+      // Store.delete("hasPhone")
       axios.get(Conf.API + '/label/')
         .then(function (response) {
           var responseData = response.data.data;
