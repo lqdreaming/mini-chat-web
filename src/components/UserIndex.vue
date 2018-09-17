@@ -39,7 +39,7 @@
                 将从空闲的老师中随机挑选一位与您连线
               </div>
               <div>
-                <el-button type="primary" v-on:click="callMatchmakerRandom()">随机连线</el-button>
+                <el-button type="primary">随机连线</el-button>
               </div>
             </el-card>
           </el-col>
@@ -91,7 +91,7 @@
                 将从空闲的老师中随机挑选一位与您连线
               </div>
               <div>
-                <el-button type="primary" v-on:click="callMatchmakerRandom()">随机连线</el-button>
+                <el-button type="primary" v-on:click="callMatchmakerRandomFake()">随机连线</el-button>
               </div>
             </el-card>
           </el-col>
