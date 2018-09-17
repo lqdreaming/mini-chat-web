@@ -61,6 +61,8 @@ var SkyRTC = function() {
 
         this.peerConnection = null;
 
+        this.connectStatus = false;
+
         // //初始时需要构建链接的数目
         // this.numStreams = 0;
         // //初始时已经连接的数目
@@ -103,6 +105,10 @@ var SkyRTC = function() {
             that.closePeerConnection(pcs);
             that.emit('socket_closed', socket);
         };
+
+        this.on("connectSuccess", function(data) {
+            that.connectStatus = true
+        });
 
         this.on("iceTo", function(data) {
             var candidate = new nativeRTCIceCandidate(data)

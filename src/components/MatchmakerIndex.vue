@@ -206,6 +206,14 @@ export default {
         if(this.second == 0 && this.chatTime - this.min == 1){
           this.$message.success('您的连线时间只剩一分钟');
         }
+        if(this.second == 0 && this.chatTime - this.min == 0){
+          rtc.closePeerConnection(rtc.peerConnection)
+          this.blackBroadShow = true
+          this.isChatting = false
+          this.chatFlag = false
+          this.blackBroadContent = '连线结束'
+          rtc.peerConnection = null
+        }
         //递归每秒调用countTime方法，显示动态时间效果
         setTimeout(this.countTime, 1000);
       }else {
@@ -545,7 +553,7 @@ index {
   height: 60px;
   width: 300px;
   right: 0;
-  margin-right: 10px;
+  margin-right: 1%;
   margin-top: 12px;
   /* margin-top: 20px; */
   /* background-color: rgba(90, 90, 90, 0.5); */
@@ -581,10 +589,10 @@ index {
   position: absolute;
   margin-top:70px;
   /* background-color: rgba(90, 90, 90, 0.5); */
-  width: 1800px;
+  width: 100%;
   /* height: 1080px; */
-  margin-left: 60px;
-  height: 800px;
+  margin-left: 1%;
+  height: auto;
   padding-top: 60px;
   padding-bottom: 100px;
   /* border-radius: 20px; */
@@ -597,15 +605,15 @@ index {
   left: 0;
   right: 0;
   /* margin: auto; */
-  height: 1080px;
-  width: 1920px;
+  height: 100%;
+  width: 100%;
   background-color: #eeeeee;
   z-index: 0;
 }
 #banner{
   position: absolute;
   /* margin-top:10px; */
-  width: 1920px;
+  width: 100%;
   height: 60px;
   background-color: #3d444c;
 }

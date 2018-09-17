@@ -43,13 +43,62 @@
 
         </el-row>
       </div>
-      <div v-if="hasPhone == 1" class="bg">
+      <div class="bg">
       </div>
-      <VerifyPhone style="position:absolute" v-if="verifyPhoneShow && hasPhone == 1" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" @close="closeVerify" contentTitle="温馨提示" contentDetail="亲，我们的服务时间为09:00-22:00,请您预留手机号，情感专家会在第一时间与您联系哦！"></VerifyPhone>
-      <zaDailog v-if="hasPhone == 0" :showCancel=false  @doBg="closeVerify"  @doConfirm="closeVerify" title="温馨提示" message="亲，我们的服务时间为09:00-22:00,情感专家会在第一时间与您联系哦！"></zaDailog>
+      <VerifyPhone style="position:absolute" v-if="verifyPhoneShow" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" @close="closeVerify" contentTitle="温馨提示" contentDetail="亲，我们的服务时间为09:00-22:00,请您预留手机号，情感专家会在第一时间与您联系哦！"></VerifyPhone>
+      <!-- <zaDailog v-if="hasPhone == 0" :showCancel=false  @doBg="closeVerify"  @doConfirm="closeVerify" title="温馨提示" message="亲，我们的服务时间为09:00-22:00,情感专家会在第一时间与您联系哦！"></zaDailog> -->
     </div>
 
-    <div v-show="!videoFlagShow">
+    <div v-show="matchMakers[0] != null && userMarriage == 2 || userMarriage == 3">
+      <!-- 虚假忙碌页面， 选择热恋的人-->
+      <div class="fake">
+        <div  class="matchMakerListTitle">
+          请选择你要联系的老师
+          <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
+        </div>
+
+        <br><br><br><br><br><br>
+        <el-row>
+          <el-col :span="5" v-for="(matchMaker, index) in matchMakersFake" :key="index" :offset="1">
+            <el-card shadow="always" :body-style="{ padding: '0px' }">
+              <img ondragstart="return false" v-bind:src="matchMaker.picUrl" class="image">
+              <div style="padding: 14px;">
+                <div id="matchMakerDetial">
+                  <b>{{matchMaker.name}}</b>
+                  <br>
+                  <div style="height:80px;margin-top:10px">
+                    <b>简介:</b>{{matchMaker.detail}}
+                  </div>
+                </div>
+
+                <div style="margin-top:10px">
+                  <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">连线</el-button>
+                  <!-- <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button> -->
+                  <div v-show="!matchMaker.status" id="busy">
+                    繁忙
+                  </div>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="5" :offset="1">
+            <el-card shadow="always">
+              <img  ondragstart="return false" style="margin-top:100px" src="../../static/question.png">
+              <div style="margin-top:80px">
+                <el-button type="primary" v-on:click="callMatchmakerRandomFake()">随机连线</el-button>
+              </div>
+            </el-card>
+          </el-col>
+
+        </el-row>
+      </div>
+      <!-- <div class="bg">
+      </div>
+      <VerifyPhone style="position:absolute" v-if="verifyPhoneShow" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" @close="closeVerify" contentTitle="温馨提示" contentDetail="亲，我们的服务时间为09:00-22:00,请您预留手机号，情感专家会在第一时间与您联系哦！"></VerifyPhone> -->
+      <!-- <zaDailog v-if="hasPhone == 0" :showCancel=false  @doBg="closeVerify"  @doConfirm="closeVerify" title="温馨提示" message="亲，我们的服务时间为09:00-22:00,情感专家会在第一时间与您联系哦！"></zaDailog> -->
+    </div>
+
+    <div v-show="!videoFlagShow && userMarriage != 2 && userMarriage != 3">
       <div v-show="matchMakers[0] != null" class="matchMakerListTitle"  style="margin-top: 100px">
         请选择你要联系的老师
         <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
@@ -163,6 +212,7 @@ export default {
       verifyPhoneShowAfterChat: false,
       chatTime: 5,
       hasPhone: 0,
+      userMarriage: 1,
       matchMakers:
       [
           // { mid: 'aaa', status: true, name:'红娘1好',detail:"sdfds fsf dsf sd",picUrl:"../../static/pic/1.png"},
@@ -191,6 +241,9 @@ export default {
               "userId": Store.fetch('uid')
           }
       }))
+    },
+    callMatchmakerRandomFake: function(){
+      this.noMatchmaker = true
     },
     callMatchmakerRandom: function(){
       var flag = false
@@ -381,31 +434,35 @@ export default {
       var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
       this.hasPhone = Store.fetch('hasPhone')
       var that = this
+      this.userMarriage = Store.fetch('user-marriage')
       this.uid = Store.fetch('client-id')
       if(this.hasPhone == 1){
         this.chatTime = 10
       }else{
         this.chatTime = 5
       }
-      console.info("connect:"+new Date());
-      console.info(rtc);
-      rtc.socket.send(JSON.stringify({
-          "eventName": "GetAllMatchmaker",
-          "data": {
 
-          }
-      }))
+      var delay = function(rtc){
+          if(rtc.connectStatus == true){
+            console.info('rtc.connectStatus = true')
+            rtc.socket.send(JSON.stringify({
+                "eventName": "GetAllMatchmaker",
+                "data": {
 
-      // rtc.connect(Conf.WS_ADDRESS + "/2/" + this.uid)
+                }
+            }))
 
+            rtc.createStream({
+              "video": true,
+              "audio": true
+            });
+      		return;
+      	}
+      	else{setTimeout(function(){delay(rtc)}, 100)}
+      }
 
-      rtc.createStream({
-        "video": true,
-        "audio": true
-        // "uid" : data.uid,
-        // "mid" : data.mid,
-        // "type" : "user"
-      });
+      delay(rtc)
+
 
       //创建本地视频流成功
       rtc.on("stream_created", function(stream) {

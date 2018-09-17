@@ -48,6 +48,7 @@
         marriage: 0,
         show: false,
         showDailog: false,
+        rtc: null,
       }
     },
     components:{
@@ -73,8 +74,25 @@
         var that = this
         window.clearTimeout(this.time)
         this.time = window.setTimeout(function () {
-          Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
-          that.show = true
+          // Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
+          if (that.marriage != 2 && that.marriage != 3){
+            that.show = true
+          }else {
+            that.$router.push({
+              path:'/UserIndex'
+            })
+          }
+          // that.rtc.on('getAllMatchMakerStatus', function (data) {
+          //     // console.info("getAllMatchMakerStatus"+new Date());
+          //     if(Object.keys(data).length == 0){
+          //       that.$router.push({
+          //         path:'/UserIndex'
+          //       })
+          //     }else {
+          //       that.show = true
+          //     }
+          // });
+
           axios.post(Conf.API + '/userInfo',  {
               uid: Store.fetch('uid'),
               gender: Store.fetch('user-gender'),
@@ -89,7 +107,6 @@
               var responseData = response.data.data
                 if (response.data.code === 0){
                   console.log("上传用户信息成功");
-
                 }else{
                   console.log("上传用户信息失败");
                 }

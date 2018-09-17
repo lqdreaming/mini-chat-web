@@ -35,6 +35,7 @@
   import axios from 'axios'
   import Store from '@/tool/store.js'
   import Conf from '@/conf/conf.js'
+  import Connect from '@/tool/connect.js'
 
   export default {
     name: 'UserWelcome',
@@ -76,7 +77,8 @@
 
       login: function () {
         var that = this;
-        Store.delete('user-label');
+        // Store.delete('user-label');
+        Store.save('user-label', 0);
         axios.get(Conf.API + '/userInfo/uid/get')
           .then(function (response) {
             var responseData = response.data.data;
@@ -100,7 +102,8 @@
 
     mounted() {
       var that = this;
-      // Store.delete("hasPhone")
+      Store.delete("hasPhone")
+
       axios.get(Conf.API + '/label/')
         .then(function (response) {
           var responseData = response.data.data;
@@ -112,6 +115,8 @@
         .catch(function (response) {
           console.log(response)
         })
+        
+      Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
     },
   }
 </script>
