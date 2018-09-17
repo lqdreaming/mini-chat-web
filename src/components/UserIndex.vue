@@ -17,7 +17,7 @@
                 <div id="matchMakerDetial">
                   <b>{{matchMaker.name}}</b>
                   <br>
-                  <div style="height:80px;margin-top:10px">
+                  <div style="height:80px;margin-top:10px;text-align:left">
                     <b>简介:</b>{{matchMaker.detail}}
                   </div>
                 </div>
@@ -34,8 +34,11 @@
           </el-col>
           <el-col :span="5" :offset="1">
             <el-card shadow="always">
-              <img  ondragstart="return false" style="margin-top:100px" src="../../static/question.png">
-              <div style="margin-top:80px">
+              <img style="margin-top:80px" src="../../static/question.png">
+              <div style="height:80px;margin-top:30px;text-align:center">
+                将从空闲的老师中随机挑选一位与您连线
+              </div>
+              <div>
                 <el-button type="primary" v-on:click="callMatchmakerRandom()">随机连线</el-button>
               </div>
             </el-card>
@@ -66,7 +69,7 @@
                 <div id="matchMakerDetial">
                   <b>{{matchMaker.name}}</b>
                   <br>
-                  <div style="height:80px;margin-top:10px">
+                  <div style="height:80px;margin-top:10px;text-align:left">
                     <b>简介:</b>{{matchMaker.detail}}
                   </div>
                 </div>
@@ -83,9 +86,12 @@
           </el-col>
           <el-col :span="5" :offset="1">
             <el-card shadow="always">
-              <img  ondragstart="return false" style="margin-top:100px" src="../../static/question.png">
-              <div style="margin-top:80px">
-                <el-button type="primary" v-on:click="callMatchmakerRandomFake()">随机连线</el-button>
+              <img style="margin-top:80px" src="../../static/question.png">
+              <div style="height:80px;margin-top:30px;text-align:center">
+                将从空闲的老师中随机挑选一位与您连线
+              </div>
+              <div>
+                <el-button type="primary" v-on:click="callMatchmakerRandom()">随机连线</el-button>
               </div>
             </el-card>
           </el-col>
@@ -113,7 +119,7 @@
               <div id="matchMakerDetial">
                 <b>{{matchMaker.name}}</b>
                 <br>
-                <div style="height:80px;margin-top:10px">
+                <div style="height:80px;margin-top:10px;text-align:left">
                   <b>简介:</b>{{matchMaker.detail}}
                 </div>
               </div>
@@ -130,8 +136,11 @@
         </el-col>
         <el-col :span="5" :offset="1" v-show="matchMakers[0] != null">
           <el-card shadow="always">
-            <img style="margin-top:100px" src="../../static/question.png">
-            <div style="margin-top:80px">
+            <img style="margin-top:80px" src="../../static/question.png">
+            <div style="height:80px;margin-top:30px;text-align:center">
+              将从空闲的老师中随机挑选一位与您连线
+            </div>
+            <div>
               <el-button type="primary" v-on:click="callMatchmakerRandom()">随机连线</el-button>
             </div>
           </el-card>
