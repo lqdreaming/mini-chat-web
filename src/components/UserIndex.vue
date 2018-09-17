@@ -35,7 +35,7 @@
           <el-col :span="5" :offset="1">
             <el-card shadow="always">
               <img style="margin-top:80px" src="../../static/question.png">
-              <div style="height:80px;margin-top:30px;text-align:center">
+              <div style="height:80px;margin-top:50px;text-align:center">
                 将从空闲的老师中随机挑选一位与您连线
               </div>
               <div>
@@ -87,7 +87,7 @@
           <el-col :span="5" :offset="1">
             <el-card shadow="always">
               <img style="margin-top:80px" src="../../static/question.png">
-              <div style="height:80px;margin-top:30px;text-align:center">
+              <div style="height:80px;margin-top:50px;text-align:center">
                 将从空闲的老师中随机挑选一位与您连线
               </div>
               <div>
@@ -137,7 +137,7 @@
         <el-col :span="5" :offset="1" v-show="matchMakers[0] != null">
           <el-card shadow="always">
             <img style="margin-top:80px" src="../../static/question.png">
-            <div style="height:80px;margin-top:30px;text-align:center">
+            <div style="height:80px;margin-top:50px;text-align:center">
               将从空闲的老师中随机挑选一位与您连线
             </div>
             <div>
