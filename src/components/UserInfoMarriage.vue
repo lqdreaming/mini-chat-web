@@ -29,109 +29,130 @@
       <div v-if="show" class="bg"/>
       <VerifyPhone v-if="show" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" id="VerifyPhone" @close="showDailog = true"></VerifyPhone>
       <zaDailog v-if="showDailog"  @doCancel="passPhone" @doConfirm="showDailog = false" @doBg="showDailog = false" cancel="跳过" confirm="去验证" message="完成验证即可以连线长达10分钟，而跳过只能连线5分钟噢~"></zaDailog>
+      <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="请问您还在吗？"></zaDailog>
     </div>
 </template>
 
 
 <script>
-  import Conf from '@/conf/conf.js'
-  import axios from 'axios'
-  import Store from '@/tool/store.js'
-  import Connect from '@/tool/connect.js'
-  import index from '../router'
-  import zaDailog from './zaDailog.vue'
-  import VerifyPhone from './VerifyPhone.vue'
+import Conf from '@/conf/conf.js'
+import axios from 'axios'
+import Store from '@/tool/store.js'
+import Connect from '@/tool/connect.js'
+import index from '../router'
+import zaDailog from './zaDailog.vue'
+import VerifyPhone from './VerifyPhone.vue'
 
-  export default {
-    data () {
-      return {
-        marriage: 0,
-        show: false,
-        showDailog: false,
-        rtc: null,
+export default {
+  data () {
+    return {
+      marriage: 0,
+      show: false,
+      showDailog: false,
+      rtc: null,
+      cancelCountDown: false
+    }
+  },
+  components:{
+    zaDailog,
+    VerifyPhone
+  },
+  methods: {
+    returnBtn: function(){
+      this.$router.push({
+        name: 'UserInfoAge'
+      })
+    },
+    passPhone: function(){
+      this.showDailog = false
+      Store.save('hasPhone', 0)
+      this.$router.push({
+        path:'/UserIndex'
+      })
+    },
+    selectMarriage (marriage) {
+      this.marriage = marriage
+      Store.save('user-marriage', marriage)
+      var that = this
+      window.clearTimeout(this.time)
+      this.time = window.setTimeout(function () {
+        // Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
+        if (that.marriage != 2 && that.marriage != 3){
+          that.show = true
+        }else {
+          that.$router.push({
+            path:'/UserIndex'
+          })
+        }
+
+        axios.post(Conf.API + '/userInfo',  {
+            uid: Store.fetch('uid'),
+            gender: Store.fetch('user-gender'),
+            age: Store.fetch('user-age'),
+            marriage: Store.fetch('user-marriage'),
+            label: Store.fetch('user-label')
+          },{
+          headers: {
+              'X-Uid': Store.fetch('uid')
+          }})
+          .then(function (response) {
+            var responseData = response.data.data
+              if (response.data.code === 0){
+                console.log("上传用户信息成功");
+              }else{
+                console.log("上传用户信息失败");
+              }
+          })
+          .catch(function (response) {
+            console.log(response)
+          })
+
+      }, 2000)
+    },
+    verifyPhoneOK: function(){
+      Store.save('hasPhone', 1)
+      this.$router.push({
+        path:'/UserIndex'
+      })
+
+    },
+    verifyPhoneFail: function(){
+      this.$message("验证码错误，请重试")
+    },
+    leaveAuto: function(){
+      if(this.cancelCountDown){
+        this.cancelCountDown = false
+        this.$router.push({
+          name: 'UserWelcome'
+        })
       }
     },
-    components:{
-      zaDailog,
-      VerifyPhone
+    closeDailog: function(){
+      this.cancelCountDown = false
     },
-    methods: {
-      returnBtn: function(){
-        this.$router.push({
-          name: 'UserInfoAge'
-        })
-      },
-      passPhone: function(){
-        this.showDailog = false
-        Store.save('hasPhone', 0)
-        this.$router.push({
-          path:'/UserIndex'
-        })
-      },
-      selectMarriage (marriage) {
-        this.marriage = marriage
-        Store.save('user-marriage', marriage)
-        var that = this
-        window.clearTimeout(this.time)
-        this.time = window.setTimeout(function () {
-          // Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
-          if (that.marriage != 2 && that.marriage != 3){
-            that.show = true
-          }else {
-            that.$router.push({
-              path:'/UserIndex'
-            })
-          }
-          // that.rtc.on('getAllMatchMakerStatus', function (data) {
-          //     // console.info("getAllMatchMakerStatus"+new Date());
-          //     if(Object.keys(data).length == 0){
-          //       that.$router.push({
-          //         path:'/UserIndex'
-          //       })
-          //     }else {
-          //       that.show = true
-          //     }
-          // });
-
-          axios.post(Conf.API + '/userInfo',  {
-              uid: Store.fetch('uid'),
-              gender: Store.fetch('user-gender'),
-              age: Store.fetch('user-age'),
-              marriage: Store.fetch('user-marriage'),
-              label: Store.fetch('user-label')
-            },{
-            headers: {
-                'X-Uid': Store.fetch('uid')
-            }})
-            .then(function (response) {
-              var responseData = response.data.data
-                if (response.data.code === 0){
-                  console.log("上传用户信息成功");
-                }else{
-                  console.log("上传用户信息失败");
-                }
-            })
-            .catch(function (response) {
-              console.log(response)
-            })
-
-        }, 2000)
-      },
-      verifyPhoneOK: function(){
-        Store.save('hasPhone', 1)
-        this.$router.push({
-          path:'/UserIndex'
-        })
-
-      },
-      verifyPhoneFail: function(){
-        this.$message("验证码错误，请重试")
-      },
-
+    startTimer: function(){
+      var that = this;
+        clearInterval(that.timeOut);
+        that.timeOut = setInterval(function () {
+          that.cancelCountDown = true
+        },1000*30) //这里设置30秒无操作弹出提示弹窗
+    },
+    isTimeOut: function(){
+      this.startTimer();
+      document.body.onmouseup = this.startTimer;
+      // document.body.onmousemove = this.startTimer;
+      document.body.onkeyup  = this.startTimer;
+      document.body.onclick  = this.startTimer;
+      document.body.ontouchend  = this.startTimer;
     }
 
-
+  },
+  created() {
+    this.isTimeOut()
   }
+
+
+}
 </script>
 
 

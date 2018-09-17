@@ -69,41 +69,72 @@
       <div class="text">55</div>
     </div>
     <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
+    <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="请问您还在吗？"></zaDailog>
   </div>
 </template>
 
 <script>
 import Store from '@/tool/store.js'
-  export default {
-    name: 'UserInfoAge',
-    data () {
-      return {
-        age: 15,
-        time: null,
+import zaDailog from './zaDailog.vue'
+export default {
+name: 'UserInfoAge',
+data () {
+  return {
+    age: 15,
+    time: null,
+    cancelCountDown: false
+  }
+},
+components:{
+    zaDailog
+},
+methods: {
+    returnBtn: function () {
+      this.$router.push({
+        name: 'UserInfoInput'
+      })
+    },
+    changeNum: function () {
+      Store.save('user-age', this.age);
+      window.clearTimeout(this.time)
+      var that = this
+      this.time = window.setTimeout(function () {
+        that.$router.push({
+          path: '/UserInfoMarriage'
+        })
+      }, 2000)  //timer2->2 当前是第二个定时器
+    },
+    leaveAuto: function(){
+      if(this.cancelCountDown){
+        this.cancelCountDown = false
+        this.$router.push({
+          name: 'UserWelcome'
+        })
       }
     },
-
-    methods: {
-      returnBtn: function () {
-        this.$router.push({
-          name: 'UserInfoInput'
-        })
-      },
-      changeNum: function () {
-        Store.save('user-age', this.age);
-        window.clearTimeout(this.time)
-        var that = this
-        this.time = window.setTimeout(function () {
-          that.$router.push({
-            path: '/UserInfoMarriage'
-          })
-        }, 2000)  //timer2->2 当前是第二个定时器
-      },
-      mounted () {
-
+    closeDailog: function(){
+      this.cancelCountDown = false
+    },
+    startTimer: function(){
+      var that = this;
+        clearInterval(that.timeOut);
+        that.timeOut = setInterval(function () {
+          that.cancelCountDown = true
+        },1000*30) //这里设置30秒无操作弹出提示弹窗
+    },
+    isTimeOut: function(){
+      this.startTimer();
+      document.body.onmouseup = this.startTimer;
+      // document.body.onmousemove = this.startTimer;
+      document.body.onkeyup  = this.startTimer;
+      document.body.onclick  = this.startTimer;
+      document.body.ontouchend  = this.startTimer;
       }
+    },
+    created() {
+        this.isTimeOut()
     }
-  }
+}
 </script>
 
 </style>
