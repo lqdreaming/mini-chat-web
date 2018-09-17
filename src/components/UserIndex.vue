@@ -18,7 +18,7 @@
                   <b>{{matchMaker.name}}</b>
                   <br>
                   <div style="height:80px;margin-top:10px;text-align:left">
-                    <b>简介:</b>{{matchMaker.detail}}
+                    {{matchMaker.detail}}
                   </div>
                 </div>
 
@@ -70,7 +70,7 @@
                   <b>{{matchMaker.name}}</b>
                   <br>
                   <div style="height:80px;margin-top:10px;text-align:left">
-                    <b>简介:</b>{{matchMaker.detail}}
+                    {{matchMaker.detail}}
                   </div>
                 </div>
 
@@ -120,7 +120,7 @@
                 <b>{{matchMaker.name}}</b>
                 <br>
                 <div style="height:80px;margin-top:10px;text-align:left">
-                  <b>简介:</b>{{matchMaker.detail}}
+                  {{matchMaker.detail}}
                 </div>
               </div>
 
