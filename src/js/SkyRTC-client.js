@@ -5,8 +5,12 @@ var SkyRTC = function() {
     var nativeRTCSessionDescription = (window.mozRTCSessionDescription || window.RTCSessionDescription); // order is very important: "RTCSessionDescription" defined in Nighly but useless
     var iceServer = {
         "iceServers": [{
-            "url": "stun:stun.l.google.com:19302"
-            // "url": "stun:113.32.111.126:3478"
+            // "url": "stun:stun.l.google.com:19302"
+            // "url": "stun:113.32.111.126:3478" {
+            "url": "turn:67.216.194.219:3478",
+            "username": "granda",
+            "credential": "qwert12345"
+
         }]
     };
 

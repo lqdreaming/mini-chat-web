@@ -92,7 +92,8 @@
     </div>
 
     <div v-show="videoFlagShow">
-      <div style="margin-top: 100px">
+      <div class="whiteBg"/>
+      <div class="chatDiv">
         <div v-show="onChat" id="timeOnChat">
           {{minShow}}:{{secondShow}}
         </div>
@@ -182,7 +183,7 @@ export default {
   methods: {
     callMatchmaker: function(mid){
       console.log("callMatchmaker button is click")
-
+      Store.save('mid', mid)
       rtc.socket.send(JSON.stringify({
           "eventName": "Call",
           "data": {
@@ -250,7 +251,6 @@ export default {
       var that = this
       that.showDailog = false
       rtc.closePeerConnection(rtc.peerConnection)
-      that.videoFlagShow = false
       that.videoOpen = true
       document.getElementById('me').srcObject = this.stream
       document.getElementById('me').muted = true
@@ -570,10 +570,10 @@ a {
 #timeOnChat {
   position: absolute;
   /* display: inline-block; */
-  margin-left: 50px;
+  margin-left: 0px;
   /* margin-top: 10px; */
   font-size: 50px;
-  color: #ffffff;
+  color: #3d444c;
 }
 #videos {
   position: relative;
@@ -663,7 +663,7 @@ a {
 #callContent{
   position: absolute;
   width: 400px;
-  margin-left: 525px;
+  margin-left: 275px;
   margin-top: 480px;
   font-size: 50px;
   color: #ffffff;
@@ -672,7 +672,7 @@ a {
 #countDown{
   position: absolute;
   width: 400px;
-  margin-left: 525px;
+  margin-left: 275px;
   margin-top: 350px;
   font-size: 100px;
   color: #ffffff;
@@ -737,6 +737,23 @@ a {
   animation-fill-mode: forwards;
   /* margin-left: 2500px */
 }
+.whiteBg{
+  position:absolute;
+  background-color:  rgba(255,255,255,0.8);
+  height: 950px;
+  width: 1700px;
+  margin-top: 65px;
+  margin-left: 110px;
+  /*margin-bottom: 100px;*/
+  border-radius: 30px;
+  box-shadow:5px 5px 10px rgba(0,0,0,0.3)
+}
+.chatDiv{
+  position:absolute;
+  margin-top: 85px;
+  margin-left: 200px;
+}
+
 .fake{
   position: absolute;
   margin-top: 100px;
