@@ -6,9 +6,9 @@
         <div class="containerTopBasetext">珍爱12年，专业情感咨询服务</div>
         <div class="zhenaiMianDuiMian">珍心面对面</div>
         <div class="containerTopBasetext">免费与情感咨询师面对面诉说您的情感“心里话”</div>
-        <div class="containerTopBasetext">这里会有人理解你，并且给你指明前行的路灯</div>
+        <div class="containerTopBasetext">这里会有人理解您，并且给您指明前行的路灯</div>
 
-        <el-button type="primary" round id="linkMatchmaker" v-on:click="login">开始连线咨询师</el-button>
+        <el-button type="primary" round id="linkMatchmaker" v-on:click="login">开始连线咨询</el-button>
       </div>
     </div>
 
