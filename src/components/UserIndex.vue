@@ -165,7 +165,7 @@
           <div id="countDown" v-show="countDownShow">{{countDown}} s</div>
         </div>
         <img id="chickenSoup" src="../../static/chickenSoup.png"/>
-        <div id="chickenSoupText">{{chickenSoupText}}</div>
+        <div id="chickenSoupText" v-html='chickenSoupText'></div>
       </div>
 
       <div class="bg" v-if="verifyPhoneShowAfterChat"/>

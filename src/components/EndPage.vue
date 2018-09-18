@@ -4,26 +4,34 @@
 
     <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
 
-    <div
-      id="matchmakerInfo">
-      <span id="zhenaiWeiZhuShou">珍爱微助手</span>
-      <img id="matchmakerIcon" src="../assets/endpage-matchmaker-icon.jpg"/>
-      <span id="matchmakerName">{{matchmakerName}}</span>
-      <span id="matchmakerAddress">{{deptName}}</span>
-      <img id="matchmakerWechat" src="../assets/endpage-matchmaker-wechat.png"/>
-      <span id="linkme">微信扫一扫添加好友，我正在{{deptName}}等着你</span>
+    <div id="matchmakerInfo">
+      <div style="width:400px;height:250px;background:rgba(255,255,255,0.6)">
+        <span id="zhenaiWeiZhuShou">珍爱网</span>
+        <img id="matchmakerIcon" src="../../static/pic/1.png"/>
+        <span id="matchmakerName">{{matchmakerName}}</span>
+        <span id="matchmakerAddress">{{deptName}}</span>
+      </div>
+      <div style="width:400px;height:350px;background:rgba(255,255,255,1)">
+        <img id="matchmakerWechat" src="../assets/endpage-matchmaker-wechat.png"/>
+        <span id="linkme">微信扫一扫添加好友，我正在{{deptName}}等着你</span>
+      </div>
+
+
     </div>
 
     <div id="addressInfo" style="text-align: left">
-      <div id="addressInfoName" class="addressBaseText">{{deptName}}距您<span id="addressDistance">{{distance}}</span>
+      <!-- <img id="addressSnipaste" src="../../static/position/1.png"/> -->
+      <div id="addressSnipaste"/>
+      <div style="position:absolute;width:300px;height:120px;background:rgba(255,255,255,0.9)">
+        <div id="distancesText">{{deptName}}距您<span id="addressDistance">{{distance}}</span>
+        </div>
+        <div id="phoneText">联系电话：<span id="phoneCall">{{phone}}</span></div>
+        <div id="addressText">地址：{{deptAddr}}</div>
       </div>
-      <div class="addressBaseText">联系电话：<span id="phoneCall">{{phone}}</span></div>
-      <div class="addressBaseText">地址：{{deptAddr}}</div>
-      <img id="addressSnipaste" src="../assets/endpage-address-snipaste.png"/>
     </div>
 
     <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto"
-              :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页">
+              :showCountDown=true :countDown=10 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页">
     </zaDailog>
 
   </div>
@@ -31,10 +39,10 @@
 </template>
 
 <script>
-  import Conf from '@/conf/conf.js'
-  import axios from 'axios'
-  import Store from '@/tool/store.js'
-  import zaDailog from './zaDailog.vue'
+import Conf from '@/conf/conf.js'
+import axios from 'axios'
+import Store from '@/tool/store.js'
+import zaDailog from './zaDailog.vue'
 
   export default {
     name: 'EndPage',
@@ -46,6 +54,8 @@
         matchmakerName: '',
         phone: '',
         cancelCountDown: false,
+        x: '',
+        y: '',
       }
     },
 
@@ -94,6 +104,7 @@
     },
 
     mounted() {
+
       var that = this;
       axios.get(Conf.API + '/boxPosition/' + Store.fetch('client-id'))
         .then(function (response) {
@@ -102,6 +113,15 @@
             that.deptName = responseData.deptName;
             that.distance = responseData.distance;
             that.deptAddr = responseData.deptAddr;
+            that.x = responseData.x;
+            that.y = responseData.y;
+            var map = new BMap.Map("addressSnipaste");
+            var point = new BMap.Point(that.x,that.y);
+            map.centerAndZoom(point, 15);
+            var marker = new BMap.Marker(point);  // 创建标注
+            map.addOverlay(marker);               // 将标注添加到地图中
+            marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+            map.enableScrollWheelZoom(true);
           }
         })
         .catch(function (response) {
@@ -121,6 +141,9 @@
         .catch(function (response) {
           console.log(response)
         })
+
+
+
     }
   }
 </script>
@@ -165,8 +188,8 @@
 
   #matchmakerWechat {
     position: absolute;
-    bottom: 150px;
-    left: 90px;
+    bottom: 100px;
+    left: 100px;
     width: 200px;
     height: 200px;
   }
@@ -174,7 +197,7 @@
   #linkme {
     text-align: left;
     position: absolute;
-    bottom: 50px;
+    bottom: 25px;
     left: 90px;
     width: 200px;
     height: auto;
@@ -185,8 +208,10 @@
     position: absolute;
     right: 20px;
     top: 10px;
-    width: 50px;
-    height: 50px;
+    width: 213px;
+    height: 190px;
+    border-radius: 10px;
+    margin-top: 20px;
   }
 
   #matchmakerName {
@@ -206,9 +231,9 @@
 
   #matchmakerInfo {
     margin-top: 100px;
-    margin-left: 550px;
+    margin-left: 500px;
     position: absolute;
-    background: #ffffff;
+    /* background: #FFF; */
     width: 400px;
     height: 600px;
   }
@@ -217,15 +242,32 @@
     background: #ffffff;
     margin-top: 100px;
     position: absolute;
-    width: 400px;
+    width: 600px;
     height: 600px;
-    margin-left: 950px;
+    margin-left: 900px;
   }
 
-  .addressBaseText {
+  #distancesText{
+    position: absolute;
     padding: 5px;
     font-size: 20px;
+    /* margin-top: 50px */
   }
+
+  #addressText{
+    position: absolute;
+    padding: 5px;
+    font-size: 20px;
+    margin-top: 50px;
+  }
+
+  #phoneText{
+    position: absolute;
+    padding: 5px;
+    font-size: 20px;
+    margin-top: 25px;
+  }
+
 
   #addressDistance, #phoneCall {
     position: absolute;
@@ -236,6 +278,7 @@
   }
 
   #addressInfoName {
+    position: absolute;
     padding-top: 20px;
   }
 
@@ -244,7 +287,7 @@
     bottom: 0;
     left: 0;
     width: 100%;
-    height: 310px;
+    height: 600px;
   }
 
 
