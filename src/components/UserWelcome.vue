@@ -6,7 +6,7 @@
         <div class="containerTopBasetext">珍爱12年，专业情感咨询服务</div>
         <div class="zhenaiMianDuiMian">珍心面对面</div>
         <div class="containerTopBasetext">免费与情感咨询师面对面诉说您的情感“心里话”</div>
-        <div class="containerTopBasetext">这里会有人理解您，并且给您指明前行的路灯</div>
+        <div class="containerTopBasetext">这里会有人理解您，并且帮您解答心中的困惑</div>
 
         <el-button type="primary" round id="linkMatchmaker" v-on:click="login">开始连线咨询</el-button>
       </div>
@@ -20,7 +20,7 @@
 
 
     <div class="containerBottom">
-      <div class="containerTopBasetext containerBottomTitle">点击以下任意标签，免费开启专业情感咨询师的视频对话吧</div>
+      <div class="containerTopBasetext containerBottomTitle">点击以下任意标签，免费开启与专业情感咨询师的视频对话吧</div>
 
       <ul>
         <li v-for="label in labels" :key="label.id" v-on:click="labelClick(label.id)">{{ label.content }}</li>
