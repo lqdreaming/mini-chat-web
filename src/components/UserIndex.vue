@@ -4,7 +4,7 @@
       <!-- 虚假页面 -->
       <div class="fake">
         <div  class="matchMakerListTitle">
-          请选择你要联系的老师
+          请选择您要联系的老师
           <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
         </div>
 
@@ -56,7 +56,7 @@
       <!-- 虚假忙碌页面， 选择热恋的人-->
       <div class="fake">
         <div  class="matchMakerListTitle">
-          请选择你要联系的老师
+          请选择您要联系的老师
           <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
         </div>
 
@@ -98,15 +98,12 @@
 
         </el-row>
       </div>
-      <!-- <div class="bg">
-      </div>
-      <VerifyPhone style="position:absolute" v-if="verifyPhoneShow" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" @close="closeVerify" contentTitle="温馨提示" contentDetail="亲，我们的服务时间为09:00-22:00,请您预留手机号，情感专家会在第一时间与您联系哦！"></VerifyPhone> -->
-      <!-- <zaDailog v-if="hasPhone == 0" :showCancel=false  @doBg="closeVerify"  @doConfirm="closeVerify" title="温馨提示" message="亲，我们的服务时间为09:00-22:00,情感专家会在第一时间与您联系哦！"></zaDailog> -->
+
     </div>
 
     <div v-show="!videoFlagShow && userMarriage != 2 && userMarriage != 3">
       <div v-show="matchMakers[0] != null" class="matchMakerListTitle"  style="margin-top: 100px">
-        请选择你要联系的老师
+        请选择您要联系的老师
         <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
       </div>
 
@@ -167,15 +164,17 @@
           <div id="callContent">{{callContent}}</div>
           <div id="countDown" v-show="countDownShow">{{countDown}} s</div>
         </div>
+        <img id="chickenSoup" src="../../static/chickenSoup.png"/>
+        <div id="chickenSoupText">{{chickenSoupText}}</div>
       </div>
 
       <div class="bg" v-if="verifyPhoneShowAfterChat"/>
       <VerifyPhone style="position:absolute;top:0" v-if="verifyPhoneShowAfterChat" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOKAfteChat" @close="closeVerifyAfteChat" contentTitle="温馨提示" contentDetail="请留下您的手机号码，我们将把老师的联系方式发送给您。"></VerifyPhone>
     </div>
     <zaDailog v-if="verifyPhoneFailShow" @doConfirm="closeDailog" @doBg="closeDailog" :showCancel=false confirm="确认" message="验证码错误，请重试" ></zaDailog>
-    <zaDailog v-if="showDailog" @doCancel="closeDailog" @doBg="closeDailog" confirm="断开" message="确认断开连线?" @doConfirm="over"></zaDailog>
+    <zaDailog v-if="showDailog" @doCancel="closeDailog" @doBg="closeDailog" confirm="断开" :message="leftTimeTip" @doConfirm="over"></zaDailog>
     <zaDailog v-if="noMatchmaker":showCancel=false  @doBg="closeDailog"  @doConfirm="closeDailog" message="目前沒有空闲中的红娘，请耐心等待"></zaDailog>
-    <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=10 :showCancel=false confirm="继续操作" message="您已超过2分钟内未进行任何操作，是否回到首页"></zaDailog>
+    <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=10 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
     <zaDailog v-if="verifyPhoneOKShow" @doConfirm="leave" :bgClose=false @doCountDown="leave" :showCountDown=true :countDown=10 :showCancel=false title="成功提示" confirm="关闭" message="恭喜您，信息提交成功，预祝生活愉快！如有疑问请拨打咨询电话：8098099"></zaDailog>
 
   </div>
@@ -222,6 +221,8 @@ export default {
       chatTime: 5,
       hasPhone: 0,
       userMarriage: 1,
+      leftTimeTip: '您的连线时间仍剩余5分钟，您确定要离开吗？',
+      chickenSoupText: '真正爱你的人不会说许多爱你的话，却会做许多爱你的事。',
       matchMakers:
       [
           // { mid: 'aaa', status: true, name:'红娘1好',detail:"sdfds fsf dsf sd",picUrl:"../../static/pic/1.png"},
@@ -305,6 +306,9 @@ export default {
       this.showDailog = false
       this.cancelCountDown = false
       this.noMatchmaker = false
+
+    },
+    closeVerifyShow: function(){
       this.verifyPhoneOKShow = false
       this.verifyPhoneFailShow = false
       this.verifyPhoneShowAfterChat = false
@@ -317,9 +321,14 @@ export default {
       document.getElementById('me').srcObject = this.stream
       document.getElementById('me').muted = true
       // document.getElementById('me').play()
-      that.$router.push({
-        name: 'EndPage'
-      })
+      if (that.hasPhone == 1){
+        that.$router.push({
+          name: 'EndPage'
+        })
+      }else {
+        that.verifyPhoneShowAfterChat = true
+      }
+
       rtc.socket.send(JSON.stringify({
           "eventName": "End",
           "data": {
@@ -408,20 +417,28 @@ export default {
         if(this.second == 0 && this.chatTime - this.min == 1){
           this.$message.success('您的连线时间只剩一分钟');
         }
-
+        var leftTime = this.chatTime - this.min
+        this.leftTimeTip =  '您的连线时间仍剩余'+ leftTime +'分钟，您确定要离开吗？'
         if(this.second == 0 && this.chatTime - this.min == 0){
           rtc.closePeerConnection(rtc.peerConnection)
           // this.videoFlagShow = false
           // this.videoOpen = false
           document.getElementById('me').srcObject = this.stream
           document.getElementById('me').muted = true
+          if (this.hasPhone == 1){
+            this.$router.push({
+              name: 'EndPage'
+            })
+          }else {
+            this.verifyPhoneShowAfterChat = true
+          }
           rtc.socket.send(JSON.stringify({
               "eventName": "End",
               "data": {
                   "id": that.uid,
               }
           }))
-          // 3333
+
         }else {
           setTimeout(this.countTime, 1000);
         }
@@ -442,6 +459,7 @@ export default {
       rtc = Connect.getConnect()
       var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
       this.hasPhone = Store.fetch('hasPhone')
+      this.chickenSoupText = Store.fetch('chickenSoup')
       var that = this
       this.userMarriage = Store.fetch('user-marriage')
       this.uid = Store.fetch('client-id')
@@ -483,7 +501,7 @@ export default {
 
       //创建本地视频流失败
       rtc.on("stream_create_error", function() {
-        alert("请检查一下你的摄像头等硬件设备");
+        alert("请检查一下你的摄像头、麦克风等硬件设备");
       });
 
       //接收到其他用户的视频流
@@ -495,18 +513,15 @@ export default {
       rtc.on('endAnswer', function (data) {
           rtc.closePeerConnection(rtc.peerConnection)
           that.onChat = false
-          // rtc.peerConnection = null
-          // window.location.reload(false);
-          // window.location.href=window.location.href;
-          // that.reload()
+
           if (data.byWho == 1){
-            if (that.hasPhone == 1){
-              that.$router.push({
-                name: 'EndPage'
-              })
-            }else {
-              that.verifyPhoneShowAfterChat = true
-            }
+            // if (that.hasPhone == 1){
+            //   that.$router.push({
+            //     name: 'EndPage'
+            //   })
+            // }else {
+            //   that.verifyPhoneShowAfterChat = true
+            // }
 
           }else {
             that.$router.push({
@@ -802,6 +817,22 @@ a {
   -webkit-animation:myfirst 0.5s;
   animation-fill-mode: forwards;
   /* margin-left: 2500px */
+}
+#chickenSoup{
+  position: absolute;
+  width: 500px;
+  margin-left: 310px;
+  /* z-index: 9; */
+}
+#chickenSoupText{
+  position: absolute;
+  color: #3d444c;
+  width: 280px;
+  margin-left: 1120px;
+  margin-top: 170px;
+  font-size: 25px;
+  text-align: left;
+  /* z-index: 10; */
 }
 .whiteBg{
   position:absolute;

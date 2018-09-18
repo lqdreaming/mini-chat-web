@@ -1,6 +1,6 @@
 <template>
   <div class="container" style="margin-top: 100px">
-    <div id="endPageTitle">与你进行连线的老师是{{matchmakerName}}，您可以跟她进行联络哦</div>
+    <div id="endPageTitle">与您进行连线的老师是{{matchmakerName}}，您可以跟她进行联络哦</div>
 
     <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
 
@@ -23,7 +23,7 @@
     </div>
 
     <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto"
-              :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="请问您还在吗？">
+              :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页">
     </zaDailog>
 
   </div>

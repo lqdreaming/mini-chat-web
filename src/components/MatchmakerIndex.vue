@@ -173,6 +173,7 @@ export default {
       });
 
       if (this.overByMatchMaker == false){
+        console.info('IsOk')
         rtc.socket.send(JSON.stringify({
             "eventName": "IsOk",
             "data": {

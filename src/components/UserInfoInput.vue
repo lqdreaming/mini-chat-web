@@ -8,7 +8,7 @@
       <div data-sex="1" class="male" @click="selectGenger(1)"></div>
       <div data-sex="2" class="female" @click="selectGenger(2)"></div>
     </div>
-    <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="请问您还在吗？"></zaDailog>
+    <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
   </div>
 </template>
 
@@ -77,6 +77,17 @@ export default {
   },
   created() {
     this.isTimeOut()
+    var that = this;
+    axios.get(Conf.API + '/chickenSoup')
+      .then(function (response) {
+        var responseData = response.data.data;
+        if (response.data.code === 0) {
+          Store.save('chickenSoup', responseData.content);
+        }
+      })
+      .catch(function (response) {
+        that.$message.error('获取鸡汤失败');
+      })
   }
 }
 </script>

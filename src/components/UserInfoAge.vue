@@ -69,7 +69,7 @@
       <div class="text">55</div>
     </div>
     <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
-    <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="请问您还在吗？"></zaDailog>
+    <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
   </div>
 </template>
 

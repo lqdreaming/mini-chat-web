@@ -20,7 +20,7 @@
 
 
     <div class="containerBottom">
-      <div class="containerTopBasetext containerBottomTitle">点击以下任意标签，免费开启何专业情感咨询师的视频对话吧</div>
+      <div class="containerTopBasetext containerBottomTitle">点击以下任意标签，免费开启专业情感咨询师的视频对话吧</div>
 
       <ul>
         <li v-for="label in labels" :key="label.id" v-on:click="labelClick(label.id)">{{ label.content }}</li>
@@ -36,6 +36,8 @@
   import Store from '@/tool/store.js'
   import Conf from '@/conf/conf.js'
   import Connect from '@/tool/connect.js'
+  import Label from '@/tool/label.js'
+  import Version from '@/tool/version.js'
 
   export default {
     name: 'UserWelcome',
@@ -50,20 +52,21 @@
           path: '/UserInfoInput'
         })
       },
-      register: function () {
-        this.$router.push({
-          path: '/Register'
-        })
-      },
+      // register: function () {
+      //   this.$router.push({
+      //     path: '/Register'
+      //   })
+      // },
       labelClick: function (lableIndex) {
         Store.save('user-label', lableIndex);
         var that = this;
         axios.get(Conf.API + '/userInfo/uid/get')
           .then(function (response) {
             var responseData = response.data.data;
-            console.log(response.data.code);
+            // console.log(response.data.code);
             if (response.data.code === 0) {
               Store.save('uid', responseData);
+              Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
               that.$router.push({
                 name: 'UserInfoInput'
               })
@@ -85,6 +88,7 @@
             console.log(response.data.code);
             if (response.data.code === 0) {
               Store.save('uid', responseData);
+              Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
               that.$router.push({
                 name: 'UserInfoInput'
               })
@@ -98,25 +102,45 @@
     },
 
     created() {
+
     },
 
     mounted() {
       var that = this;
       Store.delete("hasPhone")
+      var setLabels = function(){
+        that.labels = Label.getLabels()
+        if(Label.getOk() == true){
+          return
+        }
+        else{setTimeout(function(){setLabels()}, 1000)}
+      }
 
-      axios.get(Conf.API + '/label/')
-        .then(function (response) {
-          var responseData = response.data.data;
-          console.log(response.data.code);
-          if (response.data.code === 0) {
-            that.labels = responseData
-          }
-        })
-        .catch(function (response) {
-          console.log(response)
-        })
-        
-      Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
+      setLabels()
+
+      var setVersion = function(){
+        if (Version.getVersion() != "" && Version.getVersion() != Store.fetch('version')){
+          console.info('version:' + Version.getVersion())
+          Store.save('version', Version.getVersion())
+          window.location.reload()
+        }
+        setTimeout(function(){setVersion()}, 20*1000)
+      }
+      setVersion()
+
+      // axios.get(Conf.API + '/label/')
+      //   .then(function (response) {
+      //     var responseData = response.data.data;
+      //     console.log(response.data.code);
+      //     if (response.data.code === 0) {
+      //       that.labels = responseData
+      //     }
+      //   })
+      //   .catch(function (response) {
+      //     console.log(response)
+      //   })
+
+
     },
   }
 </script>

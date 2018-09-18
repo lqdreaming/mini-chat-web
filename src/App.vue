@@ -5,9 +5,16 @@
 </template>
 
 <script>
+import Store from '@/tool/store.js'
+
 export default {
-  name: 'App'
+  name: 'App',
+  mounted() {
+
+
+  },
 }
+
 </script>
 
 <style>

@@ -83,7 +83,7 @@ export default {
         }
         this.confirmBtnflag = true
       }
-      if(this.phone.slice(10,11) != "" && this.code.slice(5,6) != "" && this.confirmBtnflag){
+      if(this.phone.slice(10,11) != "" && this.code.slice(5,6) != ""){
         this.confirmBtnDisable = false
       }else{
         this.confirmBtnDisable = true
@@ -159,7 +159,7 @@ export default {
               that.$emit('verify')
             }else{
               that.$emit('verifyFail')
-              that.confirmBtnDisable = true
+              // that.confirmBtnDisable = true
               that.confirmBtnflag = false
             }
         })

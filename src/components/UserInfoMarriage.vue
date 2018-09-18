@@ -29,7 +29,7 @@
       <div v-if="show" class="bg"/>
       <VerifyPhone v-if="show" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" id="VerifyPhone" @close="showDailog = true"></VerifyPhone>
       <zaDailog v-if="showDailog"  @doCancel="passPhone" @doConfirm="showDailog = false" @doBg="showDailog = false" cancel="跳过" confirm="去验证" message="完成验证即可以连线长达10分钟，而跳过只能连线5分钟噢~"></zaDailog>
-      <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="请问您还在吗？"></zaDailog>
+      <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
     </div>
 </template>
 
