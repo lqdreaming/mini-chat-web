@@ -13,7 +13,7 @@
       </div>
       <div style="width:400px;height:350px;background:rgba(255,255,255,1)">
         <img id="matchmakerWechat" src="../assets/endpage-matchmaker-wechat.png"/>
-        <span id="linkme">微信扫一扫添加好友，我正在{{deptName}}等着你</span>
+        <span id="linkme">微信扫一扫添加好友<br/>我正在{{deptName}}等你</span>
       </div>
 
 
@@ -195,11 +195,11 @@ import zaDailog from './zaDailog.vue'
   }
 
   #linkme {
-    text-align: left;
+    text-align: center;
     position: absolute;
     bottom: 25px;
-    left: 90px;
-    width: 200px;
+    left: 50px;
+    width: 300px;
     height: auto;
     font-size: 20px;
   }
