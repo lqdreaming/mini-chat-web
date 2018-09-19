@@ -239,6 +239,7 @@ import zaDailog from './zaDailog.vue'
   }
 
   #addressInfo {
+    overflow: hidden;
     background: #ffffff;
     margin-top: 100px;
     position: absolute;
@@ -284,10 +285,10 @@ import zaDailog from './zaDailog.vue'
 
   #addressSnipaste {
     position: absolute;
-    bottom: 0;
+    top: 0;
     left: 0;
     width: 100%;
-    height: 600px;
+    height: 650px;
   }
 
 
