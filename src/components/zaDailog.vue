@@ -126,15 +126,15 @@ li {
   bottom: 0;
   left: 0;
   right: 0;
-  /* margin: auto; */
+  margin: auto;
   height: 1080px;
   width: 1920px;
   background-color: rgba(90, 90, 90, 0.5);
-  z-index: 10;
+  z-index: 2000;
 }
 .dailog{
   position: absolute;
-  z-index: 20;
+  z-index: 3000;
   top: 0;
   bottom: 0;
   left: 0;

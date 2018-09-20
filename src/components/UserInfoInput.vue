@@ -44,6 +44,7 @@ export default {
       }, 2000)  //timer2->2 当前是第二个定时器
     },
     returnBtn: function(){
+      window.clearTimeout(this.time)
       this.$router.push({
         name: 'UserWelcome'
       })

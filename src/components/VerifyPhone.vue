@@ -238,6 +238,7 @@ li {
   margin-top: 30px;
   color: #ffffff;
   font-size: 20px;
+  text-align: left;
 }
 #confirmBtn{
   position: absolute;

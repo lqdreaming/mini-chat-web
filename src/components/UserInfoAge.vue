@@ -2,7 +2,7 @@
   <div>
     <div id="title"> 多大了</div>
     <img ondragstart="return false" id="bg" src="../../static/info-bg.png"/>
-    <el-slider id="slider" :min="15" :max="55" :step="1" v-model="age" @change="changeNum()"></el-slider>
+
     <div id="line"/>
     <div id="whites">
       <div class="white"/>
@@ -68,6 +68,7 @@
       <div class="text">45</div>
       <div class="text">55</div>
     </div>
+    <el-slider id="slider" :min="15" :max="55" :step="1" v-model="age" @change="changeNum()"></el-slider>
     <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
     <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
   </div>
@@ -90,6 +91,7 @@ components:{
 },
 methods: {
     returnBtn: function () {
+      window.clearTimeout(this.time)
       this.$router.push({
         name: 'UserInfoInput'
       })

@@ -5,9 +5,11 @@
       <div class="index">
         <div class="containerTopBasetext">珍爱12年，专业情感咨询服务</div>
         <div class="zhenaiMianDuiMian">珍心面对面</div>
-        <div class="containerTopBasetext">免费与情感咨询师面对面诉说您的情感“心里话”</div>
-        <div class="containerTopBasetext">这里会有人理解您，并且帮您解答心中的困惑</div>
-
+        <div class="containerTopBasetext">
+          免费与情感咨询师面对面诉说您的情感“心里话”
+          <br>
+          这里会有人理解您，并且帮您解答心中的困惑
+        </div>
         <el-button type="primary" round id="linkMatchmaker" v-on:click="login">开始连线咨询</el-button>
       </div>
     </div>
@@ -20,7 +22,7 @@
 
 
     <div class="containerBottom">
-      <div class="containerTopBasetext containerBottomTitle">点击以下任意标签，免费开启与专业情感咨询师的视频对话吧</div>
+      <div class="containerBottomTitle">点击以下任意标签，免费开启与专业情感咨询师的视频对话吧</div>
 
       <ul>
         <li v-for="label in labels" :key="label.id" v-on:click="labelClick(label.id)">{{ label.content }}</li>
@@ -43,20 +45,12 @@
     name: 'UserWelcome',
     data() {
       return {
-        labels: []
+        labels: [],
+        time: null
       }
     },
     methods: {
-      inputUserInfo: function () {
-        this.$router.push({
-          path: '/UserInfoInput'
-        })
-      },
-      // register: function () {
-      //   this.$router.push({
-      //     path: '/Register'
-      //   })
-      // },
+
       labelClick: function (lableIndex) {
         Store.save('user-label', lableIndex);
         var that = this;
@@ -67,6 +61,7 @@
             if (response.data.code === 0) {
               Store.save('uid', responseData);
               Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
+              window.clearTimeout(that.time)
               that.$router.push({
                 name: 'UserInfoInput'
               })
@@ -119,27 +114,14 @@
       setLabels()
 
       var setVersion = function(){
+        Version.getRemoteVersion()
         if (Version.getVersion() != "" && Version.getVersion() != Store.fetch('version')){
-          console.info('version:' + Version.getVersion())
           Store.save('version', Version.getVersion())
           window.location.reload()
         }
-        setTimeout(function(){setVersion()}, 20*1000)
+        that.time = window.setTimeout(function(){setVersion()}, 20*1000)
       }
       setVersion()
-
-      // axios.get(Conf.API + '/label/')
-      //   .then(function (response) {
-      //     var responseData = response.data.data;
-      //     console.log(response.data.code);
-      //     if (response.data.code === 0) {
-      //       that.labels = responseData
-      //     }
-      //   })
-      //   .catch(function (response) {
-      //     console.log(response)
-      //   })
-
 
     },
   }
@@ -160,7 +142,8 @@
   }
 
   .containerTop {
-    background: url("../assets/user-welcome-bg.png") no-repeat;
+    /* background: url("../assets/user-welcome-bg.png") no-repeat; */
+    background: url("../../static/user-welcome-bg.png") no-repeat;
     background-size: 100%;
     position: absolute;
     width: 100%;
@@ -168,7 +151,7 @@
   }
 
   .bgOpacity {
-    opacity: 0.7;
+    opacity: 0.4;
     background: #515151;
     background-size: 100%;
     position: absolute;
@@ -179,7 +162,7 @@
   .index {
     padding-top: 15px;
     text-align: center;
-    margin: 250px auto 0;
+    margin: 280px auto 0;
     position: absolute;
     width: 100%;
     height: 600px;
@@ -189,6 +172,7 @@
   }
 
   .containerTopBasetext {
+    margin-top: 50px;
     color: #fff;
     font-size: 22px;
   }
@@ -197,7 +181,7 @@
     color: #fff;
     font-size: 50px;
     font-weight: bold;
-    padding: 10px 0;
+    padding: 0px 0;
   }
 
   #linkMatchmaker {
@@ -241,6 +225,7 @@
   }
 
   .containerBottomTitle {
+    font-size: 22px;
     color: #000;
     left: 0;
     text-align: left;
@@ -262,7 +247,7 @@
   li {
     color: #ff5292;
     display: inline-block;
-    margin: 0 10px;
+    margin: 10px 10px;
     padding: 10px;
     font-size: 20px;
     border-radius: 50px !important;

@@ -19,7 +19,8 @@ export default {
 
 <style>
 #app {
-  background:url('../static/background.jpg') no-repeat;
+  /* position: absolute; */
+  background:url('../static/bg0.png') no-repeat;
   background-size: 1920px 1080px;
   overflow: hidden;
   height: 1080px;
@@ -40,6 +41,8 @@ export default {
 }
 .el-button {
     border-radius: 10px !important;
+    -webkit-tap-highlight-color: transparent !important;
+    user-select: none !important;
 }
 
 /* .el-main {
@@ -57,10 +60,14 @@ export default {
   text-align:center !important;
 }
 .el-slider__bar{
-  height: 0px !important;
+  height: 100px !important;
+  background-color: rgba(90, 90, 90, 0) !important;
 }
 .el-slider__runway{
-  height: 0px !important;
+  height: 100px !important;
+  background-color: rgba(90, 90, 90, 0) !important;
+  -webkit-tap-highlight-color: transparent !important;
+  user-select: none !important;
 }
 .el-slider__button{
   width: 20px !important;

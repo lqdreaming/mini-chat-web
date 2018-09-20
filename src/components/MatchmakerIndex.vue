@@ -249,6 +249,7 @@ export default {
               that.userName = ""
               that.userDetail = ""
               that.saveTimeFlag = false
+              that.blackBroadContent = '等待用户连线'
               that.saveTime = 120
               rtc.socket.send(JSON.stringify({
                   "eventName": "MatchMakerStatus",
@@ -357,6 +358,7 @@ export default {
             that.note = ""
             that.userName = ""
             that.userDetail = ""
+            that.blackBroadContent = '等待用户连线'
             that.saveTimeFlag = false
             that.saveTime = 120
             rtc.socket.send(JSON.stringify({
@@ -577,6 +579,9 @@ index {
   bottom:0px;
   width: 998px;
   height: 750px;
+  border: solid;
+  border-width: 1px;
+  border-color: #e0e0e0;
   /* border-radius: 20px; */
 }
 
@@ -587,6 +592,7 @@ index {
   border-style: solid;
   border-color: #5eced6;
   background-color: #5eced6;
+  margin-left: -1px;
   /* border-radius: 20px; */
 }
 

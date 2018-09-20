@@ -50,7 +50,8 @@ export default {
       show: false,
       showDailog: false,
       rtc: null,
-      cancelCountDown: false
+      cancelCountDown: false,
+      noMatchmaker: false
     }
   },
   components:{
@@ -59,6 +60,7 @@ export default {
   },
   methods: {
     returnBtn: function(){
+      window.clearTimeout(this.time)
       this.$router.push({
         name: 'UserInfoAge'
       })
@@ -73,11 +75,12 @@ export default {
     selectMarriage (marriage) {
       this.marriage = marriage
       Store.save('user-marriage', marriage)
+      Store.save('hasPhone', 0)
       var that = this
       window.clearTimeout(this.time)
       this.time = window.setTimeout(function () {
         // Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
-        if (that.marriage != 2 && that.marriage != 3){
+        if (that.marriage != 2 && that.marriage != 3 && !that.noMatchmaker){
           that.show = true
         }else {
           that.$router.push({
@@ -149,6 +152,22 @@ export default {
   },
   created() {
     this.isTimeOut()
+  },
+  mounted(){
+    var that = this
+    var rtc = Connect.getConnect()
+    rtc.on('getAllMatchMakerStatus', function (data) {
+        if(Object.keys(data).length == 0){
+          that.noMatchmaker = true
+        }
+    });
+
+    rtc.socket.send(JSON.stringify({
+        "eventName": "GetAllMatchmaker",
+        "data": {
+
+        }
+    }))
   }
 
 

@@ -1,5 +1,6 @@
 <template>
   <div id="userIndex">
+    <!-- <div id="bgPic"></div> -->
     <div  v-show="noMatchmakerDailog && !videoFlagShow && matchMakers[0] == null">
       <!-- 虚假页面 -->
       <div class="fake">
@@ -9,6 +10,7 @@
         </div>
 
         <br><br><br><br><br><br>
+        <br><br><br><br>
         <el-row>
           <el-col :span="5" v-for="(matchMaker, index) in matchMakersFake" :key="index" :offset="1">
             <el-card shadow="always" :body-style="{ padding: '0px' }">
@@ -46,10 +48,10 @@
 
         </el-row>
       </div>
-      <div class="bg">
+      <div v-if="verifyPhoneShow && hasPhone == 0" class="bg">
       </div>
-      <VerifyPhone style="position:absolute" v-if="verifyPhoneShow" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" @close="closeVerify" contentTitle="温馨提示" contentDetail="亲，我们的服务时间为09:00-22:00,请您预留手机号，情感专家会在第一时间与您联系哦！"></VerifyPhone>
-      <!-- <zaDailog v-if="hasPhone == 0" :showCancel=false  @doBg="closeVerify"  @doConfirm="closeVerify" title="温馨提示" message="亲，我们的服务时间为09:00-22:00,情感专家会在第一时间与您联系哦！"></zaDailog> -->
+      <VerifyPhone style="position:absolute" v-if="verifyPhoneShow && hasPhone == 0" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" @close="closeVerify" contentTitle="温馨提示" contentDetail="亲，我们的服务时间为09:00-22:00,请您预留手机号，情感专家会在第一时间与您联系哦！"></VerifyPhone>
+      <zaDailog  v-if="hasPhone == 1" :showCancel=false  @doBg="closeVerify"  @doConfirm="closeVerify" title="温馨提示" message="亲，我们的服务时间为09:00-22:00,情感专家会在第一时间与您联系哦！"></zaDailog>
     </div>
 
     <div v-show="matchMakers[0] != null && userMarriage == 2 || userMarriage == 3">
@@ -61,6 +63,7 @@
         </div>
 
         <br><br><br><br><br><br>
+        <br><br><br><br>
         <el-row>
           <el-col :span="5" v-for="(matchMaker, index) in matchMakersFake" :key="index" :offset="1">
             <el-card shadow="always" :body-style="{ padding: '0px' }">
@@ -108,6 +111,7 @@
       </div>
 
       <br><br><br><br><br><br>
+      <br><br><br><br>
       <el-row>
         <el-col :span="5" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="1">
           <el-card shadow="always" :body-style="{ padding: '0px' }">
@@ -132,6 +136,7 @@
           </el-card>
         </el-col>
         <el-col :span="5" :offset="1" v-show="matchMakers[0] != null">
+
           <el-card shadow="always">
             <img style="margin-top:80px" src="../../static/question.png">
             <div style="height:80px;margin-top:50px;text-align:center">
@@ -141,6 +146,8 @@
               <el-button type="primary" v-on:click="callMatchmakerRandom()">随机连线</el-button>
             </div>
           </el-card>
+
+
         </el-col>
 
       </el-row>
@@ -175,7 +182,7 @@
     <zaDailog v-if="showDailog" @doCancel="closeDailog" @doBg="closeDailog" confirm="断开" :message="leftTimeTip" @doConfirm="over"></zaDailog>
     <zaDailog v-if="noMatchmaker":showCancel=false  @doBg="closeDailog"  @doConfirm="closeDailog" message="目前沒有空闲中的红娘，请耐心等待"></zaDailog>
     <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=10 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
-    <zaDailog v-if="verifyPhoneOKShow" @doConfirm="leave" :bgClose=false @doCountDown="leave" :showCountDown=true :countDown=10 :showCancel=false title="成功提示" confirm="关闭" message="恭喜您，信息提交成功，预祝生活愉快！如有疑问请拨打咨询电话：8098099"></zaDailog>
+    <zaDailog v-if="verifyPhoneOKShow" @doConfirm="leave" :bgClose=false @doCountDown="leave" :showCountDown=true :countDown=10 :showCancel=false title="成功提示" confirm="关闭" message="恭喜您，信息提交成功，预祝生活愉快！如有疑问请拨打咨询电话：4008-520520"></zaDailog>
 
   </div>
 </template>
@@ -558,7 +565,6 @@ export default {
       });
 
       rtc.on('getAllMatchMakerStatus', function (data) {
-          console.info("getAllMatchMakerStatus"+new Date());
           if(Object.keys(data).length == 0){
             that.noMatchmakerDailog = true
           }
@@ -566,7 +572,6 @@ export default {
               axios.get(Conf.API + '/matchmakerInfo/' + key)
               .then(function (response) {
                 var responseData = response.data.data
-                console.log(response.data);
                 if (response.data.code === 0){
                     that.matchMakers.push({mid:key, status: data[key], name:responseData.name, detail:responseData.detail, picUrl:responseData.picUrl});
                 }
@@ -574,11 +579,9 @@ export default {
               .catch(function (response) {
                 console.log(response);
               });
-              // that.matchMakers.push({mid:key, status: data[key]});
 
-              console.log(key,data[key]);
           });
-          console.log(that.matchMakers);
+          // console.log(that.matchMakers);
       });
 
       rtc.on('userSureCallAnswer', function(data) {
@@ -592,6 +595,46 @@ export default {
           that.secondShow = '00'
           that.countTime()
           rtc.emit("ready", data.mid, data.uid, "user");
+
+          //提前加载红娘信息
+          axios.get(Conf.API + '/matchmakerInfo/' + Store.fetch('mid'))
+            .then(function (response) {
+              console.log('response  ' + response.data);
+              var responseData = response.data.data;
+              console.log(response.data.code);
+              if (response.data.code === 0) {
+                Store.save("mid-name", responseData.name);
+                Store.save("mid-phone", responseData.phone);
+                Store.save("mid-picUrl", responseData.picUrl);
+              }
+            })
+            .catch(function (response) {
+              console.log(response)
+            })
+
+          //提前加载位置信息
+          axios.get(Conf.API + '/boxPosition/' + Store.fetch('client-id'))
+            .then(function (response) {
+              var responseData = response.data.data;
+              if (response.data.code === 0) {
+                Store.save("dept-deptName", responseData.deptName);
+                Store.save("dept-distance", responseData.distance);
+                Store.save("dept-deptAddr", responseData.deptAddr);
+                Store.save("dept-x", responseData.x);
+                Store.save("dept-y", responseData.y);
+
+                var map = new BMap.Map("addressSnipaste");
+                var point = new BMap.Point(that.x,that.y);
+                map.centerAndZoom(point, 15);
+                var marker = new BMap.Marker(point);  // 创建标注
+                map.addOverlay(marker);               // 将标注添加到地图中
+                marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                map.enableScrollWheelZoom(true);
+              }
+            })
+            .catch(function (response) {
+              console.log(response)
+            });
         }
       })
 
@@ -659,7 +702,7 @@ a {
 #videos {
   position: relative;
   margin-right: 1400px;
-  /* margin-top: 0px; */
+  margin-top: 5px;
 }
 
 
@@ -774,6 +817,7 @@ a {
 .matchMakerListTitle{
   color: #ffffff;
   font-size: 35px;
+  z-index: 1;
 }
 .el-card {
   height: 490px;
@@ -868,7 +912,19 @@ a {
   height: 1080px;
   width: 1920px;
   background-color: rgba(90, 90, 90, 0.5);
-  z-index: 0s;
+  z-index: 0;
+}
+
+#bgPic{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1080px;
+  width: 1920px;
+  background: url('../../static/bg0.png') no-repeat;
+  z-index: 0;
 }
 @-webkit-keyframes myfirst /* Safari and Chrome */
 {
@@ -876,5 +932,8 @@ a {
     10%   {width:0px; margin-left: 2500px}
     20%   {width:580px; margin-left: 2500px}
     100% {width:580px; margin-left: 1340px}
+}
+.el-card{
+  border-radius: 15px;
 }
 </style>
