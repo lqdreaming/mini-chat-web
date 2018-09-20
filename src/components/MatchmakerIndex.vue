@@ -52,18 +52,21 @@
 
           <div id="text2">
             <h2>用户称谓</h2>
-              <el-input v-model="userName" placeholder="请输入用户称谓"></el-input>
+              <el-input v-model="userName" placeholder="请输入用户称谓(必填)"></el-input>
             <h2>记录小记</h2>
             <el-input
               type="textarea"
               :rows="8"
               resize = "none"
-              placeholder="请输入小记内容"
+              placeholder="请输入小记，视频结束后有2分钟的填写时间，时间结束将会自动提交。(必填)"
               v-model="note">
             </el-input>
             <br><br>
-            <el-button type="primary" :disabled="workerStatus == 3 || workerStatus == 2" round v-on:click="saveNote()">保存</el-button>
-            <el-button :disabled="isChatting || workerStatus == 3 || workerStatus == 2" type="info" v-on:click="saveNoteAndUp()" round>提交并变更状态为空闲</el-button>
+            <div style="display:inline">
+              <el-button type="primary" :disabled="workerStatus == 3 || workerStatus == 2" round v-on:click="saveNote()">保存</el-button>
+              <el-button :disabled="isChatting || workerStatus == 3 || workerStatus == 2" type="info" v-on:click="saveNoteAndUp()" round>提交并变更状态为空闲</el-button>
+              <p v-show="saveTimeFlag" style="float: right;margin-top:7px;margin-right:70px;color:#ff5292">{{saveTime}} s后自动提交</p>
+            </div>
           </div>
 
         </div>
@@ -113,6 +116,8 @@ export default {
       second: 0,
       minShow: '00',
       secondShow: '00',
+      saveTime: 120,
+      saveTimeFlag: false,
       overByMatchMaker: false,
       chatTime: 5
     }
@@ -224,6 +229,47 @@ export default {
         this.secondShow = ''
       }
     },
+    countSaveTime: function () {
+      var that = this
+      if (this.saveTimeFlag && this.saveTime >= 0){
+        this.saveTime--
+        if (this.saveTime == 0){
+          axios.post(Conf.API + '/note', {
+            mid: this.mid,
+            uid: this.userId,
+            note: this.note,
+            nickname: this.userName,
+          })
+          .then(function (response) {
+            console.log(response.data.code);
+            if (response.data.code === 0){
+              that.$message.success('自动提交小记成功');
+              that.workerStatus = 2
+              that.note = ""
+              that.userName = ""
+              that.userDetail = ""
+              that.saveTimeFlag = false
+              that.saveTime = 120
+              rtc.socket.send(JSON.stringify({
+                  "eventName": "MatchMakerStatus",
+                  "data": {
+                      "mid": that.mid,
+                      "status": true
+                  }
+              }))
+            }else {
+              that.$message.error('自动提交小记失败');
+            }
+          })
+          .catch(function (response) {
+            that.$message.error('保存小记失败');
+          });
+        }
+        setTimeout(this.countSaveTime, 1000);
+      }else {
+        this.saveTime = 120
+      }
+    },
     doCountDown: function(){
       var that = this
       this.showDailog = false
@@ -293,18 +339,42 @@ export default {
     },
     saveNoteAndUp: function(){
       var that = this
-      this.saveNote()
-      this.workerStatus = 2
-      this.note = ""
-      this.userName = ""
-      this.userDetail = ""
-      rtc.socket.send(JSON.stringify({
-          "eventName": "MatchMakerStatus",
-          "data": {
-              "mid": that.mid,
-              "status": true
+
+      if(this.note == ""){
+        this.$message.error('请输入小记');
+      }else{
+        axios.post(Conf.API + '/note', {
+          mid: this.mid,
+          uid: this.userId,
+          note: this.note,
+          nickname: this.userName,
+        })
+        .then(function (response) {
+          console.log(response.data.code);
+          if (response.data.code === 0){
+            that.$message.success('保存小记成功');
+            that.workerStatus = 2
+            that.note = ""
+            that.userName = ""
+            that.userDetail = ""
+            that.saveTimeFlag = false
+            that.saveTime = 120
+            rtc.socket.send(JSON.stringify({
+                "eventName": "MatchMakerStatus",
+                "data": {
+                    "mid": that.mid,
+                    "status": true
+                }
+            }))
+          }else {
+            that.$message.error('保存小记失败');
           }
-      }))
+        })
+        .catch(function (response) {
+          that.$message.error('保存小记失败');
+        });
+
+      }
     },
   },
 
@@ -313,9 +383,6 @@ export default {
     var URL = (window.URL || window.webkitURL || window.msURL || window.oURL);
     var that = this
     this.mid = Store.fetch('mid')
-
-
-
 
     rtc.connect(Conf.WS_ADDRESS + "/1/" + this.mid);
 
@@ -378,6 +445,8 @@ export default {
       that.blackBroadContent = '连线结束'
       rtc.peerConnection = null
       that.$message.success('用户结束连线，请及时提交小记，并将状态改为空闲中');
+      that.saveTimeFlag = true
+      that.countSaveTime()
     });
 
     rtc.on('matchMakerSureCallAnswer', function(data) {
@@ -386,6 +455,7 @@ export default {
         that.uid = data.uid
         that.userId = data.userId
         that.isChatting = true
+
         that.workerStatus = 1
         that.showDailog = false
         that.min = 0
