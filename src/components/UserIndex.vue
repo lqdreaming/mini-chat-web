@@ -6,7 +6,7 @@
       <div class="fake">
         <div  class="matchMakerListTitle">
           请选择您要联系的老师
-          <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
+          <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn2.png"/>
         </div>
 
         <br><br><br><br><br><br>
@@ -59,7 +59,7 @@
       <div class="fake">
         <div  class="matchMakerListTitle">
           请选择您要联系的老师
-          <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
+          <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn2.png"/>
         </div>
 
         <br><br><br><br><br><br>
@@ -107,7 +107,7 @@
     <div v-show="!videoFlagShow && userMarriage != 2 && userMarriage != 3">
       <div v-show="matchMakers[0] != null" class="matchMakerListTitle"  style="margin-top: 100px">
         请选择您要联系的老师
-        <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
+        <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn2.png"/>
       </div>
 
       <br><br><br><br><br><br>

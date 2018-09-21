@@ -1,6 +1,6 @@
 <template>
   <div class="user-info">
-    <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
+    <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn1.png"/>
     <img id="checkBtn1" v-show="gender == 1" src="../../static/radio2.png"/>
     <img id="checkBtn2" v-show="gender == 2" src="../../static/radio2.png"/>
     <div id="title">男神/女神</div>

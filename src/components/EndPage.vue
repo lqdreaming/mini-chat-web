@@ -2,7 +2,7 @@
   <div class="container">
     <div id="endPageTitle">与您进行连线的老师是{{matchmakerName}}，您可以跟她进行联络哦</div>
 
-    <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
+    <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn2.png"/>
     <div style="position:absolute;margin-top:180px">
       <div id="matchmakerInfo">
         <div style="width:400px;height:250px;background:rgba(255,255,255,0.6)">

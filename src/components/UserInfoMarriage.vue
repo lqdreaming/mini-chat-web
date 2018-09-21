@@ -2,7 +2,7 @@
 
     <div class="index">
 
-      <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn.png"/>
+      <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn1.png"/>
       <div id="title">情感状况</div>
       <img ondragstart="return false" id="bg" src="../../static/info-bg.png"/>
       <div class="user-marriage">
