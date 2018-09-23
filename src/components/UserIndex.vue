@@ -291,13 +291,24 @@ export default {
       this.$message("验证码错误，请重试")
     },
     verifyPhoneOKAfteChat: function(){
-      this.$message({
-         message: '发送成功，请注意查收短信。',
-         duration: 5000
-       });
-      this.$router.push({
-        name: 'EndPage'
-      })
+      var that = this
+      axios.get(Conf.API + '/smsCode/sendMidInfo/mid/' + Store.fetch('mid')
+        ,{headers: {
+            'X-Uid': Store.fetch('uid')
+        }})
+        .then(function (response) {
+          that.$message({
+             message: '发送成功，请注意查收短信。',
+             duration: 5000
+           });
+          that.$router.push({
+            name: 'EndPage'
+          })
+        })
+        .catch(function (response) {
+          console.log(response)
+        })
+
     },
     returnBtn: function(){
       this.$router.push({

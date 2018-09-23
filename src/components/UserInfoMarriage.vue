@@ -80,6 +80,28 @@ export default {
       if(Store.fetch('user-marriage') == null){
         this.$message('请选择情感状况')
       }else{
+        axios.post(Conf.API + '/userInfo',  {
+            uid: Store.fetch('uid'),
+            gender: Store.fetch('user-gender'),
+            age: Store.fetch('user-age'),
+            marriage: Store.fetch('user-marriage'),
+            label: Store.fetch('user-label')
+          },{
+          headers: {
+              'X-Uid': Store.fetch('uid')
+          }})
+          .then(function (response) {
+            var responseData = response.data.data
+              if (response.data.code === 0){
+                console.log("上传用户信息成功");
+              }else{
+                console.log("上传用户信息失败");
+              }
+          })
+
+          .catch(function (response) {
+            console.log(response)
+          })
         if (this.marriage != 2 && this.marriage != 3 && !this.noMatchmaker){
           this.show = true
         }else {
