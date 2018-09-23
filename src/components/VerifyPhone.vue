@@ -199,7 +199,7 @@ li {
   height: 1080px;
   width: 550px;
   background-color: rgba(90, 90, 90, 0.8);
-  z-index: 0;
+  z-index: 5;
   box-shadow: 0 4px 8px 2px rgba(204, 99, 128, 0.50);
 }
 .content{
@@ -208,6 +208,7 @@ li {
   width: 450px;
   margin-right: 50px;
   margin-top: 100px;
+  z-index: 10;
 }
 .input {
   color: #999999;
@@ -219,26 +220,31 @@ li {
   padding-left: 60px;
   letter-spacing: 2px;
   outline:none;
+  z-index: 10;
 }
 .phone {
   width: 400px;
   background: url("../assets/register-icon-phone.png") 10px no-repeat #F5F0F0;
+  z-index: 10;
 }
 .code {
   position: absolute;
   width: 200px;
   left: 0;
   background: url("../assets/register-icon-code.png") 10px no-repeat #F5F0F0;
+  z-index: 10;
 }
 .title{
   color: #ffffff;
   font-size: 35px;
+  z-index: 10;
 }
 .details{
   margin-top: 30px;
   color: #ffffff;
   font-size: 20px;
   text-align: left;
+  z-index: 10;
 }
 #confirmBtn{
   position: absolute;
@@ -248,6 +254,7 @@ li {
   height: 70px;
   width: 400px;
   font-size: 25px;
+  z-index: 10;
 }
 #codeBtn{
   position: absolute;
@@ -256,12 +263,22 @@ li {
   height: 70px;
   width: 155px;
   font-size: 25px;
+  z-index: 10;
 }
 .closeBtn{
   position: absolute;
   z-index: 1;
   right: 0;
+  margin-right: 10px;
+  margin-top: 10px;
   width: 80px;
+  z-index: 10;
   // margin-left: 100px;
+}
+
+.closeBtn:active {
+  margin-right: 5px;
+  margin-top: 5px;
+  width: 90px;
 }
 </style>

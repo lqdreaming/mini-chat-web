@@ -108,6 +108,11 @@ var SkyRTC = function() {
 
         this.on("connectSuccess", function(data) {
             that.connectStatus = true
+            // socket.send(JSON.stringify({
+            //     "eventName": "GetAllMatchmaker",
+            //     "data": {
+            //     }
+            // }))
         });
 
         this.on("iceTo", function(data) {

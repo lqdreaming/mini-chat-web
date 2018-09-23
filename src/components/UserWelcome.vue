@@ -23,10 +23,12 @@
 
     <div class="containerBottom">
       <div class="containerBottomTitle">点击以下任意标签，免费开启与专业情感咨询师的视频对话吧</div>
+      <div id="labels">
+        <ul>
+          <li v-for="label in labels" :key="label.id" v-on:click="labelClick(label.id)">{{ label.content }}</li>
+        </ul>
+      </div>
 
-      <ul>
-        <li v-for="label in labels" :key="label.id" v-on:click="labelClick(label.id)">{{ label.content }}</li>
-      </ul>
 
     </div>
   </div>
@@ -103,6 +105,9 @@
     mounted() {
       var that = this;
       Store.delete("hasPhone")
+      Store.delete("user-age")
+      Store.delete("user-gender")
+      Store.delete("user-marriage")
       var setLabels = function(){
         that.labels = Label.getLabels()
         if(Label.getOk() == true){
@@ -247,14 +252,25 @@
   li {
     color: #ff5292;
     display: inline-block;
-    margin: 10px 10px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    margin-left: 15px;
     padding: 10px;
     font-size: 20px;
     border-radius: 50px !important;
     border: 1px solid #ff5292;
+    margin-top: 10px;
     -moz-user-select:none;
     -webkit-user-select: none;
     -ms-user-select: none;
+  }
+
+  li:active {
+    margin-top: 0px;
+    font-size: 25px;
+    padding: 15px;
+    border: 2px solid #ff5292;
   }
 
 

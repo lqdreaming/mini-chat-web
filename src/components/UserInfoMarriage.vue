@@ -20,11 +20,11 @@
         <div class="radio-btn" @click="selectMarriage(4)"></div>
         <strong>离异</strong></label></div>
       </div>
-      <img id="checkBtn1" v-show="marriage == 1" src="../../static/radio2.png"/>
-      <img id="checkBtn2" v-show="marriage == 2" src="../../static/radio2.png"/>
-      <img id="checkBtn3" v-show="marriage == 3" src="../../static/radio2.png"/>
-      <img id="checkBtn4" v-show="marriage == 4" src="../../static/radio2.png"/>
-
+      <img ondragstart="return false" id="checkBtn1" v-show="marriage == 1" src="../../static/radio2.png"/>
+      <img ondragstart="return false"  id="checkBtn2" v-show="marriage == 2" src="../../static/radio2.png"/>
+      <img ondragstart="return false" id="checkBtn3" v-show="marriage == 3" src="../../static/radio2.png"/>
+      <img ondragstart="return false" id="checkBtn4" v-show="marriage == 4" src="../../static/radio2.png"/>
+      <img ondragstart="return false" id="nextBtn" v-on:click="nextStep()" src="../../static/nextBtn.png"/>
 
       <div v-if="show" class="bg"/>
       <VerifyPhone v-if="show" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" id="VerifyPhone" @close="showDailog = true"></VerifyPhone>
@@ -61,6 +61,9 @@ export default {
   methods: {
     returnBtn: function(){
       window.clearTimeout(this.time)
+      Store.delete('user-gender');
+      Store.delete('user-age');
+      Store.delete('user-marriage');
       this.$router.push({
         name: 'UserInfoAge'
       })
@@ -71,6 +74,20 @@ export default {
       this.$router.push({
         path:'/UserIndex'
       })
+    },
+    nextStep: function(){
+      window.clearTimeout(this.time)
+      if(Store.fetch('user-marriage') == null){
+        this.$message('请选择情感状况')
+      }else{
+        if (this.marriage != 2 && this.marriage != 3 && !this.noMatchmaker){
+          this.show = true
+        }else {
+          this.$router.push({
+            path:'/UserIndex'
+          })
+        }
+      }
     },
     selectMarriage (marriage) {
       this.marriage = marriage
@@ -178,6 +195,24 @@ export default {
 <style scoped>
 strong{
   font-size: 20px;
+}
+
+#returnBtn:active {
+  height: 70px;
+  width: 140px;
+}
+
+#nextBtn{
+  width: 250px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 0;
+}
+#nextBtn:active {
+  width: 280px;
 }
 #bg {
   position: absolute;

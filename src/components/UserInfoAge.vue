@@ -69,8 +69,10 @@
       <div class="text">55</div>
     </div>
     <el-slider id="slider" :min="15" :max="55" :step="1" v-model="age" @change="changeNum()"></el-slider>
-    <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn1.png"/>
+    <img ondragstart="return false" id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn1.png"/>
+    <img ondragstart="return false" id="nextBtn" v-on:click="nextStep()" src="../../static/nextBtn.png"/>
     <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
+
   </div>
 </template>
 
@@ -92,6 +94,8 @@ components:{
 methods: {
     returnBtn: function () {
       window.clearTimeout(this.time)
+      Store.delete('user-gender');
+      Store.delete('user-age');
       this.$router.push({
         name: 'UserInfoInput'
       })
@@ -105,6 +109,16 @@ methods: {
           path: '/UserInfoMarriage'
         })
       }, 2000)  //timer2->2 当前是第二个定时器
+    },
+    nextStep: function(){
+      window.clearTimeout(this.time)
+      if(Store.fetch('user-age') == null){
+        this.$message('请选择年龄')
+      }else{
+        this.$router.push({
+          path:'/UserInfoMarriage'
+        })
+      }
     },
     leaveAuto: function(){
       if(this.cancelCountDown){
@@ -174,6 +188,14 @@ methods: {
     text-align: center;
     line-height: 70px;
     margin-top: 200px;
+    -moz-user-select:none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+  }
+
+  #returnBtn:active {
+    height: 70px;
+    width: 140px;
   }
 
   #bg {
@@ -210,6 +232,9 @@ methods: {
     margin-left: 650px;
     margin-top: 100px;
   }
+  #nextBtn:active {
+    width: 280px;
+  }
 
   #slider {
     position: absolute;
@@ -228,6 +253,9 @@ methods: {
     width: 1400px;
     height: 1080px;
     margin-left: 220px;
+    -moz-user-select:none;
+    -webkit-user-select: none;
+    -ms-user-select: none;
   }
 
   #whites {
@@ -269,6 +297,16 @@ methods: {
     height: 30px;
     font-size: 25px;
     color: #FFFFFF;
+  }
+
+  #nextBtn{
+    width: 250px;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto;
+    z-index: 1;
   }
 
 </style>

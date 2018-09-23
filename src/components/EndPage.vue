@@ -2,17 +2,17 @@
   <div class="container">
     <div id="endPageTitle">与您进行连线的老师是{{matchmakerName}}，您可以跟她进行联络哦</div>
 
-    <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn2.png"/>
+    <img ondragstart="return false" id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn2.png"/>
     <div style="position:absolute;margin-top:180px">
       <div id="matchmakerInfo">
         <div style="width:400px;height:250px;background:rgba(255,255,255,0.6)">
           <span id="zhenaiWeiZhuShou">珍爱网</span>
-          <img id="matchmakerIcon" v-bind:src="picUrl"/>
+          <img  ondragstart="return false" id="matchmakerIcon" v-bind:src="picUrl"/>
           <span id="matchmakerName">{{matchmakerName}}</span>
           <span id="matchmakerAddress">{{deptName}}</span>
         </div>
         <div style="width:400px;height:350px;background:rgba(255,255,255,1)">
-          <img id="matchmakerWechat" src="../assets/endpage-matchmaker-wechat.png"/>
+          <img ondragstart="return false" id="matchmakerWechat" src="../assets/endpage-matchmaker-wechat.png"/>
           <span id="linkme">微信扫一扫添加好友<br/>我正在{{deptName}}等你</span>
         </div>
       </div>
@@ -207,6 +207,11 @@ import zaDailog from './zaDailog.vue'
     top: 10px;
     color: #999999;
     font-size: 20px;
+  }
+
+  #returnBtn:active {
+    height: 70px;
+    width: 140px;
   }
 
   #matchmakerAddress {

@@ -1,13 +1,14 @@
 <template>
   <div class="user-info">
-    <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn1.png"/>
-    <img id="checkBtn1" v-show="gender == 1" src="../../static/radio2.png"/>
-    <img id="checkBtn2" v-show="gender == 2" src="../../static/radio2.png"/>
+    <img ondragstart="return false" id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn1.png"/>
+    <img ondragstart="return false" id="checkBtn1" v-show="gender == 1" src="../../static/radio2.png"/>
+    <img ondragstart="return false" id="checkBtn2" v-show="gender == 2" src="../../static/radio2.png"/>
     <div id="title">男神/女神</div>
     <div class="user-gender">
       <div data-sex="1" class="male" @click="selectGenger(1)"></div>
       <div data-sex="2" class="female" @click="selectGenger(2)"></div>
     </div>
+    <img  ondragstart="return false" id="nextBtn" v-on:click="nextStep()" src="../../static/nextBtn.png"/>
     <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
   </div>
 </template>
@@ -42,6 +43,16 @@ export default {
           path:'/UserInfoAge'
         })
       }, 2000)  //timer2->2 当前是第二个定时器
+    },
+    nextStep: function(){
+      window.clearTimeout(this.time)
+      if(Store.fetch('user-gender') == null){
+        this.$message('请选择性别')
+      }else{
+        this.$router.push({
+          path:'/UserInfoAge'
+        })
+      }
     },
     returnBtn: function(){
       window.clearTimeout(this.time)
@@ -94,7 +105,7 @@ export default {
 </script>
 
 
-<style scoped>
+<style scoped >
 #title {
   position: absolute;
   right: 0;
@@ -114,6 +125,9 @@ export default {
   text-align: center;
   line-height: 70px;
   margin-top: 200px;
+  -moz-user-select:none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 
@@ -123,6 +137,12 @@ export default {
   width: 120px;
   margin-left: 650px;
   margin-top: 100px;
+
+}
+
+#returnBtn:active {
+  height: 70px;
+  width: 140px;
 }
 
 #checkBtn1{
@@ -154,7 +174,19 @@ export default {
   justify-content: center;
 }
 
+#nextBtn{
+  width: 250px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+  z-index: 1;
+}
 
+#nextBtn:active {
+  width: 280px;
+}
 .male {
   width: 410px;
   height: 551px;

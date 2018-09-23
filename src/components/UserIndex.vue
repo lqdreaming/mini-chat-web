@@ -1,13 +1,13 @@
 <template>
   <div id="userIndex">
-    <!-- <div id="bgPic"></div> -->
+    <div v-show="!videoFlagShow" class="matchMakerListTitle" style="position:absolute;margin-top: 100px;text-align:center">
+      <div style="position:absolute;z-index:1;width:500px;font-size:35px;margin-left:730px">请选择您要联系的老师</div>
+      <img ondragstart="return false" id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn2.png"/>
+    </div>
     <div  v-show="noMatchmakerDailog && !videoFlagShow && matchMakers[0] == null">
       <!-- 虚假页面 -->
       <div class="fake">
-        <div  class="matchMakerListTitle">
-          请选择您要联系的老师
-          <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn2.png"/>
-        </div>
+
 
         <br><br><br><br><br><br>
         <br><br><br><br>
@@ -36,7 +36,7 @@
           </el-col>
           <el-col :span="5" :offset="1">
             <el-card shadow="always">
-              <img style="margin-top:80px" src="../../static/question.png">
+              <img  ondragstart="return false" style="margin-top:80px" src="../../static/question.png">
               <div style="height:80px;margin-top:50px;text-align:center">
                 将从空闲的老师中随机挑选一位与您连线
               </div>
@@ -57,10 +57,10 @@
     <div v-show="matchMakers[0] != null && userMarriage == 2 || userMarriage == 3">
       <!-- 虚假忙碌页面， 选择热恋的人-->
       <div class="fake">
-        <div  class="matchMakerListTitle">
+        <!-- <div  class="matchMakerListTitle">
           请选择您要联系的老师
           <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn2.png"/>
-        </div>
+        </div> -->
 
         <br><br><br><br><br><br>
         <br><br><br><br>
@@ -89,7 +89,7 @@
           </el-col>
           <el-col :span="5" :offset="1">
             <el-card shadow="always">
-              <img style="margin-top:80px" src="../../static/question.png">
+              <img ondragstart="return false" style="margin-top:80px" src="../../static/question.png">
               <div style="height:80px;margin-top:50px;text-align:center">
                 将从空闲的老师中随机挑选一位与您连线
               </div>
@@ -105,52 +105,54 @@
     </div>
 
     <div v-show="!videoFlagShow && userMarriage != 2 && userMarriage != 3">
-      <div v-show="matchMakers[0] != null" class="matchMakerListTitle"  style="margin-top: 100px">
+      <!-- <div v-show="matchMakers[0] != null" class="matchMakerListTitle"  style="margin-top: 100px">
         请选择您要联系的老师
         <img id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn2.png"/>
+      </div> -->
+
+      <div class="real">
+        <br><br><br><br><br><br>
+        <br><br><br><br>
+        <el-row>
+          <el-col :span="5" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="1">
+            <el-card shadow="always" :body-style="{ padding: '0px' }">
+              <img v-bind:src="matchMaker.picUrl" class="image">
+              <div style="padding: 14px;">
+                <div id="matchMakerDetial">
+                  <b>{{matchMaker.name}}</b>
+                  <br>
+                  <div style="height:80px;margin-top:10px;text-align:left">
+                    {{matchMaker.detail}}
+                  </div>
+                </div>
+
+                <div style="margin-top:10px">
+                  <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">连线</el-button>
+                  <!-- <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button> -->
+                  <div v-show="!matchMaker.status" id="busy">
+                    繁忙
+                  </div>
+                </div>
+              </div>
+            </el-card>
+          </el-col>
+          <el-col :span="5" :offset="1" v-show="matchMakers[0] != null">
+
+            <el-card shadow="always">
+              <img  ondragstart="return false" style="margin-top:80px" src="../../static/question.png">
+              <div style="height:80px;margin-top:50px;text-align:center">
+                将从空闲的老师中随机挑选一位与您连线
+              </div>
+              <div>
+                <el-button type="primary" v-on:click="callMatchmakerRandom()">随机连线</el-button>
+              </div>
+            </el-card>
+
+
+          </el-col>
+
+        </el-row>
       </div>
-
-      <br><br><br><br><br><br>
-      <br><br><br><br>
-      <el-row>
-        <el-col :span="5" v-for="(matchMaker, index) in matchMakers" :key="index" :offset="1">
-          <el-card shadow="always" :body-style="{ padding: '0px' }">
-            <img v-bind:src="matchMaker.picUrl" class="image">
-            <div style="padding: 14px;">
-              <div id="matchMakerDetial">
-                <b>{{matchMaker.name}}</b>
-                <br>
-                <div style="height:80px;margin-top:10px;text-align:left">
-                  {{matchMaker.detail}}
-                </div>
-              </div>
-
-              <div style="margin-top:10px">
-                <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">连线</el-button>
-                <!-- <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button> -->
-                <div v-show="!matchMaker.status" id="busy">
-                  繁忙
-                </div>
-              </div>
-            </div>
-          </el-card>
-        </el-col>
-        <el-col :span="5" :offset="1" v-show="matchMakers[0] != null">
-
-          <el-card shadow="always">
-            <img style="margin-top:80px" src="../../static/question.png">
-            <div style="height:80px;margin-top:50px;text-align:center">
-              将从空闲的老师中随机挑选一位与您连线
-            </div>
-            <div>
-              <el-button type="primary" v-on:click="callMatchmakerRandom()">随机连线</el-button>
-            </div>
-          </el-card>
-
-
-        </el-col>
-
-      </el-row>
     </div>
 
     <div v-show="videoFlagShow">
@@ -183,7 +185,7 @@
     <zaDailog v-if="noMatchmaker":showCancel=false  @doBg="closeDailog"  @doConfirm="closeDailog" message="目前沒有空闲中的红娘，请耐心等待"></zaDailog>
     <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=10 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
     <zaDailog v-if="verifyPhoneOKShow" @doConfirm="leave" :bgClose=false @doCountDown="leave" :showCountDown=true :countDown=10 :showCancel=false title="成功提示" confirm="关闭" message="恭喜您，信息提交成功，预祝生活愉快！如有疑问请拨打咨询电话：4008-520520"></zaDailog>
-
+    <zaDailog v-if="deviceError" :showCancel=false  @doBg="returnBtn"  @doConfirm="returnBtn" message="摄像头或麦克风等设备异常，请检查"></zaDailog>
   </div>
 </template>
 
@@ -225,11 +227,14 @@ export default {
       verifyPhoneOKShow: false,
       verifyPhoneFailShow: false,
       verifyPhoneShowAfterChat: false,
+      deviceError: false,
       chatTime: 5,
       hasPhone: 0,
       userMarriage: 1,
       leftTimeTip: '您的连线时间仍剩余5分钟，您确定要离开吗？',
       chickenSoupText: '真正爱你的人不会说许多爱你的话，却会做许多爱你的事。',
+      netError: false,
+      netErrorTime: null,
       matchMakers:
       [
           // { mid: 'aaa', status: true, name:'红娘1好',detail:"sdfds fsf dsf sd",picUrl:"../../static/pic/1.png"},
@@ -459,7 +464,203 @@ export default {
     }
   },
   created() {
+    var that = this
     this.isTimeOut()
+    this.netErrorTime = setTimeout(function(){
+      //网络超市，重新建立webSocket连接
+      that.netError = true
+      Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
+      rtc = Connect.getConnect()
+
+      var delay = function(rtc){
+          if(rtc.connectStatus == true){
+            console.info('rtc.connectStatus = true')
+            rtc.socket.send(JSON.stringify({
+                "eventName": "GetAllMatchmaker",
+                "data": {
+
+                }
+            }))
+
+            rtc.createStream({
+              "video": true,
+              "audio": true
+            });
+            //创建本地视频流成功
+            rtc.on("stream_created", function(stream) {
+              that.stream = stream
+              document.getElementById('me').srcObject = stream;
+              document.getElementById('me').muted = true
+              // document.getElementById('me').play();
+            });
+
+            //创建本地视频流失败
+            rtc.on("stream_create_error", function() {
+              that.deviceError = true
+
+            });
+
+
+            //接收到其他用户的视频流
+            rtc.on('pc_add_stream', function(stream) {
+              document.getElementById('other').srcObject = stream;
+
+            });
+
+            rtc.on('endAnswer', function (data) {
+                rtc.closePeerConnection(rtc.peerConnection)
+                that.onChat = false
+
+                if (data.byWho == 1){
+
+                }else {
+                  that.$router.push({
+                    name: 'UserWelcome'
+                  })
+                }
+            });
+
+            rtc.on('matchMakerChangeStatus', function (data) {
+                console.info("receive message:" + data);
+
+                var flag = true
+                that.matchMakers.forEach(function(matchMaker){
+                  if (matchMaker.mid == data.mid){
+                    matchMaker.status = data.status
+                    flag = false
+                  }
+                });
+
+                if (flag == true) {
+                  axios.get(Conf.API + '/matchmakerInfo/' + data.mid)
+                    .then(function (response) {
+                      var responseData = response.data.data
+                      console.log(response.data.code);
+                        if (response.data.code === 0){
+                            that.matchMakers.push({mid:data.mid, status: data.status, name:responseData.name, detail:responseData.detail,picUrl:responseData.picUrl})
+                        }
+                    })
+                    .catch(function (response) {
+                      console.log(response)
+                    })
+                }
+                console.info(that.matchMakers)
+            });
+
+            rtc.on('getAllMatchMakerStatus', function (data) {
+                that.netError = false
+                window.clearTimeout(that.netErrorTime)
+                if(Object.keys(data).length == 0){
+                  that.noMatchmakerDailog = true
+                }
+                Object.keys(data).forEach(function(key){
+                    axios.get(Conf.API + '/matchmakerInfo/' + key)
+                    .then(function (response) {
+                      var responseData = response.data.data
+                      if (response.data.code === 0){
+                          that.matchMakers.push({mid:key, status: data[key], name:responseData.name, detail:responseData.detail, picUrl:responseData.picUrl});
+                      }
+                    })
+                    .catch(function (response) {
+                      console.log(response);
+                    });
+
+                });
+                // console.log(that.matchMakers);
+            });
+
+            rtc.on('userSureCallAnswer', function(data) {
+              console.log("receive userSureCallAnswer");
+              if (data.grabFlag === true){
+                that.redBigShow = false
+                that.callContent = ''
+                that.countDownShow = false
+                that.onChat = true
+                that.minShow = '00'
+                that.secondShow = '00'
+                that.countTime()
+                rtc.emit("ready", data.mid, data.uid, "user");
+
+                //提前加载红娘信息
+                axios.get(Conf.API + '/matchmakerInfo/' + Store.fetch('mid'))
+                  .then(function (response) {
+                    console.log('response  ' + response.data);
+                    var responseData = response.data.data;
+                    console.log(response.data.code);
+                    if (response.data.code === 0) {
+                      Store.save("mid-name", responseData.name);
+                      Store.save("mid-phone", responseData.phone);
+                      Store.save("mid-picUrl", responseData.picUrl);
+                    }
+                  })
+                  .catch(function (response) {
+                    console.log(response)
+                  })
+
+                //提前加载位置信息
+                axios.get(Conf.API + '/boxPosition/' + Store.fetch('client-id'))
+                  .then(function (response) {
+                    var responseData = response.data.data;
+                    if (response.data.code === 0) {
+                      Store.save("dept-deptName", responseData.deptName);
+                      Store.save("dept-distance", responseData.distance);
+                      Store.save("dept-deptAddr", responseData.deptAddr);
+                      Store.save("dept-x", responseData.x);
+                      Store.save("dept-y", responseData.y);
+
+                      var map = new BMap.Map("addressSnipaste");
+                      var point = new BMap.Point(that.x,that.y);
+                      map.centerAndZoom(point, 15);
+                      var marker = new BMap.Marker(point);  // 创建标注
+                      map.addOverlay(marker);               // 将标注添加到地图中
+                      marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
+                      map.enableScrollWheelZoom(true);
+                    }
+                  })
+                  .catch(function (response) {
+                    console.log(response)
+                  });
+              }
+            })
+
+            rtc.on('userCallAnswer', function(data) {
+              console.log("receive userCallAnswer");
+              if (data.grabFlag === true){
+                that.videoFlagShow = true
+                that.countDownShow = true
+                that.countDown = 20
+                var doCountDown = function(){
+                  setTimeout(function(){
+                    if(that.countDown >= 1 && that.redBigShow && that.countDownShow){
+                      that.countDown--
+                      console.info(that.countDown)
+                      if(that.countDown === 0){
+                        that.countDownShow = false
+                        that.callContent = '情感咨询师正在繁忙中，请重新选择'
+                        setTimeout(function(){
+                          that.videoFlagShow = false
+                          that.callContent = '正在连线红娘中  请耐心等待'
+                        },3000)
+                      }
+                      doCountDown()
+                    }
+                  },1000)
+                }
+                doCountDown()
+              }else{
+                that.$message.error('该红娘正忙');
+              }
+            })
+
+          return;
+        }
+        else{setTimeout(function(){delay(rtc)}, 100)}
+      }
+
+      delay(rtc)
+
+
+    }, 3 * 1000);
   },
   mounted () {
       // rtc = SkyRTC()
@@ -508,8 +709,14 @@ export default {
 
       //创建本地视频流失败
       rtc.on("stream_create_error", function() {
-        alert("请检查一下你的摄像头、麦克风等硬件设备");
+        that.deviceError = true
+
       });
+
+      // rtc.on("connectSuccess", function(data) {
+      //     that.connectStatus = true
+      //
+      // });
 
       //接收到其他用户的视频流
       rtc.on('pc_add_stream', function(stream) {
@@ -565,6 +772,8 @@ export default {
       });
 
       rtc.on('getAllMatchMakerStatus', function (data) {
+          that.netError = false
+          window.clearTimeout(that.netErrorTime)
           if(Object.keys(data).length == 0){
             that.noMatchmakerDailog = true
           }
@@ -738,6 +947,11 @@ a {
   border-radius:50%;
 }
 
+#returnBtn:active {
+  height: 70px;
+  width: 140px;
+}
+
 
 #redSmall{
   position: absolute;
@@ -851,9 +1065,10 @@ a {
 }
 #returnBtn{
   position: absolute;
+  z-index: 1;
   height: 60px;
   width: 120px;
-  margin-left: 500px;
+  margin-left: 1610px;
 }
 #VerifyPhone{
   position:absolute;
@@ -901,6 +1116,12 @@ a {
   width: 1920px;
   z-index: 0;
 }
+.real{
+  position: absolute;
+  margin-top: 100px;
+  width: 1920px;
+  z-index: 0;
+}
 .bg{
   /* text-align: center; */
   position: absolute;
@@ -912,7 +1133,7 @@ a {
   height: 1080px;
   width: 1920px;
   background-color: rgba(90, 90, 90, 0.5);
-  z-index: 0;
+  z-index: 2;
 }
 
 #bgPic{
