@@ -10,10 +10,10 @@
         <div class="details">
             {{contentDetail}}
         </div>
-        <input class="input phone" type="tel" maxlength="11"  @focus="phoneNumFocus()" autofocus="autofocus"
+        <input class="input " v-bind:class="{ active: inputPhone, phoneActive: inputPhone, phone:!inputPhone}" type="tel" maxlength="11"  @focus="phoneNumFocus()" autofocus="autofocus"
                v-model="phone" placeholder="请输入手机号码">
         <div class="code-content">
-          <input class="input code" type="tel" maxlength="6"  @focus="codeFocus()"
+          <input class="input " type="tel" maxlength="6"  @focus="codeFocus()" v-bind:class="{ active: !inputPhone , codeActive: !inputPhone , code:inputPhone}"
                 v-model="code" placeholder="请输入验证码">
           <el-button id="codeBtn" :disabled=getCodeBtnDisable type="primary" round class="button" v-on:click="getVerifyCode()">{{codeContent}}</el-button>
         </div>
@@ -222,9 +222,27 @@ li {
   outline:none;
   z-index: 10;
 }
+.active{
+  border:2px solid #fa8dcc;
+  height: 75px;
+  font-size: 28px;
+  color: #000;
+}
 .phone {
   width: 400px;
   background: url("../assets/register-icon-phone.png") 10px no-repeat #F5F0F0;
+  z-index: 10;
+}
+.phoneActive {
+  width: 400px;
+  background: url("../../static/register-icon-phone-red.png") 12px no-repeat #F5F0F0;
+  z-index: 10;
+}
+.codeActive {
+  position: absolute;
+  width: 200px;
+  left: 0;
+  background: url("../../static/register-icon-code-red.png") 12px no-repeat #F5F0F0;
   z-index: 10;
 }
 .code {

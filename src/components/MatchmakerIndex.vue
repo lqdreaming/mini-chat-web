@@ -52,7 +52,7 @@
 
           <div id="text2">
             <h2>用户称谓</h2>
-              <el-input v-model="userName" placeholder="请输入用户称谓(必填)"></el-input>
+              <el-input v-model="userName" placeholder="请输入用户称谓(选填)"></el-input>
             <h2>记录小记</h2>
             <el-input
               type="textarea"
