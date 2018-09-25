@@ -21,7 +21,11 @@
       <div id="content" >
         <div id="videos" style=" display:inline-block">
           <video id="other" autoplay></video>
-          <div id="blackBroad" v-show="blackBroadShow"><br><br><br><br><br><br><br><br><br><br>{{blackBroadContent}}</div>
+          <div id="blackBroad" v-show="blackBroadShow">
+            <br><br><br><br><br><br><br>{{blackBroadContent}}
+            <br><br>
+            <img ondragstart="return false"  src="../../static/waittingChat.png"/>
+          </div>
           <video id="me" autoplay></video>
           <div id="smallBlackBroad" v-show="!videoStatus"><p><br><br>已下线</p></div>
           <div id="smallBlackBroad"  v-show="workerStatus == 1 && isChatting == false"><p><br><br>繁忙中</p></div>
@@ -99,10 +103,10 @@ export default {
       mid: "",
       note: "",
       videoStatus: true,
-      blackBroadShow: false,
+      blackBroadShow: true,
       countDown: 15,
       userDetail: "",
-      blackBroadContent: "",
+      blackBroadContent: "等待用户连入中...",
       dialogVisible: false,
       showDailog: false,
       showInputDailog: false,
@@ -274,7 +278,7 @@ export default {
     doCountDown: function(){
       var that = this
       this.showDailog = false
-
+      this.blackBroadShow  = true
       //write the reject reason
       if (this.chatFlag == true){
         this.chatFlag = false
@@ -515,7 +519,7 @@ index {
 #videos {
   position: relative;
   /* overflow: auto; */
-  background-color: #aab8a3;
+  background-color: rgba(255, 255, 255, 1);
   width: 998px;
   height: 750px;
   border: solid;
@@ -557,9 +561,9 @@ index {
 }
 #blackBroad {
   position: absolute;
-  background-color: #aab8a3;
+  background-color: rgba(255, 255, 255, 1);
   font-size: 30px;
-  color: #ffffff;
+  color: #000;
   right:0px;
   bottom:0px;
   width: 998px;
@@ -573,7 +577,7 @@ index {
 
 #other {
   position: absolute;
-  background-color: #aab8a3;
+  background-color: rgba(255, 255, 255, 1);
   /* display: inline-block; */
   right:0px;
   bottom:0px;
@@ -589,9 +593,10 @@ index {
   position: absolute;
   font-size: 50px;
   color: #ffffff;
-  border-style: solid;
+  /* border-style: solid; */
+  padding: 5px;
   border-color: #5eced6;
-  background-color: #5eced6;
+  background-color: #3d444c;
   margin-left: -1px;
   /* border-radius: 20px; */
 }

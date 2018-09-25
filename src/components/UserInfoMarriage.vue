@@ -27,7 +27,8 @@
       <img ondragstart="return false" id="nextBtn" v-on:click="nextStep()" src="../../static/nextBtn.png"/>
 
       <div v-if="show" class="bg"/>
-      <VerifyPhone v-if="show" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" id="VerifyPhone" @close="showDailog = true"></VerifyPhone>
+      <VerifyPhonePass v-if="show" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" id="VerifyPhone" @close="showDailog = true"></VerifyPhonePass>
+      <!-- <VerifyPhone v-if="show" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" id="VerifyPhone" @close="showDailog = true"></VerifyPhone> -->
       <zaDailog v-if="showDailog"  @doCancel="passPhone" @doConfirm="showDailog = false" @doBg="showDailog = false" cancel="跳过" confirm="去验证" message="完成验证即可以连线长达10分钟，而跳过只能连线5分钟噢~"></zaDailog>
       <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
     </div>
@@ -41,6 +42,7 @@ import Store from '@/tool/store.js'
 import Connect from '@/tool/connect.js'
 import index from '../router'
 import zaDailog from './zaDailog.vue'
+import VerifyPhonePass from './VerifyPhonePass.vue'
 import VerifyPhone from './VerifyPhone.vue'
 
 export default {
@@ -56,6 +58,7 @@ export default {
   },
   components:{
     zaDailog,
+    VerifyPhonePass,
     VerifyPhone
   },
   methods: {
@@ -389,14 +392,14 @@ strong{
 }
 #VerifyPhone{
   position:absolute !important;
-  animation:myfirst 0.5s !important;
-  -webkit-animation:myfirst 0.5s !important;
+  animation:myfirst 0.7s !important;
+  -webkit-animation:myfirst 0.7s !important;
   animation-fill-mode: forwards !important;
   /* margin-left: 2500px */
 }
 @-webkit-keyframes myfirst /* Safari and Chrome */
 {
-    0%   {width:0px; margin-left: 1919px}
+    0%   {width:0px; margin-left: 2500px}
     10%   {width:0px; margin-left: 2500px}
     20%   {width:580px; margin-left: 2500px}
     100% {width:580px; margin-left: 1340px}

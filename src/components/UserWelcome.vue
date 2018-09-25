@@ -85,6 +85,7 @@
             console.log(response.data.code);
             if (response.data.code === 0) {
               Store.save('uid', responseData);
+              window.clearTimeout(that.time)
               Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
               that.$router.push({
                 name: 'UserInfoInput'
