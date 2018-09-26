@@ -51,7 +51,7 @@
       </div>
       <div v-if="verifyPhoneShow && hasPhone == 0" class="bg">
       </div>
-      <VerifyPhone style="position:absolute" v-if="verifyPhoneShow && hasPhone == 0" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" @close="closeVerify" contentTitle="温馨提示" contentDetail="亲，我们的服务时间为09:00-22:00,请您预留手机号，情感专家会在第一时间与您联系哦！"></VerifyPhone>
+      <VerifyPhone style="position:absolute" v-if="verifyPhoneShow && hasPhone == 0" id="VerifyPhone" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" @close="closeVerify" contentTitle="温馨提示" contentDetail="目前情感咨询师均不在线，请您预留手机号，将会在第一时间与您联系哦"></VerifyPhone>
       <zaDailog  v-if="hasPhone == 1" :showCancel=false  @doBg="closeVerify"  @doConfirm="closeVerify" title="温馨提示" message="亲，我们的服务时间为09:00-22:00,情感专家会在第一时间与您联系哦！"></zaDailog>
     </div>
 
