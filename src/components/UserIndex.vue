@@ -245,9 +245,9 @@ export default {
       ],
       matchMakersFake:
       [
-        { mid: '666666', status: false, name:'鳁老师',detail:"有12年的专业经验，成功撮合99对情侣，帮助100人找到灵魂伴侣",picUrl:"../../static/pic/1.png"},
-        { mid: '666666', status: false, name:'文老师',detail:"有12年的专业经验，成功撮合99对情侣，帮助100人找到灵魂伴侣",picUrl:"../../static/pic/2.png"},
-        { mid: '666666', status: false, name:'静老师',detail:"有12年的专业经验，成功撮合99对情侣，帮助100人找到灵魂伴侣",picUrl:"../../static/pic/3.png"},
+        { mid: '666666', status: false, name:'李老师',detail:"情感服务专家，12年专业经验，成功解决情感疑难376例，也帮助100人获得理想的爱情",picUrl:"../../static/pic/1.png"},
+        { mid: '666666', status: false, name:'文老师',detail:"婚恋服务专家，于婚恋行业赫赫有名，成功撮合135对情侣，帮助他们寻得理想伴侣",picUrl:"../../static/pic/2.png"},
+        { mid: '666666', status: false, name:'张老师',detail:"专业情感咨询师，9年从业经验，成功帮助258人消除情感困惑，也帮助89人获得爱情的果实",picUrl:"../../static/pic/3.png"},
       ]
     }
   },
