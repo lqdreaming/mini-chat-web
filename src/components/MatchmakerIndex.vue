@@ -561,9 +561,9 @@ index {
 }
 #blackBroad {
   position: absolute;
-  background-color: #3d444c;
+  background-color: #FFFFFF;
   font-size: 30px;
-  color: #000;
+  color: #3d444c;
   right:0px;
   bottom:0px;
   width: 998px;
