@@ -7,8 +7,6 @@
     <div  v-show="noMatchmakerDailog && !videoFlagShow && matchMakers[0] == null">
       <!-- 虚假页面 -->
       <div class="fake">
-
-
         <br><br><br><br><br><br>
         <br><br><br><br>
         <el-row>

@@ -10,7 +10,7 @@
           <br>
           这里会有人理解您，并且帮您解答心中的困惑
         </div>
-        <el-button type="primary" round id="linkMatchmaker" v-on:click="login">开始连线咨询</el-button>
+        <!-- <el-button type="primary" round id="linkMatchmaker" v-on:click="login">开始连线咨询</el-button> -->
       </div>
     </div>
 
@@ -27,9 +27,10 @@
         <ul>
           <li v-for="label in labels" :key="label.id" v-on:click="labelClick(label.id)">{{ label.content }}</li>
         </ul>
+
       </div>
 
-
+      <!-- <el-button type="primary" round id="linkMatchmaker" v-on:click="login">开始连线咨询</el-button> -->
     </div>
   </div>
 
@@ -191,10 +192,14 @@
   }
 
   #linkMatchmaker {
+    position: absolute;
     padding: 20px;
     font-size: 20px;
     border-radius: 50px !important;
-    margin: 30px 0 50px;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 45px;
+    margin-right: 80px;
   }
 
   #circleButtonSet {

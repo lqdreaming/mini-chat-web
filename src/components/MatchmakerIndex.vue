@@ -55,21 +55,20 @@
           </div>
 
           <div id="text2">
-            <h2>用户称谓</h2>
-              <el-input v-model="userName" placeholder="请输入用户称谓(选填)"></el-input>
-            <h2>记录小记</h2>
+            <h2>用户称谓(选填)</h2>
+              <el-input v-model="userName" placeholder="请输入用户称谓"></el-input>
+            <h2>记录小记(必填)</h2>
             <el-input
               type="textarea"
               :rows="8"
               resize = "none"
-              placeholder="请输入小记，视频结束后有2分钟的填写时间，时间结束将会自动提交。(必填)"
               v-model="note">
             </el-input>
             <br><br>
             <div style="display:inline">
               <el-button type="primary" :disabled="workerStatus == 3 || workerStatus == 2" round v-on:click="saveNote()">保存</el-button>
               <el-button :disabled="isChatting || workerStatus == 3 || workerStatus == 2" type="info" v-on:click="saveNoteAndUp()" round>提交并变更状态为空闲</el-button>
-              <p v-show="saveTimeFlag" style="float: right;margin-top:7px;margin-right:70px;color:#ff5292">{{saveTime}} s后自动提交</p>
+              <p v-show="saveTimeFlag" style="float: right;margin-top:7px;margin-right:50px;color:#ff5292">{{saveTime}} s后自动提交小记</p>
             </div>
           </div>
 
@@ -101,7 +100,7 @@ export default {
       uid: "",
       userId: "",
       mid: "",
-      note: "",
+      note: "【咨询目的】\r\n【咨询内容】\r\n【建议指导】",
       videoStatus: true,
       blackBroadShow: true,
       countDown: 15,
@@ -249,7 +248,7 @@ export default {
             if (response.data.code === 0){
               that.$message.success('自动提交小记成功');
               that.workerStatus = 2
-              that.note = ""
+              that.note = "【咨询目的】\r\n【咨询内容】\r\n【建议指导】"
               that.userName = ""
               that.userDetail = ""
               that.saveTimeFlag = false
