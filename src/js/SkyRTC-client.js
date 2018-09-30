@@ -94,6 +94,7 @@ var SkyRTC = function() {
         };
 
         socket.onerror = function(error) {
+            console.info('socket_error')
             that.emit("socket_error", error, socket);
         };
 
@@ -101,7 +102,7 @@ var SkyRTC = function() {
         socket.onclose = function(data) {
             // that.localMediaStream.close();
             var pcs = that.peerConnection;
-
+            console.info('socket_closed')
             that.closePeerConnection(pcs);
             that.emit('socket_closed', socket);
         };

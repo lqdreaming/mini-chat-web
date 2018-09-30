@@ -187,6 +187,7 @@
     <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=10 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
     <zaDailog v-if="verifyPhoneOKShow" @doConfirm="leave" :bgClose=false @doCountDown="leave" :showCountDown=true :countDown=10 :showCancel=false title="成功提示" confirm="关闭" message="恭喜您，信息提交成功，预祝生活愉快！如有疑问请拨打咨询电话：4008-520520"></zaDailog>
     <zaDailog v-if="deviceError" :showCancel=false  @doBg="returnBtn"  @doConfirm="returnBtn" message="摄像头或麦克风等设备异常，请检查"></zaDailog>
+    <zaDailog v-if="matchMakerNetError" :showCancel=false :bgClose=false  @doConfirm="matchMakerNetErrorDo" message="连线异常中断,请重新连线" confirm="返回"></zaDailog>
   </div>
 </template>
 
@@ -236,6 +237,7 @@ export default {
       chickenSoupText: '真正爱你的人不会说许多爱你的话，却会做许多爱你的事。',
       netError: false,
       netErrorTime: null,
+      matchMakerNetError: false,
       matchMakers:
       [
           // { mid: 'aaa', status: true, name:'红娘1好',detail:"sdfds fsf dsf sd",picUrl:"../../static/pic/1.png"},
@@ -281,6 +283,10 @@ export default {
         // this.$message.error('目前暂时没有空闲中的红娘，请耐心等待');
         this.noMatchmaker = true
       }
+    },
+    matchMakerNetErrorDo: function() {
+      this.videoFlagShow = false
+      this.onChat = false
     },
     callBusy: function(){
       // this.$message.error('该红娘正在通话中，请稍等哦~');
@@ -581,6 +587,11 @@ export default {
                 // console.log(that.matchMakers);
             });
 
+            rtc.on('netError', function(data) {
+              console.info('连线中断')
+              that.matchMakerNetError = true
+            })
+
             rtc.on('userSureCallAnswer', function(data) {
               console.log("receive userSureCallAnswer");
               if (data.grabFlag === true){
@@ -858,6 +869,17 @@ export default {
             });
         }
       })
+
+
+      rtc.on('socket_error', function(data) {
+        that.$message('网络故障了')
+      })
+
+      rtc.on('netError', function(data) {
+        console.info('连线中断')
+        that.matchMakerNetError = true
+      })
+
 
       rtc.on('userCallAnswer', function(data) {
         console.log("receive userCallAnswer");

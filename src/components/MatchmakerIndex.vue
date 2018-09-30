@@ -344,7 +344,7 @@ export default {
     saveNoteAndUp: function(){
       var that = this
 
-      if(this.note == ""){
+      if(this.note == "【咨询目的】\r\n【咨询内容】\r\n【建议指导】"){
         this.$message.error('请输入小记');
       }else{
         axios.post(Conf.API + '/note', {
@@ -358,7 +358,7 @@ export default {
           if (response.data.code === 0){
             that.$message.success('保存小记成功');
             that.workerStatus = 2
-            that.note = ""
+            that.note = "【咨询目的】\r\n【咨询内容】\r\n【建议指导】"
             that.userName = ""
             that.userDetail = ""
             that.blackBroadContent = '等待用户连线'
@@ -441,6 +441,19 @@ export default {
     rtc.on('openVideo', function() {
       that.blackBroadShow = false
     });
+
+    rtc.on('netError', function(data) {
+      console.info('连线中断')
+      rtc.closePeerConnection(rtc.peerConnection)
+      that.blackBroadShow = true
+      that.isChatting = false
+      that.chatFlag = false
+      that.blackBroadContent = '连线结束'
+      rtc.peerConnection = null
+      that.$message.success('用户结束连线，请及时提交小记，并将状态改为空闲中');
+      that.saveTimeFlag = true
+      that.countSaveTime()
+    })
 
     rtc.on('endAnswer', function (data) {
       rtc.closePeerConnection(rtc.peerConnection)
