@@ -285,8 +285,12 @@ export default {
       }
     },
     matchMakerNetErrorDo: function() {
+      this.matchMakerNetError = false
       this.videoFlagShow = false
       this.onChat = false
+      this.redBigShow = true
+      this.countDownShow = true
+      this.callContent = '正在连线红娘中  请耐心等待'
     },
     callBusy: function(){
       // this.$message.error('该红娘正在通话中，请稍等哦~');
