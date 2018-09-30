@@ -1,17 +1,44 @@
 <template>
   <div id="app">
     <router-view/>
+    <zaDailog  v-if="netError" :bgClose=false :showCancel=false :showConfirm=false   message="网络异常"></zaDailog>
   </div>
 </template>
 
 <script>
 import Store from '@/tool/store.js'
-
+import axios from 'axios'
+import Conf from '@/conf/conf.js'
+import zaDailog from '@/components/zaDailog.vue'
 export default {
   name: 'App',
-  mounted() {
-
-
+  data () {
+    return {
+      netError: false
+    }
+  },
+  components:{
+    zaDailog
+  },
+  methods: {
+      heart: function () {
+        var that = this
+        axios.get(Conf.API + '/heart')
+        .then(function (response) {
+          if (response.data.code === 0){
+            that.netError = false
+          }else {
+            that.netError = true
+          }
+        })
+        .catch(function (response) {
+          that.netError = true
+        });
+      }
+  },
+  created() {
+    var that = this
+    setInterval(function(){that.heart()}, 2000)
   },
 }
 

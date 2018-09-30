@@ -3,7 +3,7 @@
     <img ondragstart="return false" id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn1.png"/>
     <img ondragstart="return false" id="checkBtn1" v-show="gender == 1" src="../../static/radio2.png"/>
     <img ondragstart="return false" id="checkBtn2" v-show="gender == 2" src="../../static/radio2.png"/>
-    <div id="title">男神/女神</div>
+    <div id="title">您是男神/女神</div>
     <div class="user-gender">
       <div data-sex="1" class="male" @click="selectGenger(1)"></div>
       <div data-sex="2" class="female" @click="selectGenger(2)"></div>
@@ -112,11 +112,11 @@ export default {
   left: 0;
   top: 0;
   margin: auto;
-  margin-left: 850px;
+  margin-left: 835px;
   font-size: 30px;
   color: #ffffff;
   background-color: #5eced6;
-  width: 200px;
+  width: 250px;
   height: 70px;
   border: 2px;
   border-style: solid;

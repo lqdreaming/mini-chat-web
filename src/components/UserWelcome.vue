@@ -10,14 +10,14 @@
           <br>
           这里会有人理解您，并且帮您解答心中的困惑
         </div>
-        <el-button type="primary" round id="linkMatchmaker" v-on:click="login">开始连线咨询</el-button>
+        <!-- <el-button type="primary" round id="linkMatchmaker" v-on:click="login">开始连线咨询</el-button> -->
       </div>
     </div>
 
     <div id="circleButtonSet">
       <div class="circleButton" style="margin-left: 0">专业</div>
-      <div class="circleButton">真诚</div>
-      <div class="circleButton" style="margin-right: 0">免费</div>
+      <div class="circleButton">免费</div>
+      <div class="circleButton" style="margin-right: 0">私密</div>
     </div>
 
 
@@ -27,9 +27,8 @@
         <ul>
           <li v-for="label in labels" :key="label.id" v-on:click="labelClick(label.id)">{{ label.content }}</li>
         </ul>
+
       </div>
-
-
     </div>
   </div>
 
@@ -52,7 +51,6 @@
       }
     },
     methods: {
-
       labelClick: function (lableIndex) {
         Store.save('user-label', lableIndex);
         var that = this;
@@ -149,7 +147,7 @@
 
   .containerTop {
     /* background: url("../assets/user-welcome-bg.png") no-repeat; */
-    background: url("../../static/user-welcome-bg.png") no-repeat;
+    background: url("../../static/new_bg.jpg") no-repeat;
     background-size: 100%;
     position: absolute;
     width: 100%;
@@ -191,10 +189,14 @@
   }
 
   #linkMatchmaker {
+    position: absolute;
     padding: 20px;
     font-size: 20px;
     border-radius: 50px !important;
-    margin: 30px 0 50px;
+    bottom: 0;
+    right: 0;
+    margin-bottom: 45px;
+    margin-right: 80px;
   }
 
   #circleButtonSet {
@@ -203,6 +205,7 @@
     bottom: 14%;
     width: 100%;
     height: auto;
+    font-size: 23px;
   }
 
   .circleButton {
@@ -211,10 +214,11 @@
     margin-left: 60px;
     z-index: 100;
     position: relative;
-    line-height: 60px;
+    line-height: 90px;
     border-radius: 60px !important;
-    width: 60px;
-    height: 60px;
+    width: 90px;
+    height: 90px;
+    top:19px;
     color: #ffffff;
     -moz-user-select:none;
     -webkit-user-select: none;
@@ -251,16 +255,17 @@
   }
 
   li {
-    color: #ff5292;
+    color: #ffffff;
     display: inline-block;
-    height: 20px;
+    height: 30px;
     text-align: center;
-    line-height: 20px;
+    line-height: 30px;
     margin-left: 15px;
     padding: 10px;
     font-size: 20px;
     border-radius: 50px !important;
     border: 1px solid #ff5292;
+    background-color: #ff5292;
     margin-top: 10px;
     -moz-user-select:none;
     -webkit-user-select: none;
