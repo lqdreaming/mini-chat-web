@@ -121,7 +121,7 @@ import zaDailog from './zaDailog.vue'
               that.y = responseData.y;
               var map = new BMap.Map("addressSnipaste",{enableMapClick: false});
               var point = new BMap.Point(that.x,that.y);
-              map.centerAndZoom(point, 15);
+              map.centerAndZoom(point, 18);
               var marker = new BMap.Marker(point);  // 创建标注
               map.addOverlay(marker);               // 将标注添加到地图中
               marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
@@ -139,7 +139,7 @@ import zaDailog from './zaDailog.vue'
         that.y = Store.fetch('dept-y');
         var map = new BMap.Map("addressSnipaste",{enableMapClick: false});
         var point = new BMap.Point(that.x,that.y);
-        map.centerAndZoom(point, 15);
+        map.centerAndZoom(point, 18);
         var marker = new BMap.Marker(point);  // 创建标注
         map.addOverlay(marker);               // 将标注添加到地图中
         marker.setAnimation(BMAP_ANIMATION_BOUNCE); //跳动的动画
