@@ -12,7 +12,7 @@
           <span id="matchmakerAddress">{{deptName}}</span>
         </div>
         <div style="width:400px;height:350px;background:rgba(255,255,255,1)">
-          <img ondragstart="return false" id="matchmakerWechat" src="../assets/endpage-matchmaker-wechat.png"/>
+          <img ondragstart="return false" id="matchmakerWechat" src="../assets/endpage-matchmaker-wechat2.png"/>
           <span id="linkme">微信扫一扫添加好友<br/>我正在{{deptName}}等你</span>
         </div>
       </div>

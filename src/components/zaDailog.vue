@@ -82,7 +82,6 @@ export default {
     var that = this
     var doingCountDown = function(){
       setTimeout(function(){
-        // console.info("3333333333344444444444444",that.count)
         if(that.count >= 1){
           that.count--
           console.info(that.count)
