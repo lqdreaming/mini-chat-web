@@ -8,7 +8,7 @@
       <div data-sex="1" class="male" @click="selectGenger(1)"></div>
       <div data-sex="2" class="female" @click="selectGenger(2)"></div>
     </div>
-    <img  ondragstart="return false" id="nextBtn" v-on:click="nextStep()" src="../../static/nextBtn.png"/>
+    <img  ondragstart="return false" id="nextBtn" v-on:click="nextStep(2)" src="../../static/nextBtn.png"/>
     <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
   </div>
 </template>
@@ -20,6 +20,7 @@ import axios from 'axios'
 import Store from '@/tool/store.js'
 import index from '../router'
 import zaDailog from './zaDailog.vue'
+import updateStep from '@/tool/common.js'
 
 export default {
   data () {
@@ -44,11 +45,14 @@ export default {
         })
       }, 2000)  //timer2->2 当前是第二个定时器
     },
-    nextStep: function(){
+    nextStep: function(step){
       window.clearTimeout(this.time)
       if(Store.fetch('user-gender') == null){
         this.$message('请选择性别')
       }else{
+        updateStep({
+          step: step
+        });
         this.$router.push({
           path:'/UserInfoAge'
         })

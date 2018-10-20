@@ -418,7 +418,6 @@ export default {
           var responseData = response.data.data
           console.log(response.data.code);
             if (response.data.code === 0){
-                console.info(responseData)
                 that.userDetail = responseData
                 if(responseData.status == 1){
                   that.chatTime = 10

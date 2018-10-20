@@ -24,12 +24,12 @@
       <img ondragstart="return false"  id="checkBtn2" v-show="marriage == 2" src="../../static/radio2.png"/>
       <img ondragstart="return false" id="checkBtn3" v-show="marriage == 3" src="../../static/radio2.png"/>
       <img ondragstart="return false" id="checkBtn4" v-show="marriage == 4" src="../../static/radio2.png"/>
-      <img ondragstart="return false" id="nextBtn" v-on:click="nextStep()" src="../../static/nextBtn.png"/>
+      <img ondragstart="return false" id="nextBtn" v-on:click="nextStep(4)" src="../../static/nextBtn.png"/>
 
       <div v-if="show" class="bg"/>
-      <VerifyPhonePass v-if="show" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" id="VerifyPhone" @close="showDailog = true"></VerifyPhonePass>
-      <!-- <VerifyPhone v-if="show" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK" id="VerifyPhone" @close="showDailog = true"></VerifyPhone> -->
-      <zaDailog v-if="showDailog"  @doCancel="passPhone" @doConfirm="showDailog = false" @doBg="showDailog = false" cancel="跳过" confirm="去验证" message="完成验证即可以连线长达10分钟，而跳过只能连线5分钟噢~"></zaDailog>
+      <VerifyPhonePass v-if="show" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK(5)" id="VerifyPhone" @close="showDailog = true"></VerifyPhonePass>
+      <!-- <VerifyPhone v-if="show" @verifyFail="verifyPhoneFail" @verify="verifyPhoneOK(5)" id="VerifyPhone" @close="showDailog = true"></VerifyPhone> -->
+      <zaDailog v-if="showDailog"  @doCancel="passPhone(5)" @doConfirm="showDailog = false" @doBg="showDailog = false" cancel="跳过" confirm="去验证" message="完成验证即可以连线长达10分钟，而跳过只能连线5分钟噢~"></zaDailog>
       <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
     </div>
 </template>
@@ -44,6 +44,7 @@ import index from '../router'
 import zaDailog from './zaDailog.vue'
 import VerifyPhonePass from './VerifyPhonePass.vue'
 import VerifyPhone from './VerifyPhone.vue'
+import updateStep from '@/tool/common.js'
 
 export default {
   data () {
@@ -71,18 +72,24 @@ export default {
         name: 'UserInfoAge'
       })
     },
-    passPhone: function(){
+    passPhone: function(step){
       this.showDailog = false
       Store.save('hasPhone', 0)
+      updateStep({
+        step: step
+      });
       this.$router.push({
         path:'/UserIndex'
       })
     },
-    nextStep: function(){
+    nextStep: function(step){
       window.clearTimeout(this.time)
       if(Store.fetch('user-marriage') == null){
         this.$message('请选择情感状况')
       }else{
+        updateStep({
+          step: step
+        });
         axios.post(Conf.API + '/userInfo',  {
             uid: Store.fetch('uid'),
             gender: Store.fetch('user-gender'),
@@ -154,7 +161,10 @@ export default {
 
       }, 2000)
     },
-    verifyPhoneOK: function(){
+    verifyPhoneOK: function(step){
+      updateStep({
+        step: step
+      });
       Store.save('hasPhone', 1)
       this.$router.push({
         path:'/UserIndex'

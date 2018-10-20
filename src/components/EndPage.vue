@@ -43,6 +43,7 @@ import Conf from '@/conf/conf.js'
 import axios from 'axios'
 import Store from '@/tool/store.js'
 import zaDailog from './zaDailog.vue'
+import updateStep from '@/tool/common.js'
 
   export default {
     name: 'EndPage',
@@ -101,9 +102,10 @@ import zaDailog from './zaDailog.vue'
     },
 
     created() {
+      updateStep({
+        step: 10
+      });
       this.isTimeOut()
-
-
     },
 
     mounted() {

@@ -25,7 +25,7 @@
       <div class="containerBottomTitle">点击以下任意标签，免费开启与专业情感咨询师的视频对话吧</div>
       <div id="labels">
         <ul>
-          <li v-for="label in labels" :key="label.id" v-on:click="labelClick(label.id)">{{ label.content }}</li>
+          <li v-for="label in labels" :key="label.id" v-on:click="labelClick(label.id, 1)">{{ label.content }}</li>
         </ul>
 
       </div>
@@ -35,102 +35,105 @@
 </template>
 
 <script>
-  import axios from 'axios'
-  import Store from '@/tool/store.js'
-  import Conf from '@/conf/conf.js'
-  import Connect from '@/tool/connect.js'
-  import Label from '@/tool/label.js'
-  import Version from '@/tool/version.js'
+import axios from 'axios'
+import Store from '@/tool/store.js'
+import Conf from '@/conf/conf.js'
+import Connect from '@/tool/connect.js'
+import Label from '@/tool/label.js'
+import Version from '@/tool/version.js'
+import updateStep from '@/tool/common.js'
 
-  export default {
-    name: 'UserWelcome',
-    data() {
-      return {
-        labels: [],
-        time: null
-      }
+export default {
+  name: 'UserWelcome',
+  data() {
+    return {
+      labels: [],
+      time: null
+    }
+  },
+  methods: {
+    labelClick: function (lableIndex, step) {
+      let that = this;
+      let positionId = Store.fetch('client-id') ? Store.fetch('client-id') : this.$router.currentRoute.params.positionId;
+      Store.save('client-id', positionId);
+      Store.save('user-label', lableIndex);
+      axios.get(Conf.API + '/userInfo/uid/get')
+        .then(function (response) {
+          var responseData = response.data.data;
+          // console.log(response.data.code);
+          if (response.data.code === 0) {
+            Store.save('uid', responseData);
+            Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
+            window.clearTimeout(that.time)
+            that.$router.push({
+              name: 'UserInfoInput'
+            })
+          }
+        })
+        .catch(function (response) {
+          that.$message.error('连接服务器失败');
+        })
+      updateStep({
+        step: step
+      });
     },
-    methods: {
-      labelClick: function (lableIndex) {
-        Store.save('user-label', lableIndex);
-        var that = this;
-        axios.get(Conf.API + '/userInfo/uid/get')
-          .then(function (response) {
-            var responseData = response.data.data;
-            // console.log(response.data.code);
-            if (response.data.code === 0) {
-              Store.save('uid', responseData);
-              Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
-              window.clearTimeout(that.time)
-              that.$router.push({
-                name: 'UserInfoInput'
-              })
-            }
-          })
-          .catch(function (response) {
-            that.$message.error('连接服务器失败');
-          })
-
-      },
-
-      login: function () {
-        var that = this;
-        // Store.delete('user-label');
-        Store.save('user-label', 0);
-        axios.get(Conf.API + '/userInfo/uid/get')
-          .then(function (response) {
-            var responseData = response.data.data;
-            console.log(response.data.code);
-            if (response.data.code === 0) {
-              Store.save('uid', responseData);
-              window.clearTimeout(that.time)
-              Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
-              that.$router.push({
-                name: 'UserInfoInput'
-              })
-            }
-          })
-          .catch(function (response) {
-            that.$message.error('连接服务器失败');
-          })
-
-      }
-    },
-
-    created() {
-
-    },
-
-    mounted() {
+    login: function () {
       var that = this;
-      Store.delete("hasPhone")
-      Store.delete("user-age")
-      Store.delete("user-gender")
-      Store.delete("user-marriage")
-      var setLabels = function(){
-        that.labels = Label.getLabels()
-        if(Label.getOk() == true){
-          return
-        }
-        else{setTimeout(function(){setLabels()}, 1000)}
+      // Store.delete('user-label');
+      Store.save('user-label', 0);
+      axios.get(Conf.API + '/userInfo/uid/get')
+        .then(function (response) {
+          var responseData = response.data.data;
+          console.log(response.data.code);
+          if (response.data.code === 0) {
+            Store.save('uid', responseData);
+            window.clearTimeout(that.time)
+            Connect.connect(Conf.WS_ADDRESS + "/2/" + Store.fetch('client-id'))
+            that.$router.push({
+              name: 'UserInfoInput'
+            })
+          }
+        })
+        .catch(function (response) {
+          that.$message.error('连接服务器失败');
+        })
+
+    }
+  },
+
+  created() {
+
+  },
+
+  mounted() {
+    var that = this;
+    Store.delete("hasPhone")
+    Store.delete("user-age")
+    Store.delete("user-gender")
+    Store.delete("user-marriage")
+    var setLabels = function(){
+      that.labels = Label.getLabels()
+      if(Label.getOk() == true){
+        return
       }
+      else{setTimeout(function(){setLabels()}, 1000)}
+    }
 
-      setLabels()
+    setLabels()
 
-      var setVersion = function(){
-        Version.getRemoteVersion()
-        if (Version.getVersion() != "" && Version.getVersion() != Store.fetch('version')){
-          Store.save('version', Version.getVersion())
-          window.location.reload()
-        }
-        that.time = window.setTimeout(function(){setVersion()}, 20*1000)
+    var setVersion = function(){
+      Version.getRemoteVersion()
+      if (Version.getVersion() != "" && Version.getVersion() != Store.fetch('version')){
+        Store.save('version', Version.getVersion())
+        window.location.reload()
       }
-      setVersion()
+      that.time = window.setTimeout(function(){setVersion()}, 20*1000)
+    }
+    setVersion()
 
-    },
   }
+}
 </script>
-
 
 <style scoped>
   h1, h2 {
@@ -146,8 +149,8 @@
   }
 
   .containerTop {
-    /* background: url("../assets/user-welcome-bg.png") no-repeat; */
-    background: url("../../static/new_bg.jpg") no-repeat;
+    background: url("../../static/user-welcome-bg.png") no-repeat;
+    /*background: url("../../static/new_bg.jpg") no-repeat;*/
     background-size: 100%;
     position: absolute;
     width: 100%;

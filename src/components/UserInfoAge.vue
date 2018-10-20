@@ -70,7 +70,7 @@
     </div>
     <el-slider id="slider" :min="15" :max="55" :step="1" v-model="age" @change="changeNum()"></el-slider>
     <img ondragstart="return false" id="returnBtn" v-on:click="returnBtn()" src="../../static/return-btn1.png"/>
-    <img ondragstart="return false" id="nextBtn" v-on:click="nextStep()" src="../../static/nextBtn.png"/>
+    <img ondragstart="return false" id="nextBtn" v-on:click="nextStep(3)" src="../../static/nextBtn.png"/>
     <zaDailog v-if="cancelCountDown" @doConfirm="closeDailog" @doBg="closeDailog" @doCountDown="leaveAuto" :showCountDown=true :countDown=15 :showCancel=false confirm="继续操作" message="您已超过2分钟未进行任何操作，是否回到首页"></zaDailog>
 
   </div>
@@ -79,6 +79,7 @@
 <script>
 import Store from '@/tool/store.js'
 import zaDailog from './zaDailog.vue'
+import updateStep from '@/tool/common.js'
 export default {
 name: 'UserInfoAge',
 data () {
@@ -110,11 +111,14 @@ methods: {
         })
       }, 2000)  //timer2->2 当前是第二个定时器
     },
-    nextStep: function(){
+    nextStep: function(step){
       window.clearTimeout(this.time)
       if(Store.fetch('user-age') == null){
         this.$message('请选择年龄')
       }else{
+        updateStep({
+          step: step
+        });
         this.$router.push({
           path:'/UserInfoMarriage'
         })

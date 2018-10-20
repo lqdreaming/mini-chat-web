@@ -24,7 +24,7 @@
                 </div>
 
                 <div style="margin-top:0px">
-                  <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">连线</el-button>
+                  <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid, 7)">连线</el-button>
                   <!-- <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button> -->
                   <div v-show="!matchMaker.status" class="busy">
                     离线
@@ -78,7 +78,7 @@
                 </div>
 
                 <div style="margin-top:0px">
-                  <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">连线</el-button>
+                  <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid, 7)">连线</el-button>
                   <!-- <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button> -->
                   <div v-show="!matchMaker.status" class="busy">
                     繁忙
@@ -128,7 +128,7 @@
                 </div>
 
                 <div>
-                  <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid)">连线</el-button>
+                  <el-button type="primary" round class="button" v-show="matchMaker.status" v-on:click="callMatchmaker(matchMaker.mid, 7)">连线</el-button>
                   <!-- <el-button type="danger" round class="button" v-show="!matchMaker.status" v-on:click="callBusy()">忙碌</el-button> -->
                   <div v-show="!matchMaker.status" class="busy">
                     繁忙
@@ -199,6 +199,7 @@ import Store from '@/tool/store.js'
 import zaDailog from './zaDailog.vue'
 import VerifyPhone from './VerifyPhone.vue'
 import Connect from '@/tool/connect.js'
+import updateStep from '@/tool/common.js'
 
 var rtc
 
@@ -256,7 +257,10 @@ export default {
     VerifyPhone
   },
   methods: {
-    callMatchmaker: function(mid){
+    callMatchmaker: function(mid, step){
+      updateStep({
+        step: step
+      });
       console.log("callMatchmaker button is click")
       Store.save('mid', mid)
       rtc.socket.send(JSON.stringify({
@@ -274,7 +278,7 @@ export default {
       var flag = false
       for (var matchMaker of this.matchMakers){
         if (matchMaker.status == true){
-          this.callMatchmaker(matchMaker.mid)
+          this.callMatchmaker(matchMaker.mid, 7)
           flag = true
           break
         }
@@ -303,6 +307,9 @@ export default {
     },
     verifyPhoneOKAfteChat: function(){
       var that = this
+      updateStep({
+        step: 9
+      });
       axios.get(Conf.API + '/smsCode/sendMidInfo/mid/' + Store.fetch('mid')
         ,{headers: {
             'X-Uid': Store.fetch('uid')
@@ -487,6 +494,10 @@ export default {
   },
   created() {
     var that = this
+
+    updateStep({
+      step: 6
+    });
     this.isTimeOut()
     this.netErrorTime = setTimeout(function(){
       //网络超市，重新建立webSocket连接
@@ -599,6 +610,9 @@ export default {
             rtc.on('userSureCallAnswer', function(data) {
               console.log("receive userSureCallAnswer");
               if (data.grabFlag === true){
+                updateStep({
+                  step: 8
+                });
                 that.redBigShow = false
                 that.callContent = ''
                 that.countDownShow = false
@@ -823,6 +837,9 @@ export default {
       rtc.on('userSureCallAnswer', function(data) {
         console.log("receive userSureCallAnswer");
         if (data.grabFlag === true){
+          updateStep({
+            step: 8
+          });
           that.redBigShow = false
           that.callContent = ''
           that.countDownShow = false

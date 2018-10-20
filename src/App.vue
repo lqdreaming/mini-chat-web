@@ -17,6 +17,9 @@ export default {
       netError: false
     }
   },
+  created () {
+    console.log(this.$router, window.localStorage, 2222);
+  },
   components:{
     zaDailog
   },

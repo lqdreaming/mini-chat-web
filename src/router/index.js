@@ -43,7 +43,7 @@ export default new Router({
       component: UserIndex
     },
     {
-      path: '/UserWelcome',
+      path: '/UserWelcome/:positionId',
       name: 'UserWelcome',
       component: UserWelcome,
       meta: {
